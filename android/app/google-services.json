@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "319100357057",
+    "project_id": "mekaapp-af802",
+    "storage_bucket": "mekaapp-af802.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319100357057:android:b38d089c623fa3dd2c4740",
+        "android_client_info": {
+          "package_name": "com.mekaapp.mekaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319100357057-0ipb1f02h3j0sc4mk6racs3uo1t70emk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mekaapp.mekaapp",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "319100357057-701pi70ce8uc5u9cpvvunvhddstv34af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjn95MeMnxR-m61xP9tSijxICtaC1IABc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "319100357057-701pi70ce8uc5u9cpvvunvhddstv34af.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "319100357057-kfgot2e46iftvcmo54efga9sm4uqpos5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mekaapp.mekaapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
