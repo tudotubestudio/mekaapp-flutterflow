@@ -4,21 +4,21 @@ import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SelectListDropDownWidget extends StatefulWidget {
-  const SelectListDropDownWidget({Key? key}) : super(key: key);
+class SelectUserDropDownWidget extends StatefulWidget {
+  const SelectUserDropDownWidget({Key? key}) : super(key: key);
 
   @override
-  _SelectListDropDownWidgetState createState() =>
-      _SelectListDropDownWidgetState();
+  _SelectUserDropDownWidgetState createState() =>
+      _SelectUserDropDownWidgetState();
 }
 
-class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
+class _SelectUserDropDownWidgetState extends State<SelectUserDropDownWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
       child: FutureBuilder<ApiCallResponse>(
-        future: TaskGetListsCall.call(),
+        future: UsersCall.call(),
         builder: (context, snapshot) {
           // Customize what your widget looks like when it's loading.
           if (!snapshot.hasData) {
@@ -32,32 +32,32 @@ class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
               ),
             );
           }
-          final listViewTaskGetListsResponse = snapshot.data!;
+          final listViewUsersResponse = snapshot.data!;
           return Builder(
             builder: (context) {
-              final list = getJsonField(
-                    (listViewTaskGetListsResponse?.jsonBody ?? ''),
+              final user = getJsonField(
+                    (listViewUsersResponse?.jsonBody ?? ''),
                     r'''$''',
                   )?.toList() ??
                   [];
               return ListView.builder(
                 padding: EdgeInsets.zero,
                 scrollDirection: Axis.vertical,
-                itemCount: list.length,
-                itemBuilder: (context, listIndex) {
-                  final listItem = list[listIndex];
+                itemCount: user.length,
+                itemBuilder: (context, userIndex) {
+                  final userItem = user[userIndex];
                   return Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 0),
                     child: InkWell(
                       onTap: () async {
                         setState(() =>
-                            FFAppState().taskDropDownListId = getJsonField(
-                              listItem,
+                            FFAppState().taskDropDownUserId = getJsonField(
+                              userItem,
                               r'''$.id''',
                             ));
                         setState(() =>
-                            FFAppState().taskDropDownListName = getJsonField(
-                              listItem,
+                            FFAppState().taskDropDownUserName = getJsonField(
+                              userItem,
                               r'''$.name''',
                             ).toString());
                         Navigator.pop(context);
@@ -92,7 +92,7 @@ class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
                                         12, 0, 0, 0),
                                     child: Text(
                                       getJsonField(
-                                        listItem,
+                                        userItem,
                                         r'''$.name''',
                                       ).toString(),
                                       style: FlutterFlowTheme.of(context)
@@ -104,7 +104,7 @@ class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
                                         12, 0, 0, 0),
                                     child: Text(
                                       getJsonField(
-                                        listItem,
+                                        userItem,
                                         r'''$.created_at''',
                                       ).toString(),
                                       style: FlutterFlowTheme.of(context)

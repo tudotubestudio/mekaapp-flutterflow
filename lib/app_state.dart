@@ -58,6 +58,12 @@ class FFAppState {
   int taskDropDownListId = 0;
 
   String taskDropDownListName = 'Select list...';
+
+  int taskDropDownUserId = 0;
+
+  String taskDropDownUserName = 'Select user...';
+
+  String addTaskDateYear = 'Date Year...';
 }
 
 LatLng? _latLngFromString(String? val) {

@@ -367,6 +367,11 @@ class TaskAddPackCall {
     String? listProdOblgs = '',
     String? listProdGifts = '',
     int? status = 0,
+    int? forUser,
+    int? repeat,
+    String? daysWeek = '',
+    int? dayMonth,
+    String? dayYear = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task add pack',
@@ -394,8 +399,120 @@ class TaskAddPackCall {
         'list_prod_oblgs': listProdOblgs,
         'list_prod_gifts': listProdGifts,
         'status': status,
+        'for_user': forUser,
+        'repeat': repeat,
+        'days_week': daysWeek,
+        'day_month': dayMonth,
+        'day_year': dayYear,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+    );
+  }
+}
+
+class UsersCall {
+  static Future<ApiCallResponse> call() {
+    return ApiManager.instance.makeApiCall(
+      callName: 'users',
+      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/users',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      },
+      params: {},
+      returnBody: true,
+    );
+  }
+
+  static dynamic listNames(dynamic response) => getJsonField(
+        response,
+        r'''$..name''',
+      );
+}
+
+class TasksCall {
+  static Future<ApiCallResponse> call() {
+    return ApiManager.instance.makeApiCall(
+      callName: 'tasks',
+      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/tasks/list',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      },
+      params: {},
+      returnBody: true,
+    );
+  }
+
+  static dynamic listNames(dynamic response) => getJsonField(
+        response,
+        r'''$..name''',
+      );
+}
+
+class TaskOrdersPackByUserCall {
+  static Future<ApiCallResponse> call() {
+    return ApiManager.instance.makeApiCall(
+      callName: 'task orders pack by user',
+      apiUrl:
+          'https://www.mekaapp.com/bcd/backend/api/tasks/orders_task_pack_by_user',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      },
+      params: {},
+      returnBody: true,
+    );
+  }
+
+  static dynamic listNames(dynamic response) => getJsonField(
+        response,
+        r'''$..name''',
+      );
+}
+
+class TaskCheckOrderPackCall {
+  static Future<ApiCallResponse> call({
+    String? orderId = '',
+    String? packId = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'task check order pack',
+      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/tasks/check_order_pack',
+      callType: ApiCallType.GET,
+      headers: {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      },
+      params: {
+        'orderId': orderId,
+        'packId': packId,
+      },
+      returnBody: true,
+    );
+  }
+}
+
+class TaskGetChiffreQuotaCall {
+  static Future<ApiCallResponse> call({
+    String? total = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'task get chiffre quota',
+      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/tasks/get_chiffre_quota',
+      callType: ApiCallType.POST,
+      headers: {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      },
+      params: {
+        'total': total,
+      },
+      bodyType: BodyType.JSON,
       returnBody: true,
     );
   }

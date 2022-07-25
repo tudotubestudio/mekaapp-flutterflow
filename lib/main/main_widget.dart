@@ -1,8 +1,8 @@
-import '../add_offre/add_offre_widget.dart';
+import '../add_task_chiffre/add_task_chiffre_widget.dart';
+import '../add_task_pack/add_task_pack_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
-import '../main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -46,11 +46,11 @@ class _MainWidgetState extends State<MainWidget> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddOffreWidget(),
+                        builder: (context) => AddTaskPackWidget(),
                       ),
                     );
                   },
-                  text: 'Add Offer',
+                  text: 'Add Task Pack',
                   options: FFButtonOptions(
                     width: double.infinity,
                     padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
@@ -75,11 +75,11 @@ class _MainWidgetState extends State<MainWidget> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NavBarPage(initialPage: 'Offers'),
+                        builder: (context) => AddTaskChiffreWidget(),
                       ),
                     );
                   },
-                  text: 'Offers',
+                  text: 'Add Task Chiffre',
                   options: FFButtonOptions(
                     width: double.infinity,
                     padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),

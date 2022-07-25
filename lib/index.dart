@@ -19,5 +19,9 @@ export 'orders_offer/orders_offer_widget.dart' show OrdersOfferWidget;
 export 'main/main_widget.dart' show MainWidget;
 export 'compare_order_and_offre/compare_order_and_offre_widget.dart'
     show CompareOrderAndOffreWidget;
-export 'add_task/add_task_widget.dart' show AddTaskWidget;
 export 'tasks/tasks_widget.dart' show TasksWidget;
+export 'add_task_pack/add_task_pack_widget.dart' show AddTaskPackWidget;
+export 'show_pack/show_pack_widget.dart' show ShowPackWidget;
+export 'add_task_chiffre/add_task_chiffre_widget.dart'
+    show AddTaskChiffreWidget;
+export 'add_task_copy/add_task_copy_widget.dart' show AddTaskCopyWidget;

@@ -1,12 +1,15 @@
-import '../add_task/add_task_widget.dart';
+import '../add_task_pack/add_task_pack_widget.dart';
 import '../auth/auth_util.dart';
+import '../backend/api_requests/api_calls.dart';
 import '../backend/backend.dart';
 import '../components/list_global_chiffre_widget.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
+import '../show_pack/show_pack_widget.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
+import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +24,8 @@ class TasksWidget extends StatefulWidget {
 
 class _TasksWidgetState extends State<TasksWidget>
     with TickerProviderStateMixin {
+  Completer<ApiCallResponse>? _apiRequestCompleter;
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   final animationsMap = {
     'containerOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
@@ -151,7 +156,6 @@ class _TasksWidgetState extends State<TasksWidget>
       ),
     ),
   };
-  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -173,7 +177,7 @@ class _TasksWidgetState extends State<TasksWidget>
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddTaskWidget(),
+              builder: (context) => AddTaskPackWidget(),
             ),
           );
         },
@@ -420,12 +424,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                         'containerOnPageLoadAnimation1']!
                                   ]),
                                 ),
-                                StreamBuilder<List<TasksRecord>>(
-                                  stream: queryTasksRecord(
-                                    queryBuilder: (tasksRecord) =>
-                                        tasksRecord.where('end_date',
-                                            isGreaterThan: getCurrentTimestamp),
-                                  ),
+                                FutureBuilder<ApiCallResponse>(
+                                  future: (_apiRequestCompleter ??=
+                                          Completer<ApiCallResponse>()
+                                            ..complete(TasksCall.call()))
+                                      .future,
                                   builder: (context, snapshot) {
                                     // Customize what your widget looks like when it's loading.
                                     if (!snapshot.hasData) {
@@ -440,576 +443,1092 @@ class _TasksWidgetState extends State<TasksWidget>
                                         ),
                                       );
                                     }
-                                    List<TasksRecord> listViewTasksRecordList =
+                                    final listViewTasksResponse =
                                         snapshot.data!;
-                                    return ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: listViewTasksRecordList.length,
-                                      itemBuilder: (context, listViewIndex) {
-                                        final listViewTasksRecord =
-                                            listViewTasksRecordList[
-                                                listViewIndex];
-                                        return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  20, 12, 20, 12),
-                                          child: StreamBuilder<
-                                              List<RealisationObjDaysRecord>>(
-                                            stream:
-                                                queryRealisationObjDaysRecord(
-                                              queryBuilder: (realisationObjDaysRecord) =>
-                                                  realisationObjDaysRecord
-                                                      .where('day',
-                                                          isGreaterThanOrEqualTo:
-                                                              listViewTasksRecord!
-                                                                  .startDate)
-                                                      .where('day',
-                                                          isLessThan:
-                                                              listViewTasksRecord!
-                                                                  .endDate),
-                                              singleRecord: true,
-                                            ),
-                                            builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
-                                              if (!snapshot.hasData) {
-                                                return Center(
-                                                  child: SizedBox(
-                                                    width: 50,
-                                                    height: 50,
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryColor,
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                              List<RealisationObjDaysRecord>
-                                                  containerRealisationObjDaysRecordList =
-                                                  snapshot.data!;
-                                              // Return an empty Container when the document does not exist.
-                                              if (snapshot.data!.isEmpty) {
-                                                return Container();
-                                              }
-                                              final containerRealisationObjDaysRecord =
-                                                  containerRealisationObjDaysRecordList
-                                                      .first;
-                                              return Container(
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      blurRadius: 4,
-                                                      color: Color(0x34090F13),
-                                                      offset: Offset(0, 2),
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(12, 16, 12, 12),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .primaryColor,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8),
-                                                              shape: BoxShape
-                                                                  .rectangle,
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          3,
-                                                                          3,
-                                                                          3,
-                                                                          3),
-                                                              child: Text(
-                                                                'Global Chiffre',
+                                    return Builder(
+                                      builder: (context) {
+                                        final task = getJsonField(
+                                              (listViewTasksResponse
+                                                      ?.jsonBody ??
+                                                  ''),
+                                              r'''$''',
+                                            )?.toList() ??
+                                            [];
+                                        return RefreshIndicator(
+                                          onRefresh: () async {
+                                            setState(() =>
+                                                _apiRequestCompleter = null);
+                                            await waitForApiRequestCompleter();
+                                          },
+                                          child: ListView.builder(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.vertical,
+                                            itemCount: task.length,
+                                            itemBuilder: (context, taskIndex) {
+                                              final taskItem = task[taskIndex];
+                                              return Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  if ((functions.jsonToInt(
+                                                          getJsonField(
+                                                        taskItem,
+                                                        r'''$.type''',
+                                                      ))) ==
+                                                      1)
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(20, 12,
+                                                                  20, 12),
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              blurRadius: 4,
+                                                              color: Color(
+                                                                  0x34090F13),
+                                                              offset:
+                                                                  Offset(0, 2),
+                                                            )
+                                                          ],
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(12),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      12,
+                                                                      16,
+                                                                      12,
+                                                                      12),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Color(
+                                                                          0xFF9B59B6),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8),
+                                                                      shape: BoxShape
+                                                                          .rectangle,
+                                                                    ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsetsDirectional
+                                                                          .fromSTEB(
+                                                                              3,
+                                                                              3,
+                                                                              3,
+                                                                              3),
+                                                                      child:
+                                                                          Text(
+                                                                        'Pack(${getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.id''',
+                                                                        ).toString()})',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyText1
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.normal,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsetsDirectional
+                                                                          .fromSTEB(
+                                                                              8,
+                                                                              0,
+                                                                              0,
+                                                                              0),
+                                                                      child:
+                                                                          AutoSizeText(
+                                                                        getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.title''',
+                                                                        ).toString(),
+                                                                        maxLines:
+                                                                            2,
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .subtitle1
+                                                                            .override(
+                                                                              fontFamily: 'Outfit',
+                                                                              color: Color(0xFF101213),
+                                                                              fontSize: 18,
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    'DA 0',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Poppins',
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).grayIcon,
+                                                                        ),
+                                                                  ),
+                                                                  Text(
+                                                                    'DA 500',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Poppins',
+                                                                          color:
+                                                                              Color(0xFF2ECC71),
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0,
+                                                                            4,
+                                                                            0,
+                                                                            4),
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  getJsonField(
+                                                                    taskItem,
+                                                                    r'''$.description''',
+                                                                  ).toString(),
+                                                                  maxLines: 2,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText2
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                'Created: ${getJsonField(
+                                                                  taskItem,
+                                                                  r'''$.created_at''',
+                                                                ).toString()}',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .bodyText1
+                                                                    .bodyText2
                                                                     .override(
                                                                       fontFamily:
-                                                                          'Poppins',
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryBtnText,
+                                                                          'Outfit',
+                                                                      color: Color(
+                                                                          0xFF57636C),
                                                                       fontSize:
-                                                                          12,
+                                                                          14,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .normal,
                                                                     ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          8,
-                                                                          0,
-                                                                          0,
-                                                                          0),
-                                                              child:
-                                                                  AutoSizeText(
-                                                                listViewTasksRecord!
-                                                                    .title!,
-                                                                maxLines: 2,
+                                                              Text(
+                                                                'Objectif: ${formatNumber(
+                                                                  functions
+                                                                      .jsonToInt(
+                                                                          getJsonField(
+                                                                    taskItem,
+                                                                    r'''$.obj1''',
+                                                                  )),
+                                                                  formatType:
+                                                                      FormatType
+                                                                          .decimal,
+                                                                  decimalType:
+                                                                      DecimalType
+                                                                          .automatic,
+                                                                  currency:
+                                                                      'DA ',
+                                                                )}',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .subtitle1
+                                                                    .bodyText2
                                                                     .override(
                                                                       fontFamily:
                                                                           'Outfit',
                                                                       color: Color(
-                                                                          0xFF101213),
+                                                                          0xFF57636C),
                                                                       fontSize:
-                                                                          18,
+                                                                          14,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w500,
+                                                                              .normal,
                                                                     ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                          if ((functions.percTwoNum(
-                                                                  containerRealisationObjDaysRecord!
-                                                                      .realisation,
-                                                                  listViewTasksRecord!
-                                                                      .objectif)) <
-                                                              (listViewTasksRecord!
-                                                                  .percReal!))
-                                                            Text(
-                                                              'DA 0',
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyText1
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'Poppins',
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .grayIcon,
-                                                                  ),
-                                                            ),
-                                                          if ((functions.percTwoNum(
-                                                                  containerRealisationObjDaysRecord!
-                                                                      .realisation,
-                                                                  listViewTasksRecord!
-                                                                      .objectif)) >=
-                                                              (listViewTasksRecord!
-                                                                  .percReal!))
-                                                            Text(
-                                                              formatNumber(
-                                                                listViewTasksRecord!
-                                                                    .giftMoney!,
-                                                                formatType:
-                                                                    FormatType
-                                                                        .decimal,
-                                                                decimalType:
-                                                                    DecimalType
-                                                                        .automatic,
-                                                                currency: 'DA ',
-                                                              ),
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyText1
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'Poppins',
-                                                                    color: Color(
-                                                                        0xFF2ECC71),
-                                                                  ),
-                                                            ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0, 4, 0, 4),
-                                                        child: AutoSizeText(
-                                                          listViewTasksRecord!
-                                                              .description!,
-                                                          maxLines: 2,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText2
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Outfit',
-                                                                color: Color(
-                                                                    0xFF57636C),
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '${dateTimeFormat('d/M/y', listViewTasksRecord!.startDate)}/${dateTimeFormat('d/M/y', listViewTasksRecord!.endDate)}',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyText2
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Outfit',
-                                                                  color: Color(
-                                                                      0xFF57636C),
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(0, 12,
-                                                                    0, 12),
-                                                        child:
-                                                            LinearPercentIndicator(
-                                                          percent: functions.percTwoNum(
-                                                              containerRealisationObjDaysRecord!
-                                                                  .realisation,
-                                                              listViewTasksRecord!
-                                                                  .objectif),
-                                                          width: 310,
-                                                          lineHeight: 16,
-                                                          animation: true,
-                                                          progressColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .primaryColor,
-                                                          backgroundColor:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .lineColor,
-                                                          barRadius:
-                                                              Radius.circular(
-                                                                  16),
-                                                          padding:
-                                                              EdgeInsets.zero,
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        children: [
-                                                          Text(
-                                                            containerRealisationObjDaysRecord!
-                                                                .realisation!
-                                                                .toString(),
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .subtitle1
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Outfit',
-                                                                  color: Color(
-                                                                      0xFF101213),
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                          ),
-                                                          Text(
-                                                            ' of  ',
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .subtitle1
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Outfit',
-                                                                  color: Color(
-                                                                      0xFF57636C),
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                          ),
-                                                          Text(
-                                                            formatNumber(
-                                                              listViewTasksRecord!
-                                                                  .objectif!,
-                                                              formatType:
-                                                                  FormatType
-                                                                      .decimal,
-                                                              decimalType:
-                                                                  DecimalType
-                                                                      .automatic,
-                                                              currency: 'DA ',
-                                                            ),
-                                                            style: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .subtitle1
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Outfit',
-                                                                  color: Color(
-                                                                      0xFF57636C),
-                                                                  fontSize: 18,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    0, 4, 0, 0),
-                                                        child: Text(
-                                                          'Resets Jun 30, 2022',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText2
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Outfit',
-                                                                color: Color(
-                                                                    0xFF57636C),
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      Divider(
-                                                        height: 24,
-                                                        thickness: 2,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .lineColor,
-                                                      ),
-                                                      Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        children: [
-                                                          if ((functions.percTwoNum(
-                                                                  containerRealisationObjDaysRecord!
-                                                                      .realisation,
-                                                                  listViewTasksRecord!
-                                                                      .objectif)) <
-                                                              (listViewTasksRecord!
-                                                                  .percReal!))
-                                                            Container(
-                                                              width: 40,
-                                                              height: 40,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Color(
-                                                                    0xFF57636C),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    blurRadius:
-                                                                        4,
-                                                                    color: Color(
-                                                                        0x2B202529),
-                                                                    offset:
-                                                                        Offset(
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
                                                                             0,
-                                                                            2),
-                                                                  )
-                                                                ],
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                              ),
-                                                              alignment:
-                                                                  AlignmentDirectional(
-                                                                      0, 0),
-                                                              child: Text(
-                                                                formatNumber(
-                                                                  listViewTasksRecord!
-                                                                      .percReal!,
-                                                                  formatType:
-                                                                      FormatType
-                                                                          .percent,
-                                                                ),
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Poppins',
-                                                                      color: FlutterFlowTheme.of(
+                                                                            12,
+                                                                            0,
+                                                                            12),
+                                                                child:
+                                                                    LinearPercentIndicator(
+                                                                  percent: 0.7,
+                                                                  width: 310,
+                                                                  lineHeight:
+                                                                      16,
+                                                                  animation:
+                                                                      true,
+                                                                  progressColor:
+                                                                      FlutterFlowTheme.of(
                                                                               context)
-                                                                          .primaryBtnText,
-                                                                    ),
+                                                                          .primaryColor,
+                                                                  backgroundColor:
+                                                                      FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .lineColor,
+                                                                  barRadius: Radius
+                                                                      .circular(
+                                                                          16),
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          if ((functions.percTwoNum(
-                                                                  containerRealisationObjDaysRecord!
-                                                                      .realisation,
-                                                                  listViewTasksRecord!
-                                                                      .objectif)) >=
-                                                              (listViewTasksRecord!
-                                                                  .percReal!))
-                                                            Container(
-                                                              width: 40,
-                                                              height: 40,
-                                                              decoration:
-                                                                  BoxDecoration(
+                                                              Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Text(
+                                                                    '10',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .subtitle1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          color:
+                                                                              Color(0xFF101213),
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                        ),
+                                                                  ),
+                                                                  Text(
+                                                                    ' of  ',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .subtitle1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          color:
+                                                                              Color(0xFF57636C),
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                        ),
+                                                                  ),
+                                                                  Text(
+                                                                    '50',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .subtitle1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          color:
+                                                                              Color(0xFF57636C),
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0,
+                                                                            4,
+                                                                            0,
+                                                                            0),
+                                                                child: Text(
+                                                                  '5/7/22-7/7/22',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText2
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              Divider(
+                                                                height: 24,
+                                                                thickness: 2,
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .secondaryColor,
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    blurRadius:
-                                                                        4,
-                                                                    color: Color(
-                                                                        0x2B202529),
-                                                                    offset:
-                                                                        Offset(
-                                                                            0,
-                                                                            2),
-                                                                  )
-                                                                ],
-                                                                shape: BoxShape
-                                                                    .circle,
+                                                                    .lineColor,
                                                               ),
-                                                              alignment:
-                                                                  AlignmentDirectional(
-                                                                      0, 0),
-                                                              child: Text(
-                                                                formatNumber(
-                                                                  listViewTasksRecord!
-                                                                      .percReal!,
-                                                                  formatType:
-                                                                      FormatType
-                                                                          .percent,
-                                                                ),
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText1
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Poppins',
+                                                              Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Wrap(
+                                                                      spacing:
+                                                                          2,
+                                                                      runSpacing:
+                                                                          2,
+                                                                      alignment:
+                                                                          WrapAlignment
+                                                                              .start,
+                                                                      crossAxisAlignment:
+                                                                          WrapCrossAlignment
+                                                                              .start,
+                                                                      direction:
+                                                                          Axis.horizontal,
+                                                                      runAlignment:
+                                                                          WrapAlignment
+                                                                              .start,
+                                                                      verticalDirection:
+                                                                          VerticalDirection
+                                                                              .down,
+                                                                      clipBehavior:
+                                                                          Clip.none,
+                                                                      children: [
+                                                                        Visibility(
+                                                                          visible: (functions.jsonToInt(getJsonField(
+                                                                                taskItem,
+                                                                                r'''$.prods_oblg''',
+                                                                              ))) ==
+                                                                              1,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0,
+                                                                                0,
+                                                                                2,
+                                                                                0),
+                                                                            child:
+                                                                                Container(
+                                                                              width: 100,
+                                                                              height: 24,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xFFD35400),
+                                                                                boxShadow: [
+                                                                                  BoxShadow(
+                                                                                    blurRadius: 4,
+                                                                                    color: Color(0x2B202529),
+                                                                                    offset: Offset(0, 2),
+                                                                                  )
+                                                                                ],
+                                                                                borderRadius: BorderRadius.circular(8),
+                                                                                shape: BoxShape.rectangle,
+                                                                              ),
+                                                                              alignment: AlignmentDirectional(0, 0),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(2, 0, 2, 0),
+                                                                                child: Text(
+                                                                                  'Prods Oblg',
+                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                        fontFamily: 'Poppins',
+                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                        fontWeight: FontWeight.normal,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Visibility(
+                                                                          visible: (functions.jsonToInt(getJsonField(
+                                                                                taskItem,
+                                                                                r'''$.gift_prods1''',
+                                                                              ))) ==
+                                                                              1,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0,
+                                                                                0,
+                                                                                2,
+                                                                                0),
+                                                                            child:
+                                                                                Container(
+                                                                              width: 100,
+                                                                              height: 24,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xFF2ECC71),
+                                                                                boxShadow: [
+                                                                                  BoxShadow(
+                                                                                    blurRadius: 4,
+                                                                                    color: Color(0x2B202529),
+                                                                                    offset: Offset(0, 2),
+                                                                                  )
+                                                                                ],
+                                                                                borderRadius: BorderRadius.circular(8),
+                                                                                shape: BoxShape.rectangle,
+                                                                              ),
+                                                                              alignment: AlignmentDirectional(0, 0),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(2, 0, 2, 0),
+                                                                                child: Text(
+                                                                                  'Prods Gift',
+                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                        fontFamily: 'Poppins',
+                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                        fontWeight: FontWeight.normal,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Visibility(
+                                                                          visible: (functions.jsonToInt(getJsonField(
+                                                                                taskItem,
+                                                                                r'''$.gift_money1''',
+                                                                              ))) >
+                                                                              0,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0,
+                                                                                0,
+                                                                                2,
+                                                                                0),
+                                                                            child:
+                                                                                Container(
+                                                                              width: 100,
+                                                                              height: 24,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xFF3498DB),
+                                                                                boxShadow: [
+                                                                                  BoxShadow(
+                                                                                    blurRadius: 4,
+                                                                                    color: Color(0x2B202529),
+                                                                                    offset: Offset(0, 2),
+                                                                                  )
+                                                                                ],
+                                                                                borderRadius: BorderRadius.circular(8),
+                                                                                shape: BoxShape.rectangle,
+                                                                              ),
+                                                                              alignment: AlignmentDirectional(0, 0),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(2, 0, 2, 0),
+                                                                                child: Text(
+                                                                                  formatNumber(
+                                                                                    functions.jsonToInt(getJsonField(
+                                                                                      taskItem,
+                                                                                      r'''$.gift_money1''',
+                                                                                    )),
+                                                                                    formatType: FormatType.decimal,
+                                                                                    decimalType: DecimalType.automatic,
+                                                                                    currency: 'DA ',
+                                                                                  ),
+                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                        fontFamily: 'Poppins',
+                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                        fontWeight: FontWeight.normal,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        Visibility(
+                                                                          visible: (functions.jsonToInt(getJsonField(
+                                                                                taskItem,
+                                                                                r'''$.gift_chiffre1''',
+                                                                              ))) >
+                                                                              0,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                0,
+                                                                                0,
+                                                                                2,
+                                                                                0),
+                                                                            child:
+                                                                                Container(
+                                                                              width: 100,
+                                                                              height: 24,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color(0xFF1ABC9C),
+                                                                                boxShadow: [
+                                                                                  BoxShadow(
+                                                                                    blurRadius: 4,
+                                                                                    color: Color(0x2B202529),
+                                                                                    offset: Offset(0, 2),
+                                                                                  )
+                                                                                ],
+                                                                                borderRadius: BorderRadius.circular(8),
+                                                                                shape: BoxShape.rectangle,
+                                                                              ),
+                                                                              alignment: AlignmentDirectional(0, 0),
+                                                                              child: Padding(
+                                                                                padding: EdgeInsetsDirectional.fromSTEB(2, 0, 2, 0),
+                                                                                child: Text(
+                                                                                  formatNumber(
+                                                                                    functions.jsonToInt(getJsonField(
+                                                                                      taskItem,
+                                                                                      r'''$.gift_chiffre1''',
+                                                                                    )),
+                                                                                    formatType: FormatType.decimal,
+                                                                                    decimalType: DecimalType.automatic,
+                                                                                  ),
+                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                        fontFamily: 'Poppins',
+                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                        fontWeight: FontWeight.normal,
+                                                                                      ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  FlutterFlowIconButton(
+                                                                    borderColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    borderRadius:
+                                                                        30,
+                                                                    borderWidth:
+                                                                        1,
+                                                                    buttonSize:
+                                                                        60,
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .arrow_forward_ios,
                                                                       color: FlutterFlowTheme.of(
                                                                               context)
-                                                                          .primaryBtnText,
+                                                                          .grayIcon,
+                                                                      size: 30,
                                                                     ),
+                                                                    onPressed:
+                                                                        () async {
+                                                                      await Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              ShowPackWidget(
+                                                                            pack:
+                                                                                getJsonField(
+                                                                              taskItem,
+                                                                              r'''$''',
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ),
-                                                          Expanded(
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          8,
-                                                                          0,
-                                                                          0,
-                                                                          0),
-                                                              child: Text(
-                                                                formatNumber(
-                                                                  functions.percTwoNum(
-                                                                      containerRealisationObjDaysRecord!
-                                                                          .realisation,
-                                                                      listViewTasksRecord!
-                                                                          .objectif),
-                                                                  formatType:
-                                                                      FormatType
-                                                                          .percent,
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  if ((functions.jsonToInt(
+                                                          getJsonField(
+                                                        taskItem,
+                                                        r'''$.type''',
+                                                      ))) ==
+                                                      2)
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(20, 12,
+                                                                  20, 12),
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              blurRadius: 4,
+                                                              color: Color(
+                                                                  0x34090F13),
+                                                              offset:
+                                                                  Offset(0, 2),
+                                                            )
+                                                          ],
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(12),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      12,
+                                                                      16,
+                                                                      12,
+                                                                      12),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primaryColor,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              8),
+                                                                      shape: BoxShape
+                                                                          .rectangle,
+                                                                    ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsetsDirectional
+                                                                          .fromSTEB(
+                                                                              3,
+                                                                              3,
+                                                                              3,
+                                                                              3),
+                                                                      child:
+                                                                          Text(
+                                                                        'Global Chiffre',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyText1
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.normal,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsetsDirectional
+                                                                          .fromSTEB(
+                                                                              8,
+                                                                              0,
+                                                                              0,
+                                                                              0),
+                                                                      child:
+                                                                          AutoSizeText(
+                                                                        'Title\n',
+                                                                        maxLines:
+                                                                            2,
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .subtitle1
+                                                                            .override(
+                                                                              fontFamily: 'Outfit',
+                                                                              color: Color(0xFF101213),
+                                                                              fontSize: 18,
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    'DA 0',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Poppins',
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).grayIcon,
+                                                                        ),
+                                                                  ),
+                                                                  Text(
+                                                                    'DA 500',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyText1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Poppins',
+                                                                          color:
+                                                                              Color(0xFF2ECC71),
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0,
+                                                                            4,
+                                                                            0,
+                                                                            4),
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  'AHP 5500',
+                                                                  maxLines: 2,
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText2
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
                                                                 ),
+                                                              ),
+                                                              Text(
+                                                                'Last Payment: April 8th, 2022',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .subtitle2
+                                                                    .bodyText2
                                                                     .override(
                                                                       fontFamily:
                                                                           'Outfit',
+                                                                      color: Color(
+                                                                          0xFF57636C),
+                                                                      fontSize:
+                                                                          14,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w500,
+                                                                              .normal,
                                                                     ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        8,
-                                                                        0,
-                                                                        0,
-                                                                        0),
-                                                            child: Text(
-                                                              formatNumber(
-                                                                listViewTasksRecord!
-                                                                    .giftMoney!,
-                                                                formatType:
-                                                                    FormatType
-                                                                        .decimal,
-                                                                decimalType:
-                                                                    DecimalType
-                                                                        .automatic,
-                                                                currency: 'DA ',
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0,
+                                                                            12,
+                                                                            0,
+                                                                            12),
+                                                                child:
+                                                                    LinearPercentIndicator(
+                                                                  percent: 0.7,
+                                                                  width: 310,
+                                                                  lineHeight:
+                                                                      16,
+                                                                  animation:
+                                                                      true,
+                                                                  progressColor:
+                                                                      FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primaryColor,
+                                                                  backgroundColor:
+                                                                      FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .lineColor,
+                                                                  barRadius: Radius
+                                                                      .circular(
+                                                                          16),
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                ),
                                                               ),
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .subtitle2
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'Outfit',
-                                                                    color: Color(
-                                                                        0xFF3498DB),
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
+                                                              Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Text(
+                                                                    '\$3,556.29',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .subtitle1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          color:
+                                                                              Color(0xFF101213),
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                        ),
                                                                   ),
-                                                            ),
+                                                                  Text(
+                                                                    ' of  ',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .subtitle1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          color:
+                                                                              Color(0xFF57636C),
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                        ),
+                                                                  ),
+                                                                  Text(
+                                                                    'of \$5,500.00',
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .subtitle1
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          color:
+                                                                              Color(0xFF57636C),
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            0,
+                                                                            4,
+                                                                            0,
+                                                                            0),
+                                                                child: Text(
+                                                                  'Resets Jun 30, 2022',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodyText2
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              Divider(
+                                                                height: 24,
+                                                                thickness: 2,
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .lineColor,
+                                                              ),
+                                                              Row(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .max,
+                                                                children: [
+                                                                  Container(
+                                                                    width: 40,
+                                                                    height: 40,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Color(
+                                                                          0xFF57636C),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          blurRadius:
+                                                                              4,
+                                                                          color:
+                                                                              Color(0x2B202529),
+                                                                          offset: Offset(
+                                                                              0,
+                                                                              2),
+                                                                        )
+                                                                      ],
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                    ),
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            0,
+                                                                            0),
+                                                                    child: Text(
+                                                                      'Hello World',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyText1
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryBtnText,
+                                                                          ),
+                                                                    ),
+                                                                  ),
+                                                                  Container(
+                                                                    width: 40,
+                                                                    height: 40,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondaryColor,
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          blurRadius:
+                                                                              4,
+                                                                          color:
+                                                                              Color(0x2B202529),
+                                                                          offset: Offset(
+                                                                              0,
+                                                                              2),
+                                                                        )
+                                                                      ],
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                    ),
+                                                                    alignment:
+                                                                        AlignmentDirectional(
+                                                                            0,
+                                                                            0),
+                                                                    child: Text(
+                                                                      'Hello World',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyText1
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).primaryBtnText,
+                                                                          ),
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsetsDirectional
+                                                                          .fromSTEB(
+                                                                              8,
+                                                                              0,
+                                                                              0,
+                                                                              0),
+                                                                      child:
+                                                                          Text(
+                                                                        '30%',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .subtitle2
+                                                                            .override(
+                                                                              fontFamily: 'Outfit',
+                                                                              fontWeight: FontWeight.w500,
+                                                                            ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                            8,
+                                                                            0,
+                                                                            0,
+                                                                            0),
+                                                                    child: Text(
+                                                                      '30%',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .subtitle2
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Outfit',
+                                                                            color:
+                                                                                Color(0xFF3498DB),
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                          ),
+                                                                    ),
+                                                                  ),
+                                                                  Icon(
+                                                                    Icons
+                                                                        .keyboard_arrow_right_rounded,
+                                                                    color: Color(
+                                                                        0xFF57636C),
+                                                                    size: 24,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
                                                           ),
-                                                          Icon(
-                                                            Icons
-                                                                .keyboard_arrow_right_rounded,
-                                                            color: Color(
-                                                                0xFF57636C),
-                                                            size: 24,
-                                                          ),
-                                                        ],
+                                                        ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
+                                                    ),
+                                                ],
                                               );
                                             },
                                           ),
@@ -1389,6 +1908,10 @@ class _TasksWidgetState extends State<TasksWidget>
                                         ),
                                       ],
                                     ),
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [],
                                   ),
                                 ],
                               ),
@@ -2158,5 +2681,20 @@ class _TasksWidgetState extends State<TasksWidget>
         ),
       ),
     );
+  }
+
+  Future waitForApiRequestCompleter({
+    double minWait = 0,
+    double maxWait = double.infinity,
+  }) async {
+    final stopwatch = Stopwatch()..start();
+    while (true) {
+      await Future.delayed(Duration(milliseconds: 50));
+      final timeElapsed = stopwatch.elapsedMilliseconds;
+      final requestComplete = _apiRequestCompleter?.isCompleted ?? false;
+      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
+        break;
+      }
+    }
   }
 }

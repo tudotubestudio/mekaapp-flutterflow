@@ -84,7 +84,6 @@ class _SearchProdsOblgWidgetState extends State<SearchProdsOblgWidget> {
                     fontWeight: FontWeight.normal,
                   ),
               textAlign: TextAlign.start,
-              keyboardType: TextInputType.number,
             ),
           ),
         ),

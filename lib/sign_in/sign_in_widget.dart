@@ -283,8 +283,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                       await Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              NavBarPage(initialPage: 'Tasks'),
+                          builder: (context) => NavBarPage(initialPage: 'Main'),
                         ),
                         (r) => false,
                       );
@@ -328,8 +327,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                       await Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              NavBarPage(initialPage: 'Tasks'),
+                          builder: (context) => NavBarPage(initialPage: 'Main'),
                         ),
                         (r) => false,
                       );
@@ -380,7 +378,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    NavBarPage(initialPage: 'Tasks'),
+                                    NavBarPage(initialPage: 'Main'),
                               ),
                               (r) => false,
                             );
@@ -406,7 +404,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    NavBarPage(initialPage: 'Tasks'),
+                                    NavBarPage(initialPage: 'Main'),
                               ),
                               (r) => false,
                             );
@@ -432,7 +430,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    NavBarPage(initialPage: 'Tasks'),
+                                    NavBarPage(initialPage: 'Main'),
                               ),
                               (r) => false,
                             );

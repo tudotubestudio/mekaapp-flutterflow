@@ -98,3 +98,31 @@ int boolToIneger(bool? status) {
     return 0;
   }
 }
+
+String createListDaysRepeat(
+  bool day1,
+  bool day2,
+  bool day3,
+  bool day4,
+  bool day5,
+  bool day6,
+  bool day7,
+) {
+  List<int> days = [];
+  (day1) ? days.add(1) : null;
+  (day2) ? days.add(2) : null;
+  (day3) ? days.add(3) : null;
+  (day4) ? days.add(4) : null;
+  (day5) ? days.add(5) : null;
+  (day6) ? days.add(6) : null;
+  (day7) ? days.add(7) : null;
+  return '[${days.map((i) => i.toString()).join(",")}]';
+}
+
+int jsonToInt(dynamic item) {
+  return int.parse(item);
+}
+
+double jsonToDouble(dynamic item) {
+  return double.parse(item);
+}

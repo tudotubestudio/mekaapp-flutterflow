@@ -83,7 +83,6 @@ class _SearchProdsGiftWidgetState extends State<SearchProdsGiftWidget> {
                     fontWeight: FontWeight.normal,
                   ),
               textAlign: TextAlign.start,
-              keyboardType: TextInputType.number,
             ),
           ),
         ),
