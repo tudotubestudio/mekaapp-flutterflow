@@ -517,3 +517,24 @@ class TaskGetChiffreQuotaCall {
     );
   }
 }
+
+class TaskGetProdsQuotaCall {
+  static Future<ApiCallResponse> call({
+    String? packId = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'task get prods quota ',
+      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/tasks/get_prods_quota',
+      callType: ApiCallType.POST,
+      headers: {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      },
+      params: {
+        'packId': packId,
+      },
+      bodyType: BodyType.JSON,
+      returnBody: true,
+    );
+  }
+}

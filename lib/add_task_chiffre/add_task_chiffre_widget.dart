@@ -28,8 +28,9 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
   ApiCallResponse? rAddTask;
   String? prodsGiftsString;
   DateTime? datePicked1;
-  TextEditingController? descriptionController;
+  String? dropDownTypeTaskValue;
   TextEditingController? titleTaskController;
+  TextEditingController? descriptionController;
   DateTime? datePicked2;
   bool? switchListTileListProdsValue;
   DateTime? datePicked3;
@@ -113,6 +114,59 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                             ),
                       ),
                     ],
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: FlutterFlowDropDown(
+                            options: [
+                              'Chiffre',
+                              'Chiffre Op',
+                              'Chiffre Group',
+                              'Task',
+                              'Déblocage client',
+                              'Suivit facts reciption',
+                              'Suivi preparation commands',
+                              'Suivi send etat client',
+                              'Recouvrement',
+                              'Recouvrement Op',
+                              'Recouvrement Livreur',
+                              'Recouvrement Group',
+                              'Recouvrement Delegue',
+                              'Demende Achat Produit',
+                              'Suivi livraison colis',
+                              'Suivi Chiffre by region',
+                              'Destockage labo',
+                              'Destockage date proche',
+                              'Destockage stagnante',
+                              'Pack'
+                            ],
+                            onChanged: (val) =>
+                                setState(() => dropDownTypeTaskValue = val),
+                            width: 180,
+                            height: 50,
+                            textStyle:
+                                FlutterFlowTheme.of(context).bodyText1.override(
+                                      fontFamily: 'Poppins',
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                            hintText: 'Please select type task...',
+                            fillColor: FlutterFlowTheme.of(context).lineColor,
+                            elevation: 2,
+                            borderColor: Colors.transparent,
+                            borderWidth: 0,
+                            borderRadius: 0,
+                            margin:
+                                EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            hidesUnderline: true,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),

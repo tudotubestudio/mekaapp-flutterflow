@@ -20,6 +20,7 @@ class GitGiftTaskWidget extends StatefulWidget {
 
 class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
   ApiCallResponse? rGetChiffreQuota;
+  ApiCallResponse? rGetProdsQuota;
 
   @override
   Widget build(BuildContext context) {
@@ -328,8 +329,49 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                     ),
                   ),
                   FFButtonWidget(
-                    onPressed: () {
-                      print('Button pressed ...');
+                    onPressed: () async {
+                      rGetProdsQuota = await TaskGetProdsQuotaCall.call();
+                      if ((rGetProdsQuota!?.succeeded ?? true)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              getJsonField(
+                                (rGetChiffreQuota!?.jsonBody ?? ''),
+                                r'''$.seccess''',
+                              ).toString(),
+                              style: GoogleFonts.getFont(
+                                'Roboto',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).secondaryColor,
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              getJsonField(
+                                (rGetChiffreQuota!?.jsonBody ?? ''),
+                                r'''$.error''',
+                              ).toString(),
+                              style: GoogleFonts.getFont(
+                                'Roboto',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).customColor3,
+                          ),
+                        );
+                      }
+
+                      setState(() {});
                     },
                     text: 'Get Products',
                     options: FFButtonOptions(
