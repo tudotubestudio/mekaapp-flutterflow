@@ -197,9 +197,9 @@ class _ListGlobalChiffreWidgetState extends State<ListGlobalChiffreWidget> {
                             realisationObjDaysRecord
                                 .where('day',
                                     isGreaterThanOrEqualTo:
-                                        listViewTasksRecord!.startDate)
+                                        listViewTasksRecord.startDate)
                                 .where('day',
-                                    isLessThan: listViewTasksRecord!.endDate),
+                                    isLessThan: listViewTasksRecord.endDate),
                         singleRecord: true,
                       ),
                       builder: (context, snapshot) {
@@ -229,7 +229,7 @@ class _ListGlobalChiffreWidgetState extends State<ListGlobalChiffreWidget> {
                           children: [
                             Text(
                               dateTimeFormat(
-                                  'yMMMd', listViewTasksRecord!.startDate!),
+                                  'yMMMd', listViewTasksRecord.startDate!),
                               style: FlutterFlowTheme.of(context)
                                   .bodyText1
                                   .override(
@@ -244,8 +244,8 @@ class _ListGlobalChiffreWidgetState extends State<ListGlobalChiffreWidget> {
                                     EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
                                 child: LinearPercentIndicator(
                                   percent: functions.percTwoNum(
-                                      rowRealisationObjDaysRecord!.realisation,
-                                      listViewTasksRecord!.objectif),
+                                      rowRealisationObjDaysRecord.realisation,
+                                      listViewTasksRecord.objectif),
                                   width:
                                       MediaQuery.of(context).size.width * 0.4,
                                   lineHeight: 16,

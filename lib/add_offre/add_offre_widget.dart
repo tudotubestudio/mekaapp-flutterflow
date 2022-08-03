@@ -4,7 +4,7 @@ import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
-import '../main.dart';
+import '../offers/offers_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -1018,8 +1018,7 @@ class _AddOffreWidgetState extends State<AddOffreWidget> {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      NavBarPage(initialPage: 'Offers'),
+                                  builder: (context) => OffersWidget(),
                                 ),
                               );
                             },
@@ -2221,8 +2220,7 @@ class _AddOffreWidgetState extends State<AddOffreWidget> {
                               await Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      NavBarPage(initialPage: 'Offers'),
+                                  builder: (context) => OffersWidget(),
                                 ),
                               );
                             },

@@ -36,10 +36,9 @@ class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
           return Builder(
             builder: (context) {
               final list = getJsonField(
-                    (listViewTaskGetListsResponse?.jsonBody ?? ''),
-                    r'''$''',
-                  )?.toList() ??
-                  [];
+                listViewTaskGetListsResponse.jsonBody,
+                r'''$''',
+              ).toList();
               return ListView.builder(
                 padding: EdgeInsets.zero,
                 scrollDirection: Axis.vertical,

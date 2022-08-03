@@ -77,10 +77,8 @@ class _LogProductsDateProchesThisWeekWidgetState
                     return Builder(
                       builder: (context) {
                         final logProds = DateProchesThisWeekCall.data(
-                              (listViewDateProchesThisWeekResponse?.jsonBody ??
-                                  ''),
-                            )?.toList() ??
-                            [];
+                          listViewDateProchesThisWeekResponse.jsonBody,
+                        ).toList();
                         return ListView.builder(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,

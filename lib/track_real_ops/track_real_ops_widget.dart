@@ -181,9 +181,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                     '${formatNumber(
                                                       functions.toDouble(
                                                           getJsonField(
-                                                            (containerRealisationOpTodayResponse
-                                                                    ?.jsonBody ??
-                                                                ''),
+                                                            containerRealisationOpTodayResponse
+                                                                .jsonBody,
                                                             r'''$[0].total''',
                                                           ).toString(),
                                                           false),
@@ -194,9 +193,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                     )} / ${formatNumber(
                                                       functions.toDouble(
                                                           getJsonField(
-                                                            (containerRealisationOpTodayResponse
-                                                                    ?.jsonBody ??
-                                                                ''),
+                                                            containerRealisationOpTodayResponse
+                                                                .jsonBody,
                                                             r'''$[0].objectifop_poste_id''',
                                                           ).toString(),
                                                           false),
@@ -207,9 +205,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                     )} (${formatNumber(
                                                       functions.toDouble(
                                                           getJsonField(
-                                                            (containerRealisationOpTodayResponse
-                                                                    ?.jsonBody ??
-                                                                ''),
+                                                            containerRealisationOpTodayResponse
+                                                                .jsonBody,
                                                             r'''$[0].perc''',
                                                           ).toString(),
                                                           false),
@@ -235,9 +232,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                         percent:
                                                             functions.toDouble(
                                                                 getJsonField(
-                                                                  (containerRealisationOpTodayResponse
-                                                                          ?.jsonBody ??
-                                                                      ''),
+                                                                  containerRealisationOpTodayResponse
+                                                                      .jsonBody,
                                                                   r'''$[0].perc''',
                                                                 ).toString(),
                                                                 true),
@@ -252,9 +248,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                           formatNumber(
                                                             functions.toDouble(
                                                                 getJsonField(
-                                                                  (containerRealisationOpTodayResponse
-                                                                          ?.jsonBody ??
-                                                                      ''),
+                                                                  containerRealisationOpTodayResponse
+                                                                      .jsonBody,
                                                                   r'''$[0].perc''',
                                                                 ).toString(),
                                                                 false),
@@ -289,12 +284,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                             children: [
                                                               if ((functions.toDouble(
                                                                       getJsonField(
-                                                                        (containerRealisationOpTodayResponse?.jsonBody ??
-                                                                            ''),
+                                                                        containerRealisationOpTodayResponse
+                                                                            .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
-                                                                      false)) >=
-                                                                  0.5)
+                                                                      false) >=
+                                                                  0.5))
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -304,12 +299,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                 ),
                                                               if ((functions.toDouble(
                                                                       getJsonField(
-                                                                        (containerRealisationOpTodayResponse?.jsonBody ??
-                                                                            ''),
+                                                                        containerRealisationOpTodayResponse
+                                                                            .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
-                                                                      false)) <
-                                                                  0.5)
+                                                                      false) <
+                                                                  0.5))
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -342,9 +337,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                             0),
                                                                 child: Text(
                                                                   '+${getJsonField(
-                                                                    (containerRealisationOpTodayResponse
-                                                                            ?.jsonBody ??
-                                                                        ''),
+                                                                    containerRealisationOpTodayResponse
+                                                                        .jsonBody,
                                                                     r'''$[0].prime50''',
                                                                   ).toString()}',
                                                                   style: FlutterFlowTheme.of(
@@ -370,12 +364,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                             children: [
                                                               if ((functions.toDouble(
                                                                       getJsonField(
-                                                                        (containerRealisationOpTodayResponse?.jsonBody ??
-                                                                            ''),
+                                                                        containerRealisationOpTodayResponse
+                                                                            .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
-                                                                      false)) >=
-                                                                  0.8)
+                                                                      false) >=
+                                                                  0.8))
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -385,12 +379,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                 ),
                                                               if ((functions.toDouble(
                                                                       getJsonField(
-                                                                        (containerRealisationOpTodayResponse?.jsonBody ??
-                                                                            ''),
+                                                                        containerRealisationOpTodayResponse
+                                                                            .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
-                                                                      false)) <
-                                                                  0.8)
+                                                                      false) <
+                                                                  0.8))
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -423,9 +417,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                             0),
                                                                 child: Text(
                                                                   '+${getJsonField(
-                                                                    (containerRealisationOpTodayResponse
-                                                                            ?.jsonBody ??
-                                                                        ''),
+                                                                    containerRealisationOpTodayResponse
+                                                                        .jsonBody,
                                                                     r'''$[0].prime80''',
                                                                   ).toString()}',
                                                                   style: FlutterFlowTheme.of(
@@ -451,12 +444,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                             children: [
                                                               if ((functions.toDouble(
                                                                       getJsonField(
-                                                                        (containerRealisationOpTodayResponse?.jsonBody ??
-                                                                            ''),
+                                                                        containerRealisationOpTodayResponse
+                                                                            .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
-                                                                      false)) >=
-                                                                  1.0)
+                                                                      false) >=
+                                                                  1.0))
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -466,12 +459,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                 ),
                                                               if ((functions.toDouble(
                                                                       getJsonField(
-                                                                        (containerRealisationOpTodayResponse?.jsonBody ??
-                                                                            ''),
+                                                                        containerRealisationOpTodayResponse
+                                                                            .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
-                                                                      false)) <
-                                                                  1.0)
+                                                                      false) <
+                                                                  1.0))
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -504,9 +497,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                             0),
                                                                 child: Text(
                                                                   '+${getJsonField(
-                                                                    (containerRealisationOpTodayResponse
-                                                                            ?.jsonBody ??
-                                                                        ''),
+                                                                    containerRealisationOpTodayResponse
+                                                                        .jsonBody,
                                                                     r'''$[0].prime100''',
                                                                   ).toString()}',
                                                                   style: FlutterFlowTheme.of(
@@ -529,9 +521,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                       formatNumber(
                                                         functions.toDouble(
                                                             getJsonField(
-                                                              (containerRealisationOpTodayResponse
-                                                                      ?.jsonBody ??
-                                                                  ''),
+                                                              containerRealisationOpTodayResponse
+                                                                  .jsonBody,
                                                               r'''$[0].prime''',
                                                             ).toString(),
                                                             false),
@@ -591,12 +582,10 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                         return Builder(
                                           builder: (context) {
                                             final labos = getJsonField(
-                                                  (listViewRealisationLabosOpTodayResponse
-                                                          ?.jsonBody ??
-                                                      ''),
-                                                  r'''$''',
-                                                )?.toList() ??
-                                                [];
+                                              listViewRealisationLabosOpTodayResponse
+                                                  .jsonBody,
+                                              r'''$''',
+                                            ).toList();
                                             return RefreshIndicator(
                                               onRefresh: () async {
                                                 setState(() =>
@@ -812,8 +801,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
-                                                                                  false)) >=
-                                                                              0.5)
+                                                                                  false) >=
+                                                                              0.5))
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFF27AE60),
@@ -824,8 +813,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
-                                                                                  false)) <
-                                                                              0.5)
+                                                                                  false) <
+                                                                              0.5))
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFFBDC3C7),
@@ -874,8 +863,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
-                                                                                  false)) >=
-                                                                              0.8)
+                                                                                  false) >=
+                                                                              0.8))
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFF27AE60),
@@ -886,8 +875,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
-                                                                                  false)) <
-                                                                              0.8)
+                                                                                  false) <
+                                                                              0.8))
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFFBDC3C7),
@@ -936,8 +925,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
-                                                                                  false)) >=
-                                                                              1.0)
+                                                                                  false) >=
+                                                                              1.0))
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFF27AE60),
@@ -948,8 +937,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
-                                                                                  false)) <
-                                                                              1.0)
+                                                                                  false) <
+                                                                              1.0))
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFFBDC3C7),
@@ -1161,7 +1150,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         formatNumber(
                                                                           functions.toDouble(
                                                                               getJsonField(
-                                                                                (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                containerRealisationOpMonthResponse.jsonBody,
                                                                                 r'''$[0].prime_privision''',
                                                                               ).toString(),
                                                                               false),
@@ -1224,7 +1213,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         '${formatNumber(
                                                                           functions.toDouble(
                                                                               getJsonField(
-                                                                                (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                containerRealisationOpMonthResponse.jsonBody,
                                                                                 r'''$[0].total''',
                                                                               ).toString(),
                                                                               false),
@@ -1235,7 +1224,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         )} / ${formatNumber(
                                                                           functions.toDouble(
                                                                               getJsonField(
-                                                                                (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                containerRealisationOpMonthResponse.jsonBody,
                                                                                 r'''$[0].objectif''',
                                                                               ).toString(),
                                                                               false),
@@ -1246,7 +1235,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         )} (${formatNumber(
                                                                           functions.toDouble(
                                                                               getJsonField(
-                                                                                (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                containerRealisationOpMonthResponse.jsonBody,
                                                                                 r'''$[0].perc''',
                                                                               ).toString(),
                                                                               false),
@@ -1260,8 +1249,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                     LinearPercentIndicator(
                                                                       percent: functions.toDouble(
                                                                           getJsonField(
-                                                                            (containerRealisationOpMonthResponse?.jsonBody ??
-                                                                                ''),
+                                                                            containerRealisationOpMonthResponse.jsonBody,
                                                                             r'''$[0].perc''',
                                                                           ).toString(),
                                                                           true),
@@ -1311,8 +1299,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         CircularPercentIndicator(
                                                                       percent: functions.toDouble(
                                                                           getJsonField(
-                                                                            (containerRealisationOpMonthResponse?.jsonBody ??
-                                                                                ''),
+                                                                            containerRealisationOpMonthResponse.jsonBody,
                                                                             r'''$[0].perc''',
                                                                           ).toString(),
                                                                           true),
@@ -1333,7 +1320,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         formatNumber(
                                                                           functions.toDouble(
                                                                               getJsonField(
-                                                                                (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                containerRealisationOpMonthResponse.jsonBody,
                                                                                 r'''$[0].perc''',
                                                                               ).toString(),
                                                                               false),
@@ -1364,11 +1351,11 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                           children: [
                                                                             if ((functions.toDouble(
                                                                                     getJsonField(
-                                                                                      (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                      containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
-                                                                                    false)) >=
-                                                                                0.5)
+                                                                                    false) >=
+                                                                                0.5))
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFF27AE60),
@@ -1376,11 +1363,11 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                               ),
                                                                             if ((functions.toDouble(
                                                                                     getJsonField(
-                                                                                      (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                      containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
-                                                                                    false)) <
-                                                                                0.5)
+                                                                                    false) <
+                                                                                0.5))
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFFBDC3C7),
@@ -1397,7 +1384,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                               padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                                                                               child: Text(
                                                                                 '+${getJsonField(
-                                                                                  (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                  containerRealisationOpMonthResponse.jsonBody,
                                                                                   r'''$[0].perc''',
                                                                                 ).toString()}',
                                                                                 style: FlutterFlowTheme.of(context).bodyText1.override(
@@ -1416,11 +1403,11 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                           children: [
                                                                             if ((functions.toDouble(
                                                                                     getJsonField(
-                                                                                      (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                      containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
-                                                                                    false)) >=
-                                                                                0.8)
+                                                                                    false) >=
+                                                                                0.8))
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFF27AE60),
@@ -1428,11 +1415,11 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                               ),
                                                                             if ((functions.toDouble(
                                                                                     getJsonField(
-                                                                                      (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                      containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
-                                                                                    false)) <
-                                                                                0.8)
+                                                                                    false) <
+                                                                                0.8))
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFFBDC3C7),
@@ -1449,7 +1436,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                               padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                                                                               child: Text(
                                                                                 '+${getJsonField(
-                                                                                  (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                  containerRealisationOpMonthResponse.jsonBody,
                                                                                   r'''$[0].perc''',
                                                                                 ).toString()}',
                                                                                 style: FlutterFlowTheme.of(context).bodyText1.override(
@@ -1468,11 +1455,11 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                           children: [
                                                                             if ((functions.toDouble(
                                                                                     getJsonField(
-                                                                                      (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                      containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
-                                                                                    false)) >=
-                                                                                1.0)
+                                                                                    false) >=
+                                                                                1.0))
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFF27AE60),
@@ -1480,11 +1467,11 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                               ),
                                                                             if ((functions.toDouble(
                                                                                     getJsonField(
-                                                                                      (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                      containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
-                                                                                    false)) <
-                                                                                1.0)
+                                                                                    false) <
+                                                                                1.0))
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFFBDC3C7),
@@ -1501,7 +1488,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                               padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                                                                               child: Text(
                                                                                 '+${getJsonField(
-                                                                                  (containerRealisationOpMonthResponse?.jsonBody ?? ''),
+                                                                                  containerRealisationOpMonthResponse.jsonBody,
                                                                                   r'''$[0].perc''',
                                                                                 ).toString()}',
                                                                                 style: FlutterFlowTheme.of(context).bodyText1.override(
@@ -1574,12 +1561,10 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                         return Builder(
                                           builder: (context) {
                                             final laboMonth = getJsonField(
-                                                  (listViewRealisationLabosOpMonthResponse
-                                                          ?.jsonBody ??
-                                                      ''),
-                                                  r'''$''',
-                                                )?.toList() ??
-                                                [];
+                                              listViewRealisationLabosOpMonthResponse
+                                                  .jsonBody,
+                                              r'''$''',
+                                            ).toList();
                                             return RefreshIndicator(
                                               onRefresh: () async {
                                                 setState(() =>
@@ -1828,8 +1813,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
-                                                                                                false)) >=
-                                                                                            0.5)
+                                                                                                false) >=
+                                                                                            0.5))
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFF27AE60),
@@ -1840,8 +1825,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
-                                                                                                false)) <
-                                                                                            0.5)
+                                                                                                false) <
+                                                                                            0.5))
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFFBDC3C7),
@@ -1878,8 +1863,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
-                                                                                                false)) >=
-                                                                                            0.8)
+                                                                                                false) >=
+                                                                                            0.8))
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFF27AE60),
@@ -1890,8 +1875,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
-                                                                                                false)) <
-                                                                                            0.8)
+                                                                                                false) <
+                                                                                            0.8))
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFFBDC3C7),
@@ -1928,8 +1913,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
-                                                                                                false)) >=
-                                                                                            1.0)
+                                                                                                false) >=
+                                                                                            1.0))
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFF27AE60),
@@ -1940,8 +1925,8 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
-                                                                                                false)) <
-                                                                                            1.0)
+                                                                                                false) <
+                                                                                            1.0))
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFFBDC3C7),

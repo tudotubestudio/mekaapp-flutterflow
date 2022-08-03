@@ -119,8 +119,6 @@ class _NavBarPageState extends State<NavBarPage> {
   Widget build(BuildContext context) {
     final tabs = {
       'Main': MainWidget(),
-      'Offers': OffersWidget(),
-      'TrackRealOps': TrackRealOpsWidget(),
       'SignIn': SignInWidget(),
       'Tasks': TasksWidget(),
     };
@@ -143,30 +141,6 @@ class _NavBarPageState extends State<NavBarPage> {
               size: 24,
             ),
             label: '',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.local_offer,
-              size: 24,
-            ),
-            activeIcon: Icon(
-              Icons.local_offer,
-              size: 32,
-            ),
-            label: '•',
-            tooltip: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.analytics,
-              size: 24,
-            ),
-            activeIcon: Icon(
-              Icons.analytics,
-              size: 32,
-            ),
-            label: '•',
             tooltip: '',
           ),
           BottomNavigationBarItem(

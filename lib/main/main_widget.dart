@@ -1,5 +1,4 @@
-import '../add_task_chiffre/add_task_chiffre_widget.dart';
-import '../add_task_pack/add_task_pack_widget.dart';
+import '../add_task/add_task_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
@@ -46,40 +45,11 @@ class _MainWidgetState extends State<MainWidget> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddTaskPackWidget(),
+                        builder: (context) => AddTaskWidget(),
                       ),
                     );
                   },
-                  text: 'Add Task Pack',
-                  options: FFButtonOptions(
-                    width: double.infinity,
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
-                    color: FlutterFlowTheme.of(context).primaryBtnText,
-                    textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                          fontFamily: 'Poppins',
-                          color: Color(0xFF95A5A6),
-                          fontSize: 20,
-                        ),
-                    borderSide: BorderSide(
-                      color: Color(0xFFBDC3C7),
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddTaskChiffreWidget(),
-                      ),
-                    );
-                  },
-                  text: 'Add Task Chiffre',
+                  text: 'Add Task\n',
                   options: FFButtonOptions(
                     width: double.infinity,
                     padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),

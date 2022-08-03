@@ -1,36 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'actions_record.dart';
+part of 'rolles_record.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<ActionsRecord> _$actionsRecordSerializer =
-    new _$ActionsRecordSerializer();
+Serializer<RollesRecord> _$rollesRecordSerializer =
+    new _$RollesRecordSerializer();
 
-class _$ActionsRecordSerializer implements StructuredSerializer<ActionsRecord> {
+class _$RollesRecordSerializer implements StructuredSerializer<RollesRecord> {
   @override
-  final Iterable<Type> types = const [ActionsRecord, _$ActionsRecord];
+  final Iterable<Type> types = const [RollesRecord, _$RollesRecord];
   @override
-  final String wireName = 'ActionsRecord';
+  final String wireName = 'RollesRecord';
 
   @override
-  Iterable<Object?> serialize(Serializers serializers, ActionsRecord object,
+  Iterable<Object?> serialize(Serializers serializers, RollesRecord object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[];
     Object? value;
+    value = object.id;
+    if (value != null) {
+      result
+        ..add('id')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
     value = object.name;
     if (value != null) {
       result
         ..add('name')
-        ..add(serializers.serialize(value,
-            specifiedType: const FullType(String)));
-    }
-    value = object.result;
-    if (value != null) {
-      result
-        ..add('result')
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
@@ -46,10 +45,10 @@ class _$ActionsRecordSerializer implements StructuredSerializer<ActionsRecord> {
   }
 
   @override
-  ActionsRecord deserialize(
+  RollesRecord deserialize(
       Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new ActionsRecordBuilder();
+    final result = new RollesRecordBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -57,12 +56,12 @@ class _$ActionsRecordSerializer implements StructuredSerializer<ActionsRecord> {
       iterator.moveNext();
       final Object? value = iterator.current;
       switch (key) {
+        case 'id':
+          result.id = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String?;
-          break;
-        case 'result':
-          result.result = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
         case 'Document__Reference__Field':
@@ -78,76 +77,75 @@ class _$ActionsRecordSerializer implements StructuredSerializer<ActionsRecord> {
   }
 }
 
-class _$ActionsRecord extends ActionsRecord {
+class _$RollesRecord extends RollesRecord {
+  @override
+  final int? id;
   @override
   final String? name;
   @override
-  final String? result;
-  @override
   final DocumentReference<Object?>? ffRef;
 
-  factory _$ActionsRecord([void Function(ActionsRecordBuilder)? updates]) =>
-      (new ActionsRecordBuilder()..update(updates))._build();
+  factory _$RollesRecord([void Function(RollesRecordBuilder)? updates]) =>
+      (new RollesRecordBuilder()..update(updates))._build();
 
-  _$ActionsRecord._({this.name, this.result, this.ffRef}) : super._();
+  _$RollesRecord._({this.id, this.name, this.ffRef}) : super._();
 
   @override
-  ActionsRecord rebuild(void Function(ActionsRecordBuilder) updates) =>
+  RollesRecord rebuild(void Function(RollesRecordBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  ActionsRecordBuilder toBuilder() => new ActionsRecordBuilder()..replace(this);
+  RollesRecordBuilder toBuilder() => new RollesRecordBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is ActionsRecord &&
+    return other is RollesRecord &&
+        id == other.id &&
         name == other.name &&
-        result == other.result &&
         ffRef == other.ffRef;
   }
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc($jc(0, name.hashCode), result.hashCode), ffRef.hashCode));
+    return $jf($jc($jc($jc(0, id.hashCode), name.hashCode), ffRef.hashCode));
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(r'ActionsRecord')
+    return (newBuiltValueToStringHelper(r'RollesRecord')
+          ..add('id', id)
           ..add('name', name)
-          ..add('result', result)
           ..add('ffRef', ffRef))
         .toString();
   }
 }
 
-class ActionsRecordBuilder
-    implements Builder<ActionsRecord, ActionsRecordBuilder> {
-  _$ActionsRecord? _$v;
+class RollesRecordBuilder
+    implements Builder<RollesRecord, RollesRecordBuilder> {
+  _$RollesRecord? _$v;
+
+  int? _id;
+  int? get id => _$this._id;
+  set id(int? id) => _$this._id = id;
 
   String? _name;
   String? get name => _$this._name;
   set name(String? name) => _$this._name = name;
 
-  String? _result;
-  String? get result => _$this._result;
-  set result(String? result) => _$this._result = result;
-
   DocumentReference<Object?>? _ffRef;
   DocumentReference<Object?>? get ffRef => _$this._ffRef;
   set ffRef(DocumentReference<Object?>? ffRef) => _$this._ffRef = ffRef;
 
-  ActionsRecordBuilder() {
-    ActionsRecord._initializeBuilder(this);
+  RollesRecordBuilder() {
+    RollesRecord._initializeBuilder(this);
   }
 
-  ActionsRecordBuilder get _$this {
+  RollesRecordBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
+      _id = $v.id;
       _name = $v.name;
-      _result = $v.result;
       _ffRef = $v.ffRef;
       _$v = null;
     }
@@ -155,22 +153,22 @@ class ActionsRecordBuilder
   }
 
   @override
-  void replace(ActionsRecord other) {
+  void replace(RollesRecord other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$ActionsRecord;
+    _$v = other as _$RollesRecord;
   }
 
   @override
-  void update(void Function(ActionsRecordBuilder)? updates) {
+  void update(void Function(RollesRecordBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  ActionsRecord build() => _build();
+  RollesRecord build() => _build();
 
-  _$ActionsRecord _build() {
+  _$RollesRecord _build() {
     final _$result =
-        _$v ?? new _$ActionsRecord._(name: name, result: result, ffRef: ffRef);
+        _$v ?? new _$RollesRecord._(id: id, name: name, ffRef: ffRef);
     replace(_$result);
     return _$result;
   }

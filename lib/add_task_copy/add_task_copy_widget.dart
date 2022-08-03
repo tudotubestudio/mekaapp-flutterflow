@@ -143,7 +143,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                               'Chiffre Group',
                               'Task',
                               'Déblocage client',
-                              'Suivit facts reciption',
+                              'Suivi facts reciption',
                               'Suivi preparation commands',
                               'Suivi send etat client',
                               'Recouvrement',
@@ -293,7 +293,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         15, 15, 15, 15),
                                     child: Text(
-                                      FFAppState().addTaskDateStart!,
+                                      FFAppState().addTaskDateStart,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1,
                                     ),
@@ -323,7 +323,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
 
                                     setState(() => FFAppState()
                                             .addTaskDateStart =
-                                        dateTimeFormat('d/M/y', datePicked1!));
+                                        dateTimeFormat('d/M/y', datePicked1));
                                   },
                                 ),
                               ],
@@ -357,7 +357,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         15, 15, 15, 15),
                                     child: Text(
-                                      FFAppState().addTaskDateEnd!,
+                                      FFAppState().addTaskDateEnd,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1,
                                     ),
@@ -386,7 +386,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                     );
 
                                     setState(() => FFAppState().addTaskDateEnd =
-                                        dateTimeFormat('d/M/y', datePicked2!));
+                                        dateTimeFormat('d/M/y', datePicked2));
                                   },
                                 ),
                               ],
@@ -480,7 +480,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                       .fromSTEB(15, 15, 15, 15),
                                                   child: Text(
                                                     FFAppState()
-                                                        .taskDropDownListName!,
+                                                        .taskDropDownListName,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1,
@@ -647,7 +647,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      if ((dropDownRepeatValue) == 'Weeks')
+                                      if ((dropDownRepeatValue == 'Weeks'))
                                         Expanded(
                                           child: Wrap(
                                             spacing: 0,
@@ -879,7 +879,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                   snapshot.data!;
                               return FlutterFlowDropDown(
                                 options: userUsersRecordList
-                                    .map((e) => e!.displayName!)
+                                    .map((e) => e.displayName!)
                                     .toList()
                                     .toList(),
                                 onChanged: (val) =>
@@ -1003,9 +1003,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                   Builder(
                                     builder: (context) {
                                       final prodsOblg = FFAppState()
-                                              .addTaskProdsOblg!
-                                              ?.toList() ??
-                                          [];
+                                          .addTaskProdsOblg
+                                          .toList();
                                       return ListView.builder(
                                         padding: EdgeInsets.zero,
                                         shrinkWrap: true,
@@ -1372,8 +1371,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                                   .start,
                                                         ),
                                                       ),
-                                                      if ((radioButtonTypeMoney1Value) ==
-                                                          'Chiffre')
+                                                      if ((radioButtonTypeMoney1Value ==
+                                                          'Chiffre'))
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1481,8 +1480,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                             ],
                                                           ),
                                                         ),
-                                                      if ((radioButtonTypeMoney1Value) ==
-                                                          'Perc')
+                                                      if ((radioButtonTypeMoney1Value ==
+                                                          'Perc'))
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1646,8 +1645,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                                   .start,
                                                         ),
                                                       ),
-                                                      if ((radioButtonTypeChiffre1Value) ==
-                                                          'Chiffre')
+                                                      if ((radioButtonTypeChiffre1Value ==
+                                                          'Chiffre'))
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1755,8 +1754,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                             ],
                                                           ),
                                                         ),
-                                                      if ((radioButtonTypeChiffre1Value) ==
-                                                          'Perc')
+                                                      if ((radioButtonTypeChiffre1Value ==
+                                                          'Perc'))
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1944,9 +1943,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                                     (context) {
                                                                   final prodsGift =
                                                                       FFAppState()
-                                                                              .addTaskProdsGift!
-                                                                              ?.toList() ??
-                                                                          [];
+                                                                          .addTaskProdsGift
+                                                                          .toList();
                                                                   return ListView
                                                                       .builder(
                                                                     padding:
@@ -2119,13 +2117,13 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                   onPressed: () async {
                                     prodsOblgString =
                                         await actions.listJsonToString(
-                                      FFAppState().addTaskProdsOblg!.toList(),
+                                      FFAppState().addTaskProdsOblg.toList(),
                                     );
                                     prodsGiftsString =
                                         await actions.listJsonToString(
-                                      FFAppState().addTaskProdsOblg!.toList(),
+                                      FFAppState().addTaskProdsOblg.toList(),
                                     );
-                                    rAddTask = await TaskAddPackCall.call(
+                                    rAddTask = await TaskAddCall.call(
                                       type: 1,
                                       title: titleTaskController!.text,
                                       description: descriptionController!.text,
@@ -2149,12 +2147,12 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                       percGiftChiffre1: double.parse(
                                           percGiftChiffre1Controller!.text),
                                       giftProds1:
-                                          FFAppState().addTaskProdsGift?.length,
+                                          FFAppState().addTaskProdsGift.length,
                                       listProdOblgs: prodsOblgString,
                                       listProdGifts: prodsGiftsString,
                                       status: 0,
                                     );
-                                    if ((rAddTask!?.succeeded ?? true)) {
+                                    if ((rAddTask?.succeeded ?? true)) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         SnackBar(
@@ -2180,7 +2178,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                           .showSnackBar(
                                         SnackBar(
                                           content: Text(
-                                            (rAddTask!?.jsonBody ?? ''),
+                                            (rAddTask?.jsonBody ?? ''),
                                             style: FlutterFlowTheme.of(context)
                                                 .bodyText1
                                                 .override(

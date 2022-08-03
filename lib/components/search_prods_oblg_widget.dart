@@ -37,90 +37,107 @@ class _SearchProdsOblgWidgetState extends State<SearchProdsOblgWidget> {
         Form(
           key: formKey2,
           autovalidateMode: AutovalidateMode.disabled,
-          child: Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
-            child: TextFormField(
-              controller: keySearchController,
-              onFieldSubmitted: (_) async {
-                setState(() => _apiRequestCompleter = null);
-                await waitForApiRequestCompleter(minWait: 2, maxWait: 10);
-              },
-              obscureText: false,
-              decoration: InputDecoration(
-                hintText: 'Enter name prod...',
-                hintStyle: FlutterFlowTheme.of(context).bodyText2.override(
-                      fontFamily: 'Outfit',
-                      color: Color(0xFF57636C),
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
+                  child: TextFormField(
+                    controller: keySearchController,
+                    onFieldSubmitted: (_) async {
+                      setState(() => _apiRequestCompleter = null);
+                    },
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      hintText: 'Enter name prod...',
+                      hintStyle:
+                          FlutterFlowTheme.of(context).bodyText2.override(
+                                fontFamily: 'Outfit',
+                                color: Color(0xFF57636C),
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFFF1F4F8),
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFFF1F4F8),
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      filled: true,
+                      fillColor: FlutterFlowTheme.of(context).lineColor,
+                      contentPadding:
+                          EdgeInsetsDirectional.fromSTEB(20, 32, 20, 12),
                     ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFFF1F4F8),
-                    width: 2,
+                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                          fontFamily: 'Outfit',
+                          color: Color(0xFF101213),
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal,
+                        ),
+                    textAlign: TextAlign.start,
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFFF1F4F8),
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                filled: true,
-                fillColor: FlutterFlowTheme.of(context).lineColor,
-                contentPadding: EdgeInsetsDirectional.fromSTEB(20, 32, 20, 12),
-                suffixIcon: Icon(
-                  Icons.search,
-                  color: Color(0xFF757575),
-                  size: 22,
                 ),
               ),
-              style: FlutterFlowTheme.of(context).bodyText1.override(
-                    fontFamily: 'Outfit',
-                    color: Color(0xFF101213),
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                  ),
-              textAlign: TextAlign.start,
-            ),
+              FlutterFlowIconButton(
+                borderColor: Colors.transparent,
+                borderRadius: 24,
+                borderWidth: 1,
+                buttonSize: 60,
+                icon: Icon(
+                  Icons.search,
+                  color: FlutterFlowTheme.of(context).grayIcon,
+                  size: 24,
+                ),
+                onPressed: () async {
+                  setState(() => _apiRequestCompleter = null);
+                  await waitForApiRequestCompleter();
+                },
+              ),
+            ],
           ),
         ),
-        Expanded(
-          child: FutureBuilder<ApiCallResponse>(
-            future: (_apiRequestCompleter ??= Completer<ApiCallResponse>()
-                  ..complete(GetSearchProductsActivePharmaCall.call(
-                    search: keySearchController!.text,
-                  )))
-                .future,
-            builder: (context, snapshot) {
-              // Customize what your widget looks like when it's loading.
-              if (!snapshot.hasData) {
-                return Center(
-                  child: SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: CircularProgressIndicator(
-                      color: FlutterFlowTheme.of(context).primaryColor,
-                    ),
+        FutureBuilder<ApiCallResponse>(
+          future: (_apiRequestCompleter ??= Completer<ApiCallResponse>()
+                ..complete(GetSearchProductsActivePharmaCall.call(
+                  search: keySearchController!.text,
+                )))
+              .future,
+          builder: (context, snapshot) {
+            // Customize what your widget looks like when it's loading.
+            if (!snapshot.hasData) {
+              return Center(
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: CircularProgressIndicator(
+                    color: FlutterFlowTheme.of(context).primaryColor,
                   ),
-                );
-              }
-              final listViewGetSearchProductsActivePharmaResponse =
-                  snapshot.data!;
-              return Builder(
-                builder: (context) {
-                  final prodsOblg = (getJsonField(
-                            (listViewGetSearchProductsActivePharmaResponse
-                                    ?.jsonBody ??
-                                ''),
-                            r'''$''',
-                          )?.toList() ??
-                          [])
-                      .take(20)
-                      .toList();
-                  return ListView.builder(
+                ),
+              );
+            }
+            final listViewGetSearchProductsActivePharmaResponse =
+                snapshot.data!;
+            return Builder(
+              builder: (context) {
+                final prodsOblg = getJsonField(
+                  listViewGetSearchProductsActivePharmaResponse.jsonBody,
+                  r'''$''',
+                ).toList().take(20).toList();
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    setState(() => _apiRequestCompleter = null);
+                    await waitForApiRequestCompleter();
+                  },
+                  child: ListView.builder(
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
@@ -249,11 +266,11 @@ class _SearchProdsOblgWidgetState extends State<SearchProdsOblgWidget> {
                         ),
                       );
                     },
-                  );
-                },
-              );
-            },
-          ),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ],
     );

@@ -74,9 +74,7 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                               snapshot.data!;
                           return FlutterFlowDropDown(
                             options: (GetAllLabosActiveCall.listNames(
-                              (dropDownLabosGetAllLabosActiveResponse
-                                      ?.jsonBody ??
-                                  ''),
+                              dropDownLabosGetAllLabosActiveResponse.jsonBody,
                             ) as List)
                                 .map<String>((s) => s.toString())
                                 .toList()
@@ -121,9 +119,9 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                         setState(() => FFAppState().addTaskListProdsSelect =
                             functions
                                 .jsonToListJson(
-                                    (resProds!?.jsonBody ?? ''),
+                                    (resProds?.jsonBody ?? ''),
                                     FFAppState()
-                                        .addTaskListProdsSelect!
+                                        .addTaskListProdsSelect
                                         .toList())
                                 .toList());
 
@@ -142,7 +140,7 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
             controller: nameListController,
             onChanged: (_) => EasyDebounce.debounce(
               'nameListController',
-              Duration(milliseconds: 2000),
+              Duration(milliseconds: 1000),
               () => setState(() {}),
             ),
             obscureText: false,
@@ -191,7 +189,6 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                   fontWeight: FontWeight.normal,
                 ),
             textAlign: TextAlign.start,
-            keyboardType: TextInputType.number,
           ),
         ),
         Stack(
@@ -202,7 +199,7 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                 controller: keySearchListController,
                 onChanged: (_) => EasyDebounce.debounce(
                   'keySearchListController',
-                  Duration(milliseconds: 2000),
+                  Duration(milliseconds: 1000),
                   () => setState(() {}),
                 ),
                 onFieldSubmitted: (_) async {
@@ -306,15 +303,11 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                                   snapshot.data!;
                               return Builder(
                                 builder: (context) {
-                                  final prodsSerach = (getJsonField(
-                                            (listViewGetSearchProductsActivePharmaResponse
-                                                    ?.jsonBody ??
-                                                ''),
-                                            r'''$''',
-                                          )?.toList() ??
-                                          [])
-                                      .take(20)
-                                      .toList();
+                                  final prodsSerach = getJsonField(
+                                    listViewGetSearchProductsActivePharmaResponse
+                                        .jsonBody,
+                                    r'''$''',
+                                  ).toList().take(20).toList();
                                   return RefreshIndicator(
                                     onRefresh: () async {
                                       setState(
@@ -443,8 +436,7 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
         Expanded(
           child: Builder(
             builder: (context) {
-              final prodsList =
-                  FFAppState().addTaskListProdsSelect!?.toList() ?? [];
+              final prodsList = FFAppState().addTaskListProdsSelect.toList();
               return ListView.builder(
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
@@ -536,13 +528,13 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                   child: FFButtonWidget(
                     onPressed: () async {
                       listProdsSelectString = await actions.listJsonToString(
-                        FFAppState().addTaskListProdsSelect!.toList(),
+                        FFAppState().addTaskListProdsSelect.toList(),
                       );
                       rAddList = await TaskAddListCall.call(
                         name: nameListController!.text,
                         products: listProdsSelectString,
                       );
-                      if ((rAddList!?.succeeded ?? true)) {
+                      if ((rAddList?.succeeded ?? true)) {
                         Navigator.pop(context);
                       } else {
                         await showDialog(

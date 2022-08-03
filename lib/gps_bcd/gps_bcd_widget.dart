@@ -114,11 +114,9 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                 return Builder(
                                   builder: (context) {
                                     final listObjs = getJsonField(
-                                          (listViewObjectsResponse?.jsonBody ??
-                                              ''),
-                                          r'''$''',
-                                        )?.toList() ??
-                                        [];
+                                      listViewObjectsResponse.jsonBody,
+                                      r'''$''',
+                                    ).toList();
                                     return RefreshIndicator(
                                       onRefresh: () async {
                                         setState(

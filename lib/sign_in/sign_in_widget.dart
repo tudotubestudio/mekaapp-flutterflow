@@ -253,6 +253,8 @@ class _SignInWidgetState extends State<SignInWidget> {
                 children: [
                   FFButtonWidget(
                     onPressed: () async {
+                      Future Function() _navigate = () async {};
+
                       final user = await signInWithEmail(
                         context,
                         emailAddressController!.text,
@@ -262,31 +264,55 @@ class _SignInWidgetState extends State<SignInWidget> {
                         return;
                       }
 
+                      _navigate = () => Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  NavBarPage(initialPage: 'Main'),
+                            ),
+                            (r) => false,
+                          );
                       token = await LoginCall.call(
                         email: emailAddressController!.text,
                         password: passwordController!.text,
                       );
-
-                      final usersUpdateData = createUsersRecordData(
-                        token: getJsonField(
-                          (token?.jsonBody ?? ''),
-                          r'''$.access_token''',
-                        ).toString(),
-                      );
-                      await currentUserReference!.update(usersUpdateData);
-                      setState(() => FFAppState().apitoken = getJsonField(
-                            (token!?.jsonBody ?? ''),
+                      if ((token?.succeeded ?? true)) {
+                        final usersUpdateData = createUsersRecordData(
+                          token: getJsonField(
+                            (token?.jsonBody ?? ''),
                             r'''$.access_token''',
-                          ).toString());
-                      me = await MeCall.call();
-                      setState(() => FFAppState().me = (me!?.jsonBody ?? ''));
-                      await Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NavBarPage(initialPage: 'Main'),
-                        ),
-                        (r) => false,
-                      );
+                          ).toString(),
+                          displayName: getJsonField(
+                            (token?.jsonBody ?? ''),
+                            r'''$.user''',
+                          ).toString(),
+                        );
+                        await currentUserReference!.update(usersUpdateData);
+                        setState(() => FFAppState().apitoken = getJsonField(
+                              (token?.jsonBody ?? ''),
+                              r'''$.access_token''',
+                            ).toString());
+                        me = await MeCall.call();
+                        setState(() => FFAppState().me = (me?.jsonBody ?? ''));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              getJsonField(
+                                (token?.jsonBody ?? ''),
+                                r'''$.error''',
+                              ).toString(),
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor: Color(0x00000000),
+                          ),
+                        );
+                      }
+
+                      await _navigate();
 
                       setState(() {});
                     },

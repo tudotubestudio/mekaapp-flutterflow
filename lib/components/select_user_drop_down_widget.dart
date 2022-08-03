@@ -1,6 +1,7 @@
 import '../backend/api_requests/api_calls.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
+import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -36,10 +37,9 @@ class _SelectUserDropDownWidgetState extends State<SelectUserDropDownWidget> {
           return Builder(
             builder: (context) {
               final user = getJsonField(
-                    (listViewUsersResponse?.jsonBody ?? ''),
-                    r'''$''',
-                  )?.toList() ??
-                  [];
+                listViewUsersResponse.jsonBody,
+                r'''$''',
+              ).toList();
               return ListView.builder(
                 padding: EdgeInsets.zero,
                 scrollDirection: Axis.vertical,
@@ -50,11 +50,11 @@ class _SelectUserDropDownWidgetState extends State<SelectUserDropDownWidget> {
                     padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 0),
                     child: InkWell(
                       onTap: () async {
-                        setState(() =>
-                            FFAppState().taskDropDownUserId = getJsonField(
+                        setState(() => FFAppState().taskDropDownUserId =
+                                functions.jsonToInt(getJsonField(
                               userItem,
                               r'''$.id''',
-                            ));
+                            )));
                         setState(() =>
                             FFAppState().taskDropDownUserName = getJsonField(
                               userItem,
@@ -97,22 +97,6 @@ class _SelectUserDropDownWidgetState extends State<SelectUserDropDownWidget> {
                                       ).toString(),
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText2,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 0, 0, 0),
-                                    child: Text(
-                                      getJsonField(
-                                        userItem,
-                                        r'''$.created_at''',
-                                      ).toString(),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText2
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.normal,
-                                          ),
                                     ),
                                   ),
                                 ],

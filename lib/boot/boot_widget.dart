@@ -103,12 +103,11 @@ class _BootWidgetState extends State<BootWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if ((listViewConversationsRecord!
-                                          .createdBy) ==
-                                      (FFAppState().bot))
+                                  if ((listViewConversationsRecord.createdBy ==
+                                      FFAppState().bot))
                                     StreamBuilder<UsersRecord>(
                                       stream: UsersRecord.getDocument(
-                                          listViewConversationsRecord!
+                                          listViewConversationsRecord
                                               .createdBy!),
                                       builder: (context, snapshot) {
                                         // Customize what your widget looks like when it's loading.
@@ -136,7 +135,7 @@ class _BootWidgetState extends State<BootWidget> {
                                           ),
                                           child: Image.network(
                                             valueOrDefault<String>(
-                                              circleImageUsersRecord!.photoUrl!,
+                                              circleImageUsersRecord.photoUrl,
                                               'https://www.shareicon.net/data/2016/05/24/770128_man_512x512.png',
                                             ),
                                           ),
@@ -150,9 +149,9 @@ class _BootWidgetState extends State<BootWidget> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
-                                          if ((listViewConversationsRecord!
-                                                  .type) ==
-                                              'perc_ops')
+                                          if ((listViewConversationsRecord
+                                                  .type ==
+                                              'perc_ops'))
                                             Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(8, 0, 8, 0),
@@ -274,12 +273,10 @@ class _BootWidgetState extends State<BootWidget> {
                                                           builder: (context) {
                                                             final perc =
                                                                 getJsonField(
-                                                                      (listViewPercOpResponse
-                                                                              ?.jsonBody ??
-                                                                          ''),
-                                                                      r'''$''',
-                                                                    )?.toList() ??
-                                                                    [];
+                                                              listViewPercOpResponse
+                                                                  .jsonBody,
+                                                              r'''$''',
+                                                            ).toList();
                                                             return ListView
                                                                 .builder(
                                                               padding:
@@ -384,12 +381,11 @@ class _BootWidgetState extends State<BootWidget> {
                                       ),
                                     ),
                                   ),
-                                  if ((listViewConversationsRecord!
-                                          .createdBy) !=
-                                      (FFAppState().bot))
+                                  if ((listViewConversationsRecord.createdBy !=
+                                      FFAppState().bot))
                                     StreamBuilder<UsersRecord>(
                                       stream: UsersRecord.getDocument(
-                                          listViewConversationsRecord!
+                                          listViewConversationsRecord
                                               .createdBy!),
                                       builder: (context, snapshot) {
                                         // Customize what your widget looks like when it's loading.
@@ -417,7 +413,7 @@ class _BootWidgetState extends State<BootWidget> {
                                           ),
                                           child: Image.network(
                                             valueOrDefault<String>(
-                                              circleImageUsersRecord!.photoUrl!,
+                                              circleImageUsersRecord.photoUrl,
                                               'https://www.shareicon.net/data/2016/05/24/770128_man_512x512.png',
                                             ),
                                           ),
@@ -471,7 +467,7 @@ class _BootWidgetState extends State<BootWidget> {
                             onPressed: () async {
                               final conversationsCreateData =
                                   createConversationsRecordData(
-                                type: listViewActionsRecord!.result,
+                                type: listViewActionsRecord.result,
                                 createdAt: getCurrentTimestamp,
                                 createdBy: FFAppState().bot,
                               );
@@ -479,7 +475,7 @@ class _BootWidgetState extends State<BootWidget> {
                                   .doc()
                                   .set(conversationsCreateData);
                             },
-                            text: listViewActionsRecord!.name!,
+                            text: listViewActionsRecord.name!,
                             options: FFButtonOptions(
                               width: 130,
                               height: 40,

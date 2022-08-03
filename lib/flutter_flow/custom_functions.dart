@@ -82,6 +82,13 @@ double percTwoNum(
   return value! / res!;
 }
 
+double multiplicationTwoNum(
+  double? num1,
+  double? num2,
+) {
+  return num1! * num2!;
+}
+
 dynamic addQuantityInJsonProdOblgOrGift(
   dynamic item,
   double? quantity,
@@ -116,7 +123,9 @@ String createListDaysRepeat(
   (day5) ? days.add(5) : null;
   (day6) ? days.add(6) : null;
   (day7) ? days.add(7) : null;
-  return '[${days.map((i) => i.toString()).join(",")}]';
+  return (days.isNotEmpty)
+      ? '[${days.map((i) => i.toString()).join(",")}]'
+      : '[]';
 }
 
 int jsonToInt(dynamic item) {
@@ -125,4 +134,8 @@ int jsonToInt(dynamic item) {
 
 double jsonToDouble(dynamic item) {
   return double.parse(item);
+}
+
+DateTime jsonToDate(dynamic item) {
+  return DateTime.parse(item);
 }

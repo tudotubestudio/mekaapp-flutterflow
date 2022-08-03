@@ -6,6 +6,8 @@ import 'conversations_record.dart';
 import 'tasks_record.dart';
 import 'realisation_obj_days_record.dart';
 import 'gifts_record.dart';
+import 'rolles_record.dart';
+import 'task_types_record.dart';
 
 import 'index.dart';
 
@@ -22,6 +24,9 @@ const kDocumentReferenceField = 'Document__Reference__Field';
   TasksRecord,
   RealisationObjDaysRecord,
   GiftsRecord,
+  RollesRecord,
+  TaskTypesRecord,
+  DataTypeTestStruct,
 ])
 final Serializers serializers = (_$serializers.toBuilder()
       ..add(DocumentReferenceSerializer())

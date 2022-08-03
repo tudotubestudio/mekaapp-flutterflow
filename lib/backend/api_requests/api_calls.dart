@@ -18,7 +18,7 @@ class LoginCall {
         'email': email,
         'password': password,
       },
-      bodyType: BodyType.NONE,
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
     );
   }
@@ -72,7 +72,7 @@ class DateProchesThisWeekCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1NTY0NjMzMywiZXhwIjoxNjU4MjM4MzMzLCJuYmYiOjE2NTU2NDYzMzMsImp0aSI6ImZVejdONEpxY0VZZ2xzbjkiLCJzdWIiOjExMTE1ODcsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.a9ru1ktWwalfTSdSOUog7BoilusitXYxs84vWUm3Nqg',
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
       params: {},
       returnBody: true,
@@ -113,13 +113,13 @@ class AddScoreDateProcheCall {
       callType: ApiCallType.POST,
       headers: {
         'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1NTY0NjMzMywiZXhwIjoxNjU4MjM4MzMzLCJuYmYiOjE2NTU2NDYzMzMsImp0aSI6ImZVejdONEpxY0VZZ2xzbjkiLCJzdWIiOjExMTE1ODcsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.a9ru1ktWwalfTSdSOUog7BoilusitXYxs84vWUm3Nqg',
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
       params: {
         'total': total,
         'target_id': targetId,
       },
-      bodyType: BodyType.JSON,
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
     );
   }
@@ -136,12 +136,12 @@ class StatusScoreDateProcheCall {
       callType: ApiCallType.POST,
       headers: {
         'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1NTY0NjMzMywiZXhwIjoxNjU4MjM4MzMzLCJuYmYiOjE2NTU2NDYzMzMsImp0aSI6ImZVejdONEpxY0VZZ2xzbjkiLCJzdWIiOjExMTE1ODcsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.a9ru1ktWwalfTSdSOUog7BoilusitXYxs84vWUm3Nqg',
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
       params: {
         'target_id': targetId,
       },
-      bodyType: BodyType.NONE,
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
     );
   }
@@ -174,7 +174,7 @@ class RealisationOpTodayCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1NjM1NDQzNSwiZXhwIjoxNjU4OTQ2NDM1LCJuYmYiOjE2NTYzNTQ0MzUsImp0aSI6IkpnTHlKMkxBaDZEM28zdnciLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.VIeB6OtuI-q59lvNntU7dMHtNBYM5lba31fJIbv868o',
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
       params: {},
       returnBody: true,
@@ -190,7 +190,7 @@ class RealisationOpMonthCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1NjM1NDQzNSwiZXhwIjoxNjU4OTQ2NDM1LCJuYmYiOjE2NTYzNTQ0MzUsImp0aSI6IkpnTHlKMkxBaDZEM28zdnciLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.VIeB6OtuI-q59lvNntU7dMHtNBYM5lba31fJIbv868o',
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
       params: {},
       returnBody: true,
@@ -207,7 +207,7 @@ class RealisationLabosOpTodayCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1NjM1NDQzNSwiZXhwIjoxNjU4OTQ2NDM1LCJuYmYiOjE2NTYzNTQ0MzUsImp0aSI6IkpnTHlKMkxBaDZEM28zdnciLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.VIeB6OtuI-q59lvNntU7dMHtNBYM5lba31fJIbv868o',
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
       params: {},
       returnBody: true,
@@ -224,7 +224,7 @@ class RealisationLabosOpMonthCall {
       callType: ApiCallType.GET,
       headers: {
         'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1NjM1NDQzNSwiZXhwIjoxNjU4OTQ2NDM1LCJuYmYiOjE2NTYzNTQ0MzUsImp0aSI6IkpnTHlKMkxBaDZEM28zdnciLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.VIeB6OtuI-q59lvNntU7dMHtNBYM5lba31fJIbv868o',
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
       params: {},
       returnBody: true,
@@ -348,69 +348,6 @@ class TaskGetListsCall {
       );
 }
 
-class TaskAddPackCall {
-  static Future<ApiCallResponse> call({
-    int? type,
-    String? title = '',
-    String? description = '',
-    String? dateStart = '',
-    String? dateEnd = '',
-    int? listId,
-    int? prodsOblg = 0,
-    double? obj1 = 0,
-    double? percReal1 = 0,
-    double? giftMoney1 = 0,
-    double? percGiftMoney1 = 0,
-    double? giftChiffre1 = 0,
-    double? percGiftChiffre1 = 0,
-    int? giftProds1 = 0,
-    String? listProdOblgs = '',
-    String? listProdGifts = '',
-    int? status = 0,
-    int? forUser,
-    int? repeat,
-    String? daysWeek = '',
-    int? dayMonth,
-    String? dayYear = '',
-  }) {
-    return ApiManager.instance.makeApiCall(
-      callName: 'task add pack',
-      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/sell/add_task',
-      callType: ApiCallType.POST,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
-      params: {
-        'type': type,
-        'title': title,
-        'description': description,
-        'date_start': dateStart,
-        'date_end': dateEnd,
-        'list_id': listId,
-        'prods_oblg': prodsOblg,
-        'obj1': obj1,
-        'perc_real1': percReal1,
-        'gift_money1': giftMoney1,
-        'perc_gift_money1': percGiftMoney1,
-        'gift_chiffre1': giftChiffre1,
-        'perc_gift_chiffre1': percGiftChiffre1,
-        'gift_prods1': giftProds1,
-        'list_prod_oblgs': listProdOblgs,
-        'list_prod_gifts': listProdGifts,
-        'status': status,
-        'for_user': forUser,
-        'repeat': repeat,
-        'days_week': daysWeek,
-        'day_month': dayMonth,
-        'day_year': dayYear,
-      },
-      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
-      returnBody: true,
-    );
-  }
-}
-
 class UsersCall {
   static Future<ApiCallResponse> call() {
     return ApiManager.instance.makeApiCall(
@@ -454,7 +391,9 @@ class TasksCall {
 }
 
 class TaskOrdersPackByUserCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    int? packId,
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task orders pack by user',
       apiUrl:
@@ -464,15 +403,12 @@ class TaskOrdersPackByUserCall {
         'Authorization':
             'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
-      params: {},
+      params: {
+        'packId': packId,
+      },
       returnBody: true,
     );
   }
-
-  static dynamic listNames(dynamic response) => getJsonField(
-        response,
-        r'''$..name''',
-      );
 }
 
 class TaskCheckOrderPackCall {
@@ -499,7 +435,8 @@ class TaskCheckOrderPackCall {
 
 class TaskGetChiffreQuotaCall {
   static Future<ApiCallResponse> call({
-    String? total = '',
+    int? taskId,
+    bool? perc,
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task get chiffre quota',
@@ -510,9 +447,10 @@ class TaskGetChiffreQuotaCall {
             'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
       },
       params: {
-        'total': total,
+        'taskId': taskId,
+        'perc': perc,
       },
-      bodyType: BodyType.JSON,
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
     );
   }
@@ -533,7 +471,94 @@ class TaskGetProdsQuotaCall {
       params: {
         'packId': packId,
       },
-      bodyType: BodyType.JSON,
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+    );
+  }
+}
+
+class TaskAddCall {
+  static Future<ApiCallResponse> call({
+    int? type,
+    String? title = '',
+    String? description = '',
+    String? dateStart = '',
+    String? dateEnd = '',
+    int? listId,
+    int? prodsOblg = 0,
+    double? obj1 = 0,
+    double? percReal1 = 0,
+    double? giftMoney1 = 0,
+    double? percGiftMoney1 = 0,
+    double? giftChiffre1 = 0,
+    double? percGiftChiffre1 = 0,
+    int? giftProds1 = 0,
+    String? listProdOblgs = '',
+    String? listProdGifts = '',
+    int? status = 0,
+    int? forUser,
+    int? repeat,
+    String? daysWeek = '',
+    int? dayMonth,
+    String? dayYear = '',
+    int? numPack,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'task add',
+      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/sell/add_task',
+      callType: ApiCallType.POST,
+      headers: {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      },
+      params: {
+        'type': type,
+        'title': title,
+        'description': description,
+        'date_start': dateStart,
+        'date_end': dateEnd,
+        'list_id': listId,
+        'prods_oblg': prodsOblg,
+        'obj1': obj1,
+        'perc_real1': percReal1,
+        'gift_money1': giftMoney1,
+        'perc_gift_money1': percGiftMoney1,
+        'gift_chiffre1': giftChiffre1,
+        'perc_gift_chiffre1': percGiftChiffre1,
+        'gift_prods1': giftProds1,
+        'list_prod_oblgs': listProdOblgs,
+        'list_prod_gifts': listProdGifts,
+        'status': status,
+        'for_user': forUser,
+        'repeat': repeat,
+        'days_week': daysWeek,
+        'day_month': dayMonth,
+        'day_year': dayYear,
+        'num_pack': numPack,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+    );
+  }
+}
+
+class TaskReservedPackCall {
+  static Future<ApiCallResponse> call({
+    String? taskId = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'task reserved pack',
+      apiUrl:
+          'https://www.mekaapp.com/bcd/backend/api/tasks/reserve_pack?packId=61',
+      callType: ApiCallType.POST,
+      headers: {
+        'Authorization':
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      },
+      params: {
+        'taskId': taskId,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
     );
   }

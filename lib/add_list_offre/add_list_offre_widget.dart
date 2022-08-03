@@ -175,9 +175,8 @@ class _AddListOffreWidgetState extends State<AddListOffreWidget> {
                                         snapshot.data!;
                                     return FlutterFlowDropDown(
                                       options: (GetAllLabosActiveCall.listNames(
-                                        (dropDownGetAllLabosActiveResponse
-                                                ?.jsonBody ??
-                                            ''),
+                                        dropDownGetAllLabosActiveResponse
+                                            .jsonBody,
                                       ) as List)
                                           .map<String>((s) => s.toString())
                                           .toList()

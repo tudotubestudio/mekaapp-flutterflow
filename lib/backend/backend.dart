@@ -10,6 +10,8 @@ import 'schema/conversations_record.dart';
 import 'schema/tasks_record.dart';
 import 'schema/realisation_obj_days_record.dart';
 import 'schema/gifts_record.dart';
+import 'schema/rolles_record.dart';
+import 'schema/task_types_record.dart';
 import 'schema/serializers.dart';
 
 export 'dart:async' show StreamSubscription;
@@ -23,6 +25,8 @@ export 'schema/conversations_record.dart';
 export 'schema/tasks_record.dart';
 export 'schema/realisation_obj_days_record.dart';
 export 'schema/gifts_record.dart';
+export 'schema/rolles_record.dart';
+export 'schema/task_types_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
 Stream<List<UsersRecord>> queryUsersRecord({
@@ -271,6 +275,90 @@ Future<FFFirestorePage<GiftsRecord>> queryGiftsRecordPage({
     queryCollectionPage(
       GiftsRecord.collection,
       GiftsRecord.serializer,
+      queryBuilder: queryBuilder,
+      nextPageMarker: nextPageMarker,
+      pageSize: pageSize,
+      isStream: isStream,
+    );
+
+/// Functions to query RollesRecords (as a Stream and as a Future).
+Stream<List<RollesRecord>> queryRollesRecord({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      RollesRecord.collection,
+      RollesRecord.serializer,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<RollesRecord>> queryRollesRecordOnce({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      RollesRecord.collection,
+      RollesRecord.serializer,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<FFFirestorePage<RollesRecord>> queryRollesRecordPage({
+  Query Function(Query)? queryBuilder,
+  DocumentSnapshot? nextPageMarker,
+  required int pageSize,
+  required bool isStream,
+}) =>
+    queryCollectionPage(
+      RollesRecord.collection,
+      RollesRecord.serializer,
+      queryBuilder: queryBuilder,
+      nextPageMarker: nextPageMarker,
+      pageSize: pageSize,
+      isStream: isStream,
+    );
+
+/// Functions to query TaskTypesRecords (as a Stream and as a Future).
+Stream<List<TaskTypesRecord>> queryTaskTypesRecord({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollection(
+      TaskTypesRecord.collection,
+      TaskTypesRecord.serializer,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<List<TaskTypesRecord>> queryTaskTypesRecordOnce({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+  bool singleRecord = false,
+}) =>
+    queryCollectionOnce(
+      TaskTypesRecord.collection,
+      TaskTypesRecord.serializer,
+      queryBuilder: queryBuilder,
+      limit: limit,
+      singleRecord: singleRecord,
+    );
+
+Future<FFFirestorePage<TaskTypesRecord>> queryTaskTypesRecordPage({
+  Query Function(Query)? queryBuilder,
+  DocumentSnapshot? nextPageMarker,
+  required int pageSize,
+  required bool isStream,
+}) =>
+    queryCollectionPage(
+      TaskTypesRecord.collection,
+      TaskTypesRecord.serializer,
       queryBuilder: queryBuilder,
       nextPageMarker: nextPageMarker,
       pageSize: pageSize,

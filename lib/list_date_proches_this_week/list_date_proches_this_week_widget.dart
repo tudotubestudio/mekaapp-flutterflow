@@ -61,8 +61,7 @@ class _ListDateProchesThisWeekWidgetState
                       child: Text(
                         'Initial value: ${formatNumber(
                           functions.sumSubTotal(
-                              (columnDateProchesThisWeekResponse?.jsonBody ??
-                                  '')),
+                              columnDateProchesThisWeekResponse.jsonBody),
                           formatType: FormatType.decimal,
                           decimalType: DecimalType.automatic,
                         )} DA',
@@ -155,9 +154,8 @@ class _ListDateProchesThisWeekWidgetState
                                         children: [
                                           CircularPercentIndicator(
                                             percent: functions.percDateProcheOb(
-                                                (columnDateProchesThisWeekResponse
-                                                        ?.jsonBody ??
-                                                    ''),
+                                                columnDateProchesThisWeekResponse
+                                                    .jsonBody,
                                                 getJsonField(
                                                   FFAppState().me,
                                                   r'''$.objectif_ca_oper''',
@@ -171,9 +169,8 @@ class _ListDateProchesThisWeekWidgetState
                                             center: Text(
                                               formatNumber(
                                                 functions.percDateProcheOb(
-                                                    (columnDateProchesThisWeekResponse
-                                                            ?.jsonBody ??
-                                                        ''),
+                                                    columnDateProchesThisWeekResponse
+                                                        .jsonBody,
                                                     getJsonField(
                                                       FFAppState().me,
                                                       r'''$.objectif_ca_oper''',
@@ -213,10 +210,8 @@ class _ListDateProchesThisWeekWidgetState
                                           ),
                                         ],
                                       ),
-                                      if ((containerStatusScoreDateProcheResponse
-                                                  ?.succeeded ??
-                                              true) ??
-                                          true)
+                                      if (containerStatusScoreDateProcheResponse
+                                          .succeeded)
                                         Column(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
@@ -255,15 +250,14 @@ class _ListDateProchesThisWeekWidgetState
                                   ),
                                 ),
                                 if ((functions.percDateProcheOb(
-                                        (columnDateProchesThisWeekResponse
-                                                ?.jsonBody ??
-                                            ''),
+                                        columnDateProchesThisWeekResponse
+                                            .jsonBody,
                                         getJsonField(
                                           FFAppState().me,
                                           r'''$.objectif_ca_oper''',
                                         ).toString(),
-                                        FFAppState().percOb1)) >=
-                                    1.0)
+                                        FFAppState().percOb1) >=
+                                    1.0))
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8, 0, 8, 0),
@@ -275,10 +269,8 @@ class _ListDateProchesThisWeekWidgetState
                                       ),
                                       child: Visibility(
                                         visible:
-                                            !((containerStatusScoreDateProcheResponse
-                                                        ?.succeeded ??
-                                                    true)) ??
-                                                true,
+                                            !containerStatusScoreDateProcheResponse
+                                                .succeeded,
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
@@ -398,9 +390,8 @@ class _ListDateProchesThisWeekWidgetState
                                         children: [
                                           CircularPercentIndicator(
                                             percent: functions.percDateProcheOb(
-                                                (columnDateProchesThisWeekResponse
-                                                        ?.jsonBody ??
-                                                    ''),
+                                                columnDateProchesThisWeekResponse
+                                                    .jsonBody,
                                                 getJsonField(
                                                   FFAppState().me,
                                                   r'''$.objectif_ca_oper''',
@@ -414,9 +405,8 @@ class _ListDateProchesThisWeekWidgetState
                                             center: Text(
                                               formatNumber(
                                                 functions.percDateProcheOb(
-                                                    (columnDateProchesThisWeekResponse
-                                                            ?.jsonBody ??
-                                                        ''),
+                                                    columnDateProchesThisWeekResponse
+                                                        .jsonBody,
                                                     getJsonField(
                                                       FFAppState().me,
                                                       r'''$.objectif_ca_oper''',
@@ -456,10 +446,8 @@ class _ListDateProchesThisWeekWidgetState
                                           ),
                                         ],
                                       ),
-                                      if ((containerStatusScoreDateProcheResponse
-                                                  ?.succeeded ??
-                                              true) ??
-                                          true)
+                                      if (containerStatusScoreDateProcheResponse
+                                          .succeeded)
                                         Column(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
@@ -498,15 +486,14 @@ class _ListDateProchesThisWeekWidgetState
                                   ),
                                 ),
                                 if ((functions.percDateProcheOb(
-                                        (columnDateProchesThisWeekResponse
-                                                ?.jsonBody ??
-                                            ''),
+                                        columnDateProchesThisWeekResponse
+                                            .jsonBody,
                                         getJsonField(
                                           FFAppState().me,
                                           r'''$.objectif_ca_oper''',
                                         ).toString(),
-                                        FFAppState().percOb2)) >=
-                                    1.0)
+                                        FFAppState().percOb2) >=
+                                    1.0))
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8, 0, 8, 0),
@@ -518,10 +505,8 @@ class _ListDateProchesThisWeekWidgetState
                                       ),
                                       child: Visibility(
                                         visible:
-                                            !((containerStatusScoreDateProcheResponse
-                                                        ?.succeeded ??
-                                                    true)) ??
-                                                true,
+                                            !containerStatusScoreDateProcheResponse
+                                                .succeeded,
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
@@ -641,9 +626,8 @@ class _ListDateProchesThisWeekWidgetState
                                         children: [
                                           CircularPercentIndicator(
                                             percent: functions.percDateProcheOb(
-                                                (columnDateProchesThisWeekResponse
-                                                        ?.jsonBody ??
-                                                    ''),
+                                                columnDateProchesThisWeekResponse
+                                                    .jsonBody,
                                                 getJsonField(
                                                   FFAppState().me,
                                                   r'''$.objectif_ca_oper''',
@@ -657,9 +641,8 @@ class _ListDateProchesThisWeekWidgetState
                                             center: Text(
                                               formatNumber(
                                                 functions.percDateProcheOb(
-                                                    (columnDateProchesThisWeekResponse
-                                                            ?.jsonBody ??
-                                                        ''),
+                                                    columnDateProchesThisWeekResponse
+                                                        .jsonBody,
                                                     getJsonField(
                                                       FFAppState().me,
                                                       r'''$.objectif_ca_oper''',
@@ -699,10 +682,8 @@ class _ListDateProchesThisWeekWidgetState
                                           ),
                                         ],
                                       ),
-                                      if ((containerStatusScoreDateProcheResponse
-                                                  ?.succeeded ??
-                                              true) ??
-                                          true)
+                                      if (containerStatusScoreDateProcheResponse
+                                          .succeeded)
                                         Column(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
@@ -741,15 +722,14 @@ class _ListDateProchesThisWeekWidgetState
                                   ),
                                 ),
                                 if ((functions.percDateProcheOb(
-                                        (columnDateProchesThisWeekResponse
-                                                ?.jsonBody ??
-                                            ''),
+                                        columnDateProchesThisWeekResponse
+                                            .jsonBody,
                                         getJsonField(
                                           FFAppState().me,
                                           r'''$.objectif_ca_oper''',
                                         ).toString(),
-                                        FFAppState().percOb3)) >=
-                                    1.0)
+                                        FFAppState().percOb3) >=
+                                    1.0))
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8, 0, 8, 0),
@@ -761,10 +741,8 @@ class _ListDateProchesThisWeekWidgetState
                                       ),
                                       child: Visibility(
                                         visible:
-                                            !((containerStatusScoreDateProcheResponse
-                                                        ?.succeeded ??
-                                                    true)) ??
-                                                true,
+                                            !containerStatusScoreDateProcheResponse
+                                                .succeeded,
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(

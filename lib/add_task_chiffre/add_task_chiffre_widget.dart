@@ -278,7 +278,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         15, 15, 15, 15),
                                     child: Text(
-                                      FFAppState().addTaskDateStart!,
+                                      FFAppState().addTaskDateStart,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1,
                                     ),
@@ -308,7 +308,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
 
                                     setState(() => FFAppState()
                                             .addTaskDateStart =
-                                        dateTimeFormat('d/M/y', datePicked1!));
+                                        dateTimeFormat('d/M/y', datePicked1));
                                   },
                                 ),
                               ],
@@ -342,7 +342,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         15, 15, 15, 15),
                                     child: Text(
-                                      FFAppState().addTaskDateEnd!,
+                                      FFAppState().addTaskDateEnd,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyText1,
                                     ),
@@ -371,7 +371,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                     );
 
                                     setState(() => FFAppState().addTaskDateEnd =
-                                        dateTimeFormat('d/M/y', datePicked2!));
+                                        dateTimeFormat('d/M/y', datePicked2));
                                   },
                                 ),
                               ],
@@ -381,90 +381,84 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                       ],
                     ),
                   ),
-                  if (switchListTileListProdsValue ?? true)
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
-                              child: InkWell(
-                                onTap: () async {
-                                  await showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor:
-                                        FlutterFlowTheme.of(context)
-                                            .primaryBtnText,
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding:
-                                            MediaQuery.of(context).viewInsets,
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.75,
-                                          child: SelectUserDropDownWidget(),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  width: 100,
-                                  decoration: BoxDecoration(
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+                            child: InkWell(
+                              onTap: () async {
+                                await showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: FlutterFlowTheme.of(context)
+                                      .primaryBtnText,
+                                  context: context,
+                                  builder: (context) {
+                                    return Padding(
+                                      padding:
+                                          MediaQuery.of(context).viewInsets,
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.75,
+                                        child: SelectUserDropDownWidget(),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: FlutterFlowTheme.of(context).lineColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
                                     color:
                                         FlutterFlowTheme.of(context).lineColor,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: FlutterFlowTheme.of(context)
-                                          .lineColor,
-                                      width: 1,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            15, 15, 15, 15),
+                                        child: Text(
+                                          FFAppState().taskDropDownUserName,
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyText1,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  15, 15, 15, 15),
-                                          child: Text(
-                                            FFAppState().taskDropDownUserName!,
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyText1,
-                                          ),
-                                        ),
+                                    FlutterFlowIconButton(
+                                      borderColor: Colors.transparent,
+                                      borderRadius: 30,
+                                      borderWidth: 1,
+                                      buttonSize: 60,
+                                      icon: Icon(
+                                        Icons.keyboard_arrow_down_sharp,
+                                        color: FlutterFlowTheme.of(context)
+                                            .grayIcon,
+                                        size: 30,
                                       ),
-                                      FlutterFlowIconButton(
-                                        borderColor: Colors.transparent,
-                                        borderRadius: 30,
-                                        borderWidth: 1,
-                                        buttonSize: 60,
-                                        icon: Icon(
-                                          Icons.keyboard_arrow_down_sharp,
-                                          color: FlutterFlowTheme.of(context)
-                                              .grayIcon,
-                                          size: 30,
-                                        ),
-                                        onPressed: () {
-                                          print('IconButton pressed ...');
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                      onPressed: () {
+                                        print('IconButton pressed ...');
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
                     child: Container(
@@ -549,7 +543,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                       .fromSTEB(15, 15, 15, 15),
                                                   child: Text(
                                                     FFAppState()
-                                                        .taskDropDownListName!,
+                                                        .taskDropDownListName,
                                                     style: FlutterFlowTheme.of(
                                                             context)
                                                         .bodyText1,
@@ -699,7 +693,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                           hidesUnderline: true,
                                         ),
                                       ),
-                                      if ((dropDownRepeatValue) == 'Month')
+                                      if ((dropDownRepeatValue == 'Month'))
                                         Expanded(
                                           flex: 1,
                                           child: TextFormField(
@@ -757,7 +751,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      if ((dropDownRepeatValue) == 'Week')
+                                      if ((dropDownRepeatValue == 'Week'))
                                         Expanded(
                                           child: Wrap(
                                             spacing: 0,
@@ -981,7 +975,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                   ),
                                 ],
                               ),
-                            if ((dropDownRepeatValue) == 'Year')
+                            if ((dropDownRepeatValue == 'Year'))
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -1006,7 +1000,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(15, 15, 15, 15),
                                               child: Text(
-                                                FFAppState().addTaskDateYear!,
+                                                FFAppState().addTaskDateYear,
                                                 style:
                                                     FlutterFlowTheme.of(context)
                                                         .bodyText1,
@@ -1041,7 +1035,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                               setState(() => FFAppState()
                                                       .addTaskDateYear =
                                                   dateTimeFormat(
-                                                      'd/M/y', datePicked2!));
+                                                      'd/M/y', datePicked2));
                                             },
                                           ),
                                         ],
@@ -1339,8 +1333,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                                   .start,
                                                         ),
                                                       ),
-                                                      if ((radioButtonTypeMoney1Value) ==
-                                                          'Chiffre')
+                                                      if ((radioButtonTypeMoney1Value ==
+                                                          'Chiffre'))
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1448,8 +1442,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                             ],
                                                           ),
                                                         ),
-                                                      if ((radioButtonTypeMoney1Value) ==
-                                                          'Perc')
+                                                      if ((radioButtonTypeMoney1Value ==
+                                                          'Perc'))
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1613,8 +1607,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                                   .start,
                                                         ),
                                                       ),
-                                                      if ((radioButtonTypeChiffre1Value) ==
-                                                          'Chiffre')
+                                                      if ((radioButtonTypeChiffre1Value ==
+                                                          'Chiffre'))
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1722,8 +1716,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                             ],
                                                           ),
                                                         ),
-                                                      if ((radioButtonTypeChiffre1Value) ==
-                                                          'Perc')
+                                                      if ((radioButtonTypeChiffre1Value ==
+                                                          'Perc'))
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1911,9 +1905,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                                     (context) {
                                                                   final prodsGift =
                                                                       FFAppState()
-                                                                              .addTaskProdsGift!
-                                                                              ?.toList() ??
-                                                                          [];
+                                                                          .addTaskProdsGift
+                                                                          .toList();
                                                                   return ListView
                                                                       .builder(
                                                                     padding:
@@ -2031,9 +2024,9 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                               onPressed: () async {
                                 prodsGiftsString =
                                     await actions.listJsonToString(
-                                  FFAppState().addTaskProdsOblg!.toList(),
+                                  FFAppState().addTaskProdsOblg.toList(),
                                 );
-                                rAddTask = await TaskAddPackCall.call(
+                                rAddTask = await TaskAddCall.call(
                                   type: 2,
                                   title: titleTaskController!.text,
                                   description: descriptionController!.text,
@@ -2053,24 +2046,27 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                   percGiftChiffre1: double.parse(
                                       percGiftChiffre1Controller!.text),
                                   giftProds1:
-                                      FFAppState().addTaskProdsGift?.length,
+                                      FFAppState().addTaskProdsGift.length,
                                   listProdGifts: prodsGiftsString,
                                   status: 1,
                                   forUser: FFAppState().taskDropDownUserId,
                                   repeat: functions
                                       .boolToIneger(switchListTileRepeatValue),
-                                  daysWeek: functions.createListDaysRepeat(
-                                      checkboxDay1Value!,
-                                      checkboxDay2Value!,
-                                      checkboxDay3Value!,
-                                      checkboxDay4Value!,
-                                      checkboxDay5Value!,
-                                      checkboxDay6Value!,
-                                      checkboxDay7Value!),
+                                  daysWeek: valueOrDefault<String>(
+                                    functions.createListDaysRepeat(
+                                        checkboxDay1Value!,
+                                        checkboxDay2Value!,
+                                        checkboxDay3Value!,
+                                        checkboxDay4Value!,
+                                        checkboxDay5Value!,
+                                        checkboxDay6Value!,
+                                        checkboxDay7Value!),
+                                    '[]',
+                                  ),
                                   dayMonth: int.parse(dayMonthController!.text),
                                   dayYear: dateTimeFormat('d/M/y', datePicked2),
                                 );
-                                if ((rAddTask!?.succeeded ?? true)) {
+                                if ((rAddTask?.succeeded ?? true)) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -2093,7 +2089,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        (rAddTask!?.jsonBody ?? ''),
+                                        (rAddTask?.jsonBody ?? ''),
                                         style: FlutterFlowTheme.of(context)
                                             .bodyText1
                                             .override(

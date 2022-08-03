@@ -17,8 +17,8 @@ class ListProdsLaboWidget extends StatefulWidget {
 }
 
 class _ListProdsLaboWidgetState extends State<ListProdsLaboWidget> {
-  Map<ApiCallResponse?, bool> checkboxListTileValueMap2 = {};
-  List<ApiCallResponse?> get checkboxListTileCheckedItems2 =>
+  Map<ApiCallResponse, bool> checkboxListTileValueMap2 = {};
+  List<ApiCallResponse> get checkboxListTileCheckedItems2 =>
       checkboxListTileValueMap2.entries
           .where((e) => e.value)
           .map((e) => e.key)
@@ -86,11 +86,9 @@ class _ListProdsLaboWidgetState extends State<ListProdsLaboWidget> {
               final listViewGetAllProductsActivePharmaResponse = snapshot.data!;
               return Builder(
                 builder: (context) {
-                  final prodsLabo =
-                      (listViewGetAllProductsActivePharmaResponse?.jsonBody ??
-                                  '')
-                              ?.toList() ??
-                          [];
+                  final prodsLabo = listViewGetAllProductsActivePharmaResponse
+                      .jsonBody
+                      .toList();
                   return ListView.builder(
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
