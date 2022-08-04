@@ -103,8 +103,8 @@ class _BootWidgetState extends State<BootWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if ((listViewConversationsRecord.createdBy ==
-                                      FFAppState().bot))
+                                  if (listViewConversationsRecord.createdBy ==
+                                      FFAppState().bot)
                                     StreamBuilder<UsersRecord>(
                                       stream: UsersRecord.getDocument(
                                           listViewConversationsRecord
@@ -149,9 +149,9 @@ class _BootWidgetState extends State<BootWidget> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
-                                          if ((listViewConversationsRecord
+                                          if (listViewConversationsRecord
                                                   .type ==
-                                              'perc_ops'))
+                                              'perc_ops')
                                             Padding(
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(8, 0, 8, 0),
@@ -381,8 +381,8 @@ class _BootWidgetState extends State<BootWidget> {
                                       ),
                                     ),
                                   ),
-                                  if ((listViewConversationsRecord.createdBy !=
-                                      FFAppState().bot))
+                                  if (listViewConversationsRecord.createdBy !=
+                                      FFAppState().bot)
                                     StreamBuilder<UsersRecord>(
                                       stream: UsersRecord.getDocument(
                                           listViewConversationsRecord

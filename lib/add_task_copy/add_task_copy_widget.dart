@@ -647,7 +647,7 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      if ((dropDownRepeatValue == 'Weeks'))
+                                      if (dropDownRepeatValue == 'Weeks')
                                         Expanded(
                                           child: Wrap(
                                             spacing: 0,
@@ -1371,8 +1371,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                                   .start,
                                                         ),
                                                       ),
-                                                      if ((radioButtonTypeMoney1Value ==
-                                                          'Chiffre'))
+                                                      if (radioButtonTypeMoney1Value ==
+                                                          'Chiffre')
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1480,8 +1480,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                             ],
                                                           ),
                                                         ),
-                                                      if ((radioButtonTypeMoney1Value ==
-                                                          'Perc'))
+                                                      if (radioButtonTypeMoney1Value ==
+                                                          'Perc')
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1645,8 +1645,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                                   .start,
                                                         ),
                                                       ),
-                                                      if ((radioButtonTypeChiffre1Value ==
-                                                          'Chiffre'))
+                                                      if (radioButtonTypeChiffre1Value ==
+                                                          'Chiffre')
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1754,8 +1754,8 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                             ],
                                                           ),
                                                         ),
-                                                      if ((radioButtonTypeChiffre1Value ==
-                                                          'Perc'))
+                                                      if (radioButtonTypeChiffre1Value ==
+                                                          'Perc')
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional

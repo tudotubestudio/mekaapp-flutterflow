@@ -282,14 +282,14 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                 MainAxisAlignment
                                                                     .spaceEvenly,
                                                             children: [
-                                                              if ((functions.toDouble(
+                                                              if (functions.toDouble(
                                                                       getJsonField(
                                                                         containerRealisationOpTodayResponse
                                                                             .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
                                                                       false) >=
-                                                                  0.5))
+                                                                  0.5)
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -297,14 +297,14 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                       0xFF27AE60),
                                                                   size: 24,
                                                                 ),
-                                                              if ((functions.toDouble(
+                                                              if (functions.toDouble(
                                                                       getJsonField(
                                                                         containerRealisationOpTodayResponse
                                                                             .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
                                                                       false) <
-                                                                  0.5))
+                                                                  0.5)
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -362,14 +362,14 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                 MainAxisAlignment
                                                                     .spaceEvenly,
                                                             children: [
-                                                              if ((functions.toDouble(
+                                                              if (functions.toDouble(
                                                                       getJsonField(
                                                                         containerRealisationOpTodayResponse
                                                                             .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
                                                                       false) >=
-                                                                  0.8))
+                                                                  0.8)
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -377,14 +377,14 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                       0xFF27AE60),
                                                                   size: 24,
                                                                 ),
-                                                              if ((functions.toDouble(
+                                                              if (functions.toDouble(
                                                                       getJsonField(
                                                                         containerRealisationOpTodayResponse
                                                                             .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
                                                                       false) <
-                                                                  0.8))
+                                                                  0.8)
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -442,14 +442,14 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                 MainAxisAlignment
                                                                     .spaceEvenly,
                                                             children: [
-                                                              if ((functions.toDouble(
+                                                              if (functions.toDouble(
                                                                       getJsonField(
                                                                         containerRealisationOpTodayResponse
                                                                             .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
                                                                       false) >=
-                                                                  1.0))
+                                                                  1.0)
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -457,14 +457,14 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                       0xFF27AE60),
                                                                   size: 24,
                                                                 ),
-                                                              if ((functions.toDouble(
+                                                              if (functions.toDouble(
                                                                       getJsonField(
                                                                         containerRealisationOpTodayResponse
                                                                             .jsonBody,
                                                                         r'''$[0].perc''',
                                                                       ).toString(),
                                                                       false) <
-                                                                  1.0))
+                                                                  1.0)
                                                                 Icon(
                                                                   Icons
                                                                       .check_circle,
@@ -796,25 +796,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         mainAxisAlignment:
                                                                             MainAxisAlignment.spaceEvenly,
                                                                         children: [
-                                                                          if ((functions.toDouble(
+                                                                          if (functions.toDouble(
                                                                                   getJsonField(
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
                                                                                   false) >=
-                                                                              0.5))
+                                                                              0.5)
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFF27AE60),
                                                                               size: 24,
                                                                             ),
-                                                                          if ((functions.toDouble(
+                                                                          if (functions.toDouble(
                                                                                   getJsonField(
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
                                                                                   false) <
-                                                                              0.5))
+                                                                              0.5)
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFFBDC3C7),
@@ -858,25 +858,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         mainAxisAlignment:
                                                                             MainAxisAlignment.spaceEvenly,
                                                                         children: [
-                                                                          if ((functions.toDouble(
+                                                                          if (functions.toDouble(
                                                                                   getJsonField(
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
                                                                                   false) >=
-                                                                              0.8))
+                                                                              0.8)
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFF27AE60),
                                                                               size: 24,
                                                                             ),
-                                                                          if ((functions.toDouble(
+                                                                          if (functions.toDouble(
                                                                                   getJsonField(
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
                                                                                   false) <
-                                                                              0.8))
+                                                                              0.8)
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFFBDC3C7),
@@ -920,25 +920,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         mainAxisAlignment:
                                                                             MainAxisAlignment.spaceEvenly,
                                                                         children: [
-                                                                          if ((functions.toDouble(
+                                                                          if (functions.toDouble(
                                                                                   getJsonField(
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
                                                                                   false) >=
-                                                                              1.0))
+                                                                              1.0)
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFF27AE60),
                                                                               size: 24,
                                                                             ),
-                                                                          if ((functions.toDouble(
+                                                                          if (functions.toDouble(
                                                                                   getJsonField(
                                                                                     labosItem,
                                                                                     r'''$.perc''',
                                                                                   ).toString(),
                                                                                   false) <
-                                                                              1.0))
+                                                                              1.0)
                                                                             Icon(
                                                                               Icons.check_circle,
                                                                               color: Color(0xFFBDC3C7),
@@ -1349,25 +1349,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                           mainAxisAlignment:
                                                                               MainAxisAlignment.spaceEvenly,
                                                                           children: [
-                                                                            if ((functions.toDouble(
+                                                                            if (functions.toDouble(
                                                                                     getJsonField(
                                                                                       containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
                                                                                     false) >=
-                                                                                0.5))
+                                                                                0.5)
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFF27AE60),
                                                                                 size: 24,
                                                                               ),
-                                                                            if ((functions.toDouble(
+                                                                            if (functions.toDouble(
                                                                                     getJsonField(
                                                                                       containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
                                                                                     false) <
-                                                                                0.5))
+                                                                                0.5)
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFFBDC3C7),
@@ -1401,25 +1401,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                           mainAxisAlignment:
                                                                               MainAxisAlignment.spaceEvenly,
                                                                           children: [
-                                                                            if ((functions.toDouble(
+                                                                            if (functions.toDouble(
                                                                                     getJsonField(
                                                                                       containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
                                                                                     false) >=
-                                                                                0.8))
+                                                                                0.8)
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFF27AE60),
                                                                                 size: 24,
                                                                               ),
-                                                                            if ((functions.toDouble(
+                                                                            if (functions.toDouble(
                                                                                     getJsonField(
                                                                                       containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
                                                                                     false) <
-                                                                                0.8))
+                                                                                0.8)
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFFBDC3C7),
@@ -1453,25 +1453,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                           mainAxisAlignment:
                                                                               MainAxisAlignment.spaceEvenly,
                                                                           children: [
-                                                                            if ((functions.toDouble(
+                                                                            if (functions.toDouble(
                                                                                     getJsonField(
                                                                                       containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
                                                                                     false) >=
-                                                                                1.0))
+                                                                                1.0)
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFF27AE60),
                                                                                 size: 24,
                                                                               ),
-                                                                            if ((functions.toDouble(
+                                                                            if (functions.toDouble(
                                                                                     getJsonField(
                                                                                       containerRealisationOpMonthResponse.jsonBody,
                                                                                       r'''$[0].perc''',
                                                                                     ).toString(),
                                                                                     false) <
-                                                                                1.0))
+                                                                                1.0)
                                                                               Icon(
                                                                                 Icons.check_circle,
                                                                                 color: Color(0xFFBDC3C7),
@@ -1808,25 +1808,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                       mainAxisSize: MainAxisSize.max,
                                                                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                                       children: [
-                                                                                        if ((functions.toDouble(
+                                                                                        if (functions.toDouble(
                                                                                                 getJsonField(
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
                                                                                                 false) >=
-                                                                                            0.5))
+                                                                                            0.5)
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFF27AE60),
                                                                                             size: 24,
                                                                                           ),
-                                                                                        if ((functions.toDouble(
+                                                                                        if (functions.toDouble(
                                                                                                 getJsonField(
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
                                                                                                 false) <
-                                                                                            0.5))
+                                                                                            0.5)
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFFBDC3C7),
@@ -1858,25 +1858,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                       mainAxisSize: MainAxisSize.max,
                                                                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                                       children: [
-                                                                                        if ((functions.toDouble(
+                                                                                        if (functions.toDouble(
                                                                                                 getJsonField(
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
                                                                                                 false) >=
-                                                                                            0.8))
+                                                                                            0.8)
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFF27AE60),
                                                                                             size: 24,
                                                                                           ),
-                                                                                        if ((functions.toDouble(
+                                                                                        if (functions.toDouble(
                                                                                                 getJsonField(
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
                                                                                                 false) <
-                                                                                            0.8))
+                                                                                            0.8)
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFFBDC3C7),
@@ -1908,25 +1908,25 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                       mainAxisSize: MainAxisSize.max,
                                                                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                                       children: [
-                                                                                        if ((functions.toDouble(
+                                                                                        if (functions.toDouble(
                                                                                                 getJsonField(
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
                                                                                                 false) >=
-                                                                                            1.0))
+                                                                                            1.0)
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFF27AE60),
                                                                                             size: 24,
                                                                                           ),
-                                                                                        if ((functions.toDouble(
+                                                                                        if (functions.toDouble(
                                                                                                 getJsonField(
                                                                                                   laboMonthItem,
                                                                                                   r'''$.perc''',
                                                                                                 ).toString(),
                                                                                                 false) <
-                                                                                            1.0))
+                                                                                            1.0)
                                                                                           Icon(
                                                                                             Icons.check_circle,
                                                                                             color: Color(0xFFBDC3C7),

@@ -34,6 +34,7 @@ DataTypeTestStruct createDataTypeTestStruct({
   int? id,
   Map<String, dynamic> fieldValues = const {},
   bool clearUnsetFields = true,
+  bool create = false,
   bool delete = false,
 }) =>
     DataTypeTestStruct(
@@ -42,6 +43,7 @@ DataTypeTestStruct createDataTypeTestStruct({
         ..id = id
         ..firestoreUtilData = FirestoreUtilData(
           clearUnsetFields: clearUnsetFields,
+          create: create,
           delete: delete,
           fieldValues: fieldValues,
         ),
@@ -72,14 +74,17 @@ void addDataTypeTestStructData(
     firestoreData[fieldName] = FieldValue.delete();
     return;
   }
-  if (forFieldValue && dataTypeTest.firestoreUtilData.clearUnsetFields) {
+  if (!forFieldValue && dataTypeTest.firestoreUtilData.clearUnsetFields) {
     firestoreData[fieldName] = {};
   }
   final dataTypeTestData =
       getDataTypeTestFirestoreData(dataTypeTest, forFieldValue);
   final nestedData =
       dataTypeTestData.map((k, v) => MapEntry('$fieldName.$k', v));
-  firestoreData.addAll(nestedData);
+
+  final create = dataTypeTest.firestoreUtilData.create;
+  firestoreData.addAll(create ? mergeNestedFields(nestedData) : nestedData);
+
   return;
 }
 

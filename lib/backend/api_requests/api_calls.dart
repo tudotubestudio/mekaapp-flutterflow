@@ -437,6 +437,7 @@ class TaskGetChiffreQuotaCall {
   static Future<ApiCallResponse> call({
     int? taskId,
     bool? perc,
+    int? orderId,
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task get chiffre quota',
@@ -449,6 +450,7 @@ class TaskGetChiffreQuotaCall {
       params: {
         'taskId': taskId,
         'perc': perc,
+        'orderId': orderId,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
@@ -459,6 +461,7 @@ class TaskGetChiffreQuotaCall {
 class TaskGetProdsQuotaCall {
   static Future<ApiCallResponse> call({
     String? packId = '',
+    int? orderId,
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task get prods quota ',
@@ -470,6 +473,7 @@ class TaskGetProdsQuotaCall {
       },
       params: {
         'packId': packId,
+        'orderId': orderId,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
@@ -545,6 +549,7 @@ class TaskAddCall {
 class TaskReservedPackCall {
   static Future<ApiCallResponse> call({
     String? taskId = '',
+    int? countReserve,
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task reserved pack',
@@ -557,6 +562,7 @@ class TaskReservedPackCall {
       },
       params: {
         'taskId': taskId,
+        'countReserve': countReserve,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,

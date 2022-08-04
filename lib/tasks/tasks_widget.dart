@@ -3,6 +3,7 @@ import '../auth/auth_util.dart';
 import '../backend/api_requests/api_calls.dart';
 import '../backend/backend.dart';
 import '../components/list_global_chiffre_widget.dart';
+import '../components/select_count_reserved_widget.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -29,7 +30,6 @@ class _TasksWidgetState extends State<TasksWidget>
   ApiCallResponse? rGetChiffreQuota;
   ApiCallResponse? rGetChiffreQuotaPerc;
   ApiCallResponse? rGetProdsQuota;
-  ApiCallResponse? resReserve;
   Completer<ApiCallResponse>? _apiRequestCompleter;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final animationsMap = {
@@ -474,12 +474,12 @@ class _TasksWidgetState extends State<TasksWidget>
                                               return Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  if ((functions.jsonToInt(
+                                                  if (functions.jsonToInt(
                                                           getJsonField(
                                                         taskItem,
                                                         r'''$.type''',
                                                       )) ==
-                                                      1))
+                                                      1)
                                                     Padding(
                                                       padding:
                                                           EdgeInsetsDirectional
@@ -743,11 +743,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                           Clip.none,
                                                                       children: [
                                                                         Visibility(
-                                                                          visible: (functions.jsonToInt(getJsonField(
+                                                                          visible: functions.jsonToInt(getJsonField(
                                                                                 taskItem,
                                                                                 r'''$.prods_oblg''',
                                                                               )) ==
-                                                                              1),
+                                                                              1,
                                                                           child:
                                                                               Padding(
                                                                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -787,11 +787,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                           ),
                                                                         ),
                                                                         Visibility(
-                                                                          visible: (functions.jsonToInt(getJsonField(
+                                                                          visible: functions.jsonToInt(getJsonField(
                                                                                 taskItem,
                                                                                 r'''$.gift_prods1''',
                                                                               )) ==
-                                                                              1),
+                                                                              1,
                                                                           child:
                                                                               Padding(
                                                                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -831,11 +831,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                           ),
                                                                         ),
                                                                         Visibility(
-                                                                          visible: (functions.jsonToInt(getJsonField(
+                                                                          visible: functions.jsonToInt(getJsonField(
                                                                                 taskItem,
                                                                                 r'''$.gift_money1''',
                                                                               )) >
-                                                                              0),
+                                                                              0,
                                                                           child:
                                                                               Padding(
                                                                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -883,11 +883,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                           ),
                                                                         ),
                                                                         Visibility(
-                                                                          visible: (functions.jsonToInt(getJsonField(
+                                                                          visible: functions.jsonToInt(getJsonField(
                                                                                 taskItem,
                                                                                 r'''$.gift_chiffre1''',
                                                                               )) >
-                                                                              0),
+                                                                              0,
                                                                           child:
                                                                               Padding(
                                                                             padding: EdgeInsetsDirectional.fromSTEB(
@@ -982,11 +982,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                     MainAxisAlignment
                                                                         .spaceBetween,
                                                                 children: [
-                                                                  if ((getJsonField(
+                                                                  if (getJsonField(
                                                                         taskItem,
                                                                         r'''$.packStatus.total''',
                                                                       ) !=
-                                                                      null))
+                                                                      null)
                                                                     Padding(
                                                                       padding: EdgeInsetsDirectional
                                                                           .fromSTEB(
@@ -1051,11 +1051,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                         MainAxisSize
                                                                             .max,
                                                                     children: [
-                                                                      if ((getJsonField(
+                                                                      if (getJsonField(
                                                                             taskItem,
                                                                             r'''$.packStatus.total''',
                                                                           ) !=
-                                                                          null))
+                                                                          null)
                                                                         Text(
                                                                           '${valueOrDefault<String>(
                                                                             getJsonField(
@@ -1067,11 +1067,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                           style:
                                                                               FlutterFlowTheme.of(context).bodyText1,
                                                                         ),
-                                                                      if ((getJsonField(
+                                                                      if (getJsonField(
                                                                             taskItem,
                                                                             r'''$.packStatus.reserved''',
                                                                           ) !=
-                                                                          null))
+                                                                          null)
                                                                         Text(
                                                                           '${valueOrDefault<String>(
                                                                             getJsonField(
@@ -1090,59 +1090,34 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                         MainAxisSize
                                                                             .max,
                                                                     children: [
-                                                                      if ((functions
+                                                                      if (functions
                                                                               .jsonToDouble(getJsonField(
                                                                             taskItem,
                                                                             r'''$.reserved''',
                                                                           )) ==
-                                                                          0.0))
+                                                                          0.0)
                                                                         FFButtonWidget(
                                                                           onPressed:
                                                                               () async {
-                                                                            resReserve =
-                                                                                await TaskReservedPackCall.call(
-                                                                              taskId: getJsonField(
-                                                                                taskItem,
-                                                                                r'''$.id''',
-                                                                              ).toString(),
+                                                                            await showModalBottomSheet(
+                                                                              isScrollControlled: true,
+                                                                              backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                              context: context,
+                                                                              builder: (context) {
+                                                                                return Padding(
+                                                                                  padding: MediaQuery.of(context).viewInsets,
+                                                                                  child: Container(
+                                                                                    height: MediaQuery.of(context).size.height * 0.25,
+                                                                                    child: SelectCountReservedWidget(
+                                                                                      task: taskItem,
+                                                                                    ),
+                                                                                  ),
+                                                                                );
+                                                                              },
                                                                             );
-                                                                            if ((resReserve?.succeeded ??
-                                                                                true)) {
-                                                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                                                SnackBar(
-                                                                                  content: Text(
-                                                                                    'Seccess reserved',
-                                                                                    style: GoogleFonts.getFont(
-                                                                                      'Roboto',
-                                                                                      color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                    ),
-                                                                                  ),
-                                                                                  duration: Duration(milliseconds: 4000),
-                                                                                  backgroundColor: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                ),
-                                                                              );
-                                                                              setState(() => _apiRequestCompleter = null);
-                                                                              await waitForApiRequestCompleter();
-                                                                            } else {
-                                                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                                                SnackBar(
-                                                                                  content: Text(
-                                                                                    getJsonField(
-                                                                                      (resReserve?.jsonBody ?? ''),
-                                                                                      r'''$.error''',
-                                                                                    ).toString(),
-                                                                                    style: GoogleFonts.getFont(
-                                                                                      'Roboto',
-                                                                                      color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                    ),
-                                                                                  ),
-                                                                                  duration: Duration(milliseconds: 4000),
-                                                                                  backgroundColor: FlutterFlowTheme.of(context).customColor3,
-                                                                                ),
-                                                                              );
-                                                                            }
-
-                                                                            setState(() {});
+                                                                            setState(() =>
+                                                                                _apiRequestCompleter = null);
+                                                                            await waitForApiRequestCompleter();
                                                                           },
                                                                           text:
                                                                               'Reserve',
@@ -1167,12 +1142,12 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                 BorderRadius.circular(8),
                                                                           ),
                                                                         ),
-                                                                      if ((functions
+                                                                      if (functions
                                                                               .jsonToDouble(getJsonField(
                                                                             taskItem,
                                                                             r'''$.reserved''',
                                                                           )) >
-                                                                          0.0))
+                                                                          0.0)
                                                                         FFButtonWidget(
                                                                           onPressed:
                                                                               () async {
@@ -1181,7 +1156,10 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                             await waitForApiRequestCompleter();
                                                                           },
                                                                           text:
-                                                                              'Reserved',
+                                                                              'Reserved(${getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.reserved''',
+                                                                          ).toString()})',
                                                                           options:
                                                                               FFButtonOptions(
                                                                             width:
@@ -1212,12 +1190,12 @@ class _TasksWidgetState extends State<TasksWidget>
                                                         ),
                                                       ),
                                                     ),
-                                                  if ((functions.jsonToInt(
+                                                  if (functions.jsonToInt(
                                                           getJsonField(
                                                         taskItem,
                                                         r'''$.type''',
                                                       )) ==
-                                                      2))
+                                                      2)
                                                     Padding(
                                                       padding:
                                                           EdgeInsetsDirectional
@@ -1488,14 +1466,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                 Row(
                                                                                   mainAxisSize: MainAxisSize.max,
                                                                                   children: [
-                                                                                    if ((functions.jsonToDouble(getJsonField(
+                                                                                    if (functions.jsonToDouble(getJsonField(
                                                                                           taskItem,
                                                                                           r'''$.perc_realisation1''',
                                                                                         )) >=
                                                                                         functions.jsonToDouble(getJsonField(
                                                                                           taskItem,
                                                                                           r'''$.perc_real1''',
-                                                                                        ))))
+                                                                                        )))
                                                                                       Container(
                                                                                         width: 40,
                                                                                         height: 40,
@@ -1525,14 +1503,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                               ),
                                                                                         ),
                                                                                       ),
-                                                                                    if ((functions.jsonToDouble(getJsonField(
+                                                                                    if (functions.jsonToDouble(getJsonField(
                                                                                           taskItem,
                                                                                           r'''$.perc_realisation1''',
                                                                                         )) <
                                                                                         functions.jsonToDouble(getJsonField(
                                                                                           taskItem,
                                                                                           r'''$.perc_real1''',
-                                                                                        ))))
+                                                                                        )))
                                                                                       Container(
                                                                                         width: 40,
                                                                                         height: 40,
@@ -1629,11 +1607,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                 Column(
                                                                               mainAxisSize: MainAxisSize.max,
                                                                               children: [
-                                                                                if ((functions.jsonToDouble(getJsonField(
+                                                                                if (functions.jsonToDouble(getJsonField(
                                                                                       taskItem,
                                                                                       r'''$.gift_money1''',
                                                                                     )) >
-                                                                                    0.0))
+                                                                                    0.0)
                                                                                   Row(
                                                                                     mainAxisSize: MainAxisSize.max,
                                                                                     children: [
@@ -1682,14 +1660,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           ),
                                                                                         ),
                                                                                       ),
-                                                                                      if ((functions.jsonToDouble(getJsonField(
+                                                                                      if (functions.jsonToDouble(getJsonField(
                                                                                             taskItem,
                                                                                             r'''$.perc_realisation1''',
                                                                                           )) >=
                                                                                           functions.jsonToDouble(getJsonField(
                                                                                             taskItem,
                                                                                             r'''$.perc_real1''',
-                                                                                          ))))
+                                                                                          )))
                                                                                         Padding(
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
                                                                                           child: FFButtonWidget(
@@ -1717,11 +1695,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                         ),
                                                                                     ],
                                                                                   ),
-                                                                                if ((functions.jsonToDouble(getJsonField(
+                                                                                if (functions.jsonToDouble(getJsonField(
                                                                                       taskItem,
                                                                                       r'''$.perc_gift_money1''',
                                                                                     )) >
-                                                                                    0.0))
+                                                                                    0.0)
                                                                                   Row(
                                                                                     mainAxisSize: MainAxisSize.max,
                                                                                     children: [
@@ -1781,14 +1759,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           ),
                                                                                         ),
                                                                                       ),
-                                                                                      if ((functions.jsonToDouble(getJsonField(
+                                                                                      if (functions.jsonToDouble(getJsonField(
                                                                                             taskItem,
                                                                                             r'''$.perc_realisation1''',
                                                                                           )) >=
                                                                                           functions.jsonToDouble(getJsonField(
                                                                                             taskItem,
                                                                                             r'''$.perc_real1''',
-                                                                                          ))))
+                                                                                          )))
                                                                                         Padding(
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
                                                                                           child: FFButtonWidget(
@@ -1816,11 +1794,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                         ),
                                                                                     ],
                                                                                   ),
-                                                                                if ((functions.jsonToDouble(getJsonField(
+                                                                                if (functions.jsonToDouble(getJsonField(
                                                                                       taskItem,
                                                                                       r'''$.gift_chiffre1''',
                                                                                     )) >
-                                                                                    0.0))
+                                                                                    0.0)
                                                                                   Row(
                                                                                     mainAxisSize: MainAxisSize.max,
                                                                                     children: [
@@ -1864,14 +1842,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           ),
                                                                                         ),
                                                                                       ),
-                                                                                      if ((functions.jsonToDouble(getJsonField(
+                                                                                      if (functions.jsonToDouble(getJsonField(
                                                                                             taskItem,
                                                                                             r'''$.perc_realisation1''',
                                                                                           )) >=
                                                                                           functions.jsonToDouble(getJsonField(
                                                                                             taskItem,
                                                                                             r'''$.perc_real1''',
-                                                                                          ))))
+                                                                                          )))
                                                                                         Padding(
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
                                                                                           child: FFButtonWidget(
@@ -1941,11 +1919,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                         ),
                                                                                     ],
                                                                                   ),
-                                                                                if ((functions.jsonToDouble(getJsonField(
+                                                                                if (functions.jsonToDouble(getJsonField(
                                                                                       taskItem,
                                                                                       r'''$.gift_chiffre1''',
                                                                                     )) >
-                                                                                    0.0))
+                                                                                    0.0)
                                                                                   Row(
                                                                                     mainAxisSize: MainAxisSize.max,
                                                                                     children: [
@@ -2005,14 +1983,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           ),
                                                                                         ),
                                                                                       ),
-                                                                                      if ((functions.jsonToDouble(getJsonField(
+                                                                                      if (functions.jsonToDouble(getJsonField(
                                                                                             taskItem,
                                                                                             r'''$.perc_realisation1''',
                                                                                           )) >=
                                                                                           functions.jsonToDouble(getJsonField(
                                                                                             taskItem,
                                                                                             r'''$.perc_real1''',
-                                                                                          ))))
+                                                                                          )))
                                                                                         Padding(
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
                                                                                           child: FFButtonWidget(
@@ -2082,11 +2060,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                         ),
                                                                                     ],
                                                                                   ),
-                                                                                if ((functions.jsonToDouble(getJsonField(
+                                                                                if (functions.jsonToDouble(getJsonField(
                                                                                       taskItem,
                                                                                       r'''$.gift_prods1''',
                                                                                     )) >
-                                                                                    0.0))
+                                                                                    0.0)
                                                                                   Row(
                                                                                     mainAxisSize: MainAxisSize.max,
                                                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -2189,14 +2167,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                                   );
                                                                                                 },
                                                                                               ),
-                                                                                              if ((functions.jsonToDouble(getJsonField(
+                                                                                              if (functions.jsonToDouble(getJsonField(
                                                                                                     taskItem,
                                                                                                     r'''$.perc_realisation1''',
                                                                                                   )) >=
                                                                                                   functions.jsonToDouble(getJsonField(
                                                                                                     taskItem,
                                                                                                     r'''$.perc_real1''',
-                                                                                                  ))))
+                                                                                                  )))
                                                                                                 Padding(
                                                                                                   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
                                                                                                   child: FFButtonWidget(

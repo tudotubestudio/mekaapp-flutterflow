@@ -256,8 +256,8 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                 keyboardType: TextInputType.number,
               ),
             ),
-            if ((keySearchListController!.text != null &&
-                keySearchListController!.text != ''))
+            if (keySearchListController!.text != null &&
+                keySearchListController!.text != '')
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 70, 16, 16),
                 child: Container(

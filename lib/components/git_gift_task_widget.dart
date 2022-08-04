@@ -11,9 +11,11 @@ class GitGiftTaskWidget extends StatefulWidget {
   const GitGiftTaskWidget({
     Key? key,
     this.task,
+    this.orderId,
   }) : super(key: key);
 
   final dynamic task;
+  final int? orderId;
 
   @override
   _GitGiftTaskWidgetState createState() => _GitGiftTaskWidgetState();
@@ -33,11 +35,11 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
           Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              if ((functions.jsonToDouble(getJsonField(
+              if (functions.jsonToDouble(getJsonField(
                     widget.task,
                     r'''$.gift_money1''',
                   )) >
-                  0.0))
+                  0.0)
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -118,11 +120,11 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                     ),
                   ],
                 ),
-              if ((functions.jsonToDouble(getJsonField(
+              if (functions.jsonToDouble(getJsonField(
                     widget.task,
                     r'''$.perc_gift_money1''',
                   )) >
-                  0.0))
+                  0.0)
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -201,11 +203,11 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                     ),
                   ],
                 ),
-              if ((functions.jsonToDouble(getJsonField(
+              if (functions.jsonToDouble(getJsonField(
                     widget.task,
                     r'''$.gift_chiffre1''',
                   )) >
-                  0.0))
+                  0.0)
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -263,6 +265,7 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                               r'''$.id''',
                             ),
                             perc: false,
+                            orderId: widget.orderId,
                           );
                           if ((rGetChiffreQuota?.succeeded ?? true)) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -456,11 +459,11 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                   ),
                 ],
               ),
-              if ((functions.jsonToDouble(getJsonField(
+              if (functions.jsonToDouble(getJsonField(
                     widget.task,
                     r'''$.gift_prods1''',
                   )) >
-                  0.0))
+                  0.0)
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -469,7 +472,7 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                       padding: EdgeInsetsDirectional.fromSTEB(8, 8, 4, 8),
                       child: Container(
                         width: 4,
-                        height: MediaQuery.of(context).size.height * 0.1,
+                        height: MediaQuery.of(context).size.height * 0.3,
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context).tertiaryColor,
                           borderRadius: BorderRadius.circular(4),
@@ -589,6 +592,7 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                                       widget.task,
                                       r'''$.id''',
                                     ).toString(),
+                                    orderId: widget.orderId,
                                   );
                                   if ((rGetProdsQuota?.succeeded ?? true)) {
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -664,11 +668,11 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                 ),
             ],
           ),
-          if ((functions.jsonToDouble(getJsonField(
+          if (functions.jsonToDouble(getJsonField(
                 widget.task,
                 r'''$.gift_prods1''',
               )) >
-              0.0))
+              0.0)
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
               child: Container(

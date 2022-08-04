@@ -249,7 +249,7 @@ class _ListDateProchesThisWeekWidgetState
                                     ],
                                   ),
                                 ),
-                                if ((functions.percDateProcheOb(
+                                if (functions.percDateProcheOb(
                                         columnDateProchesThisWeekResponse
                                             .jsonBody,
                                         getJsonField(
@@ -257,7 +257,7 @@ class _ListDateProchesThisWeekWidgetState
                                           r'''$.objectif_ca_oper''',
                                         ).toString(),
                                         FFAppState().percOb1) >=
-                                    1.0))
+                                    1.0)
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8, 0, 8, 0),
@@ -485,7 +485,7 @@ class _ListDateProchesThisWeekWidgetState
                                     ],
                                   ),
                                 ),
-                                if ((functions.percDateProcheOb(
+                                if (functions.percDateProcheOb(
                                         columnDateProchesThisWeekResponse
                                             .jsonBody,
                                         getJsonField(
@@ -493,7 +493,7 @@ class _ListDateProchesThisWeekWidgetState
                                           r'''$.objectif_ca_oper''',
                                         ).toString(),
                                         FFAppState().percOb2) >=
-                                    1.0))
+                                    1.0)
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8, 0, 8, 0),
@@ -721,7 +721,7 @@ class _ListDateProchesThisWeekWidgetState
                                     ],
                                   ),
                                 ),
-                                if ((functions.percDateProcheOb(
+                                if (functions.percDateProcheOb(
                                         columnDateProchesThisWeekResponse
                                             .jsonBody,
                                         getJsonField(
@@ -729,7 +729,7 @@ class _ListDateProchesThisWeekWidgetState
                                           r'''$.objectif_ca_oper''',
                                         ).toString(),
                                         FFAppState().percOb3) >=
-                                    1.0))
+                                    1.0)
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
                                         8, 0, 8, 0),

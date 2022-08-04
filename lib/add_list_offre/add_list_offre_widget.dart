@@ -404,8 +404,8 @@ class _AddListOffreWidgetState extends State<AddListOffreWidget> {
                                 ),
                               ],
                             ),
-                            if ((nameController2!.text != null &&
-                                nameController2!.text != ''))
+                            if (nameController2!.text != null &&
+                                nameController2!.text != '')
                               Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 60, 0, 0),

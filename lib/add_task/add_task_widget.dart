@@ -738,7 +738,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                           hidesUnderline: true,
                                         ),
                                       ),
-                                      if ((dropDownRepeatValue == 'Month'))
+                                      if (dropDownRepeatValue == 'Month')
                                         Expanded(
                                           flex: 1,
                                           child: TextFormField(
@@ -796,7 +796,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      if ((dropDownRepeatValue == 'Week'))
+                                      if (dropDownRepeatValue == 'Week')
                                         Expanded(
                                           child: Wrap(
                                             spacing: 0,
@@ -1020,7 +1020,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                   ),
                                 ],
                               ),
-                            if ((dropDownRepeatValue == 'Year'))
+                            if (dropDownRepeatValue == 'Year')
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [

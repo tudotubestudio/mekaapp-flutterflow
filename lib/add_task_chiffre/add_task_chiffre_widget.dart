@@ -693,7 +693,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                           hidesUnderline: true,
                                         ),
                                       ),
-                                      if ((dropDownRepeatValue == 'Month'))
+                                      if (dropDownRepeatValue == 'Month')
                                         Expanded(
                                           flex: 1,
                                           child: TextFormField(
@@ -751,7 +751,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                   Row(
                                     mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      if ((dropDownRepeatValue == 'Week'))
+                                      if (dropDownRepeatValue == 'Week')
                                         Expanded(
                                           child: Wrap(
                                             spacing: 0,
@@ -975,7 +975,7 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                   ),
                                 ],
                               ),
-                            if ((dropDownRepeatValue == 'Year'))
+                            if (dropDownRepeatValue == 'Year')
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -1333,8 +1333,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                                   .start,
                                                         ),
                                                       ),
-                                                      if ((radioButtonTypeMoney1Value ==
-                                                          'Chiffre'))
+                                                      if (radioButtonTypeMoney1Value ==
+                                                          'Chiffre')
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1442,8 +1442,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                             ],
                                                           ),
                                                         ),
-                                                      if ((radioButtonTypeMoney1Value ==
-                                                          'Perc'))
+                                                      if (radioButtonTypeMoney1Value ==
+                                                          'Perc')
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1607,8 +1607,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                                   .start,
                                                         ),
                                                       ),
-                                                      if ((radioButtonTypeChiffre1Value ==
-                                                          'Chiffre'))
+                                                      if (radioButtonTypeChiffre1Value ==
+                                                          'Chiffre')
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
@@ -1716,8 +1716,8 @@ class _AddTaskChiffreWidgetState extends State<AddTaskChiffreWidget> {
                                                             ],
                                                           ),
                                                         ),
-                                                      if ((radioButtonTypeChiffre1Value ==
-                                                          'Perc'))
+                                                      if (radioButtonTypeChiffre1Value ==
+                                                          'Perc')
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional

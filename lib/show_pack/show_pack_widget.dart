@@ -331,11 +331,11 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                                                 ],
                                               ),
                                             ),
-                                            if ((getJsonField(
+                                            if (getJsonField(
                                                   orderItem,
                                                   r'''$.target_id''',
                                                 ) ==
-                                                null))
+                                                null)
                                               FlutterFlowIconButton(
                                                 borderColor: Colors.transparent,
                                                 borderRadius: 30,
@@ -398,6 +398,11 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                                                                 widget.pack,
                                                                 r'''$''',
                                                               ),
+                                                              orderId:
+                                                                  getJsonField(
+                                                                orderItem,
+                                                                r'''$.c_order_id''',
+                                                              ),
                                                             ),
                                                           ),
                                                         );
@@ -436,11 +441,11 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                                                   setState(() {});
                                                 },
                                               ),
-                                            if ((getJsonField(
+                                            if (getJsonField(
                                                   orderItem,
                                                   r'''$.target_id''',
                                                 ) !=
-                                                null))
+                                                null)
                                               FlutterFlowIconButton(
                                                 borderColor: Colors.transparent,
                                                 borderRadius: 30,
@@ -475,6 +480,11 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                                                           child:
                                                               GitGiftTaskWidget(
                                                             task: widget.pack,
+                                                            orderId:
+                                                                getJsonField(
+                                                              orderItem,
+                                                              r'''$.c_order_id''',
+                                                            ),
                                                           ),
                                                         ),
                                                       );
