@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,16 @@ import '../../auth/auth_util.dart';
 double sumSubTotal(dynamic jsonitem) {
   return jsonitem['data']
       .map((val) => double.parse(val['linenetamt']))
+      .reduce((value, element) => value + element);
+}
+
+double sumSubTotalPrime(
+  dynamic jsonitem,
+  String? fieldSum,
+) {
+  return jsonitem
+      .map((val) =>
+          (val.containsKey(fieldSum)) ? double.parse(val[fieldSum]) : 0)
       .reduce((value, element) => value + element);
 }
 
@@ -41,7 +52,7 @@ double toDouble(
   String? num,
   bool? progressPerc,
 ) {
-  double res = double.parse(num!);
+  double res = double.parse(num ?? '0');
   if (progressPerc!) {
     return (res > 1) ? 1 : res;
   } else {
@@ -89,6 +100,13 @@ double multiplicationTwoNum(
   return num1! * num2!;
 }
 
+double sumTwoNumCopy(
+  double? num1,
+  double? num2,
+) {
+  return num1! + num2!;
+}
+
 dynamic addQuantityInJsonProdOblgOrGift(
   dynamic item,
   double? quantity,
@@ -116,13 +134,13 @@ String createListDaysRepeat(
   bool day7,
 ) {
   List<int> days = [];
-  (day1) ? days.add(1) : null;
-  (day2) ? days.add(2) : null;
-  (day3) ? days.add(3) : null;
-  (day4) ? days.add(4) : null;
-  (day5) ? days.add(5) : null;
-  (day6) ? days.add(6) : null;
-  (day7) ? days.add(7) : null;
+  (day1) ? days.add(7) : null;
+  (day2) ? days.add(1) : null;
+  (day3) ? days.add(2) : null;
+  (day4) ? days.add(3) : null;
+  (day5) ? days.add(4) : null;
+  (day6) ? days.add(5) : null;
+  (day7) ? days.add(6) : null;
   return (days.isNotEmpty)
       ? '[${days.map((i) => i.toString()).join(",")}]'
       : '[]';
@@ -136,6 +154,45 @@ double jsonToDouble(dynamic item) {
   return double.parse(item);
 }
 
+double jsonToDoublePercMax1(dynamic item) {
+  if (double.parse(item) > 1) {
+    return 1;
+  } else {
+    return double.parse(item);
+  }
+}
+
 DateTime jsonToDate(dynamic item) {
   return DateTime.parse(item);
+}
+
+String? getFirstLatter(String? name) {
+  return name!.substring(0, 1);
+}
+
+DateTime? stringToDate(String date) {
+  // string to date
+  try {
+    return DateTime.parse(date);
+  } catch (e) {
+    return null;
+  }
+}
+
+List<double>? getChiffreJson(dynamic data) {
+  List<double> listProds = [];
+  listProds.add(double.parse(data['ch_6']));
+  listProds.add(double.parse(data['ch_5']));
+  listProds.add(double.parse(data['ch_4']));
+  listProds.add(double.parse(data['ch_3']));
+  listProds.add(double.parse(data['ch_2']));
+  listProds.add(double.parse(data['ch_1']));
+  listProds.add(double.parse(data['ch_0']));
+  return listProds;
+}
+
+String convertListJsonToString(List<dynamic> data) {
+  // json encode
+  String jsonString = jsonEncode(data);
+  return jsonString;
 }

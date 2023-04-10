@@ -1,22 +1,27 @@
-import '../add_task/add_task_widget.dart';
-import '../auth/auth_util.dart';
-import '../backend/api_requests/api_calls.dart';
-import '../backend/backend.dart';
-import '../components/list_global_chiffre_widget.dart';
-import '../components/select_count_reserved_widget.dart';
-import '../flutter_flow/flutter_flow_animations.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../show_pack/show_pack_widget.dart';
-import '../flutter_flow/custom_functions.dart' as functions;
+import '/auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
+import '/components/list_global_chiffre_widget.dart';
+import '/components/select_count_reserved_widget.dart';
+import '/components/show_prods_widget.dart';
+import '/flutter_flow/flutter_flow_animations.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/widgets/index.dart' as custom_widgets;
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
+import 'tasks_model.dart';
+export 'tasks_model.dart';
 
 class TasksWidget extends StatefulWidget {
   const TasksWidget({Key? key}) : super(key: key);
@@ -27,174 +32,209 @@ class TasksWidget extends StatefulWidget {
 
 class _TasksWidgetState extends State<TasksWidget>
     with TickerProviderStateMixin {
-  ApiCallResponse? rGetChiffreQuota;
-  ApiCallResponse? rGetChiffreQuotaPerc;
-  ApiCallResponse? rGetProdsQuota;
-  Completer<ApiCallResponse>? _apiRequestCompleter;
+  late TasksModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   final animationsMap = {
     'containerOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(0, 50),
-        scale: 1,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: Offset(0.0, 50.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
     ),
     'columnOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(40, 0),
-        scale: 1,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: Offset(40.0, 0.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
     ),
     'progressBarOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(-50, 0),
-        scale: 0.7,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: Offset(-50.0, 0.0),
+          end: Offset(0.0, 0.0),
+        ),
+        ScaleEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.7,
+          end: 1.0,
+        ),
+      ],
     ),
     'iconOnPageLoadAnimation1': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 0,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        ScaleEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
     ),
     'containerOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(0, 50),
-        scale: 1,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: Offset(0.0, 50.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
     ),
     'columnOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(40, 0),
-        scale: 1,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: Offset(40.0, 0.0),
+          end: Offset(0.0, 0.0),
+        ),
+      ],
     ),
     'progressBarOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(-50, 0),
-        scale: 0.7,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        MoveEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: Offset(-50.0, 0.0),
+          end: Offset(0.0, 0.0),
+        ),
+        ScaleEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.7,
+          end: 1.0,
+        ),
+      ],
     ),
     'iconOnPageLoadAnimation2': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
-      duration: 600,
-      hideBeforeAnimating: false,
-      fadeIn: true,
-      initialState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 0,
-        opacity: 0,
-      ),
-      finalState: AnimationState(
-        offset: Offset(0, 0),
-        scale: 1,
-        opacity: 1,
-      ),
+      effects: [
+        FadeEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+        ScaleEffect(
+          curve: Curves.easeInOut,
+          delay: 0.ms,
+          duration: 600.ms,
+          begin: 0.0,
+          end: 1.0,
+        ),
+      ],
     ),
   };
 
   @override
   void initState() {
     super.initState();
-    startPageLoadAnimations(
-      animationsMap.values
-          .where((anim) => anim.trigger == AnimationTrigger.onPageLoad),
+    _model = createModel(context, () => TasksModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'Tasks'});
+    setupAnimations(
+      animationsMap.values.where((anim) =>
+          anim.trigger == AnimationTrigger.onActionTrigger ||
+          !anim.applyInitialState),
       this,
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddTaskWidget(),
-            ),
-          );
-        },
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        elevation: 8,
-        child: Icon(
-          Icons.add,
-          color: FlutterFlowTheme.of(context).primaryBtnText,
-          size: 24,
-        ),
-      ),
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -205,55 +245,31 @@ class _TasksWidgetState extends State<TasksWidget>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 44, 16, 0),
+              padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  FlutterFlowIconButton(
-                    borderColor: Colors.transparent,
-                    borderRadius: 30,
-                    borderWidth: 1,
-                    buttonSize: 44,
-                    icon: Icon(
-                      Icons.menu_rounded,
-                      color: Color(0xFF101213),
-                      size: 24,
-                    ),
-                    onPressed: () {
-                      print('IconButton pressed ...');
-                    },
-                  ),
                   Text(
                     'Hello,',
-                    style: FlutterFlowTheme.of(context).title1.override(
-                          fontFamily: 'Outfit',
-                          color: Color(0xFF101213),
-                          fontSize: 24,
-                          fontWeight: FontWeight.normal,
-                        ),
+                    style: FlutterFlowTheme.of(context).titleSmall,
                   ),
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(2, 0, 0, 0),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 0.0, 0.0),
                       child: AuthUserStreamWidget(
-                        child: Text(
+                        builder: (context) => Text(
                           currentUserDisplayName,
-                          style: FlutterFlowTheme.of(context).title1.override(
-                                fontFamily: 'Outfit',
-                                color:
-                                    FlutterFlowTheme.of(context).primaryColor,
-                                fontSize: 26,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style: FlutterFlowTheme.of(context).headlineSmall,
                         ),
                       ),
                     ),
                   ),
                   AuthUserStreamWidget(
-                    child: Container(
-                      width: 40,
-                      height: 40,
+                    builder: (context) => Container(
+                      width: 40.0,
+                      height: 40.0,
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -275,9 +291,9 @@ class _TasksWidgetState extends State<TasksWidget>
                     TabBar(
                       labelColor: FlutterFlowTheme.of(context).secondaryText,
                       labelStyle:
-                          FlutterFlowTheme.of(context).bodyText1.override(
+                          FlutterFlowTheme.of(context).bodyMedium.override(
                                 fontFamily: 'Poppins',
-                                fontSize: 16,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.normal,
                               ),
                       indicatorColor: Color(0xFF3498DB),
@@ -302,2002 +318,7016 @@ class _TasksWidgetState extends State<TasksWidget>
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 12, 16, 12),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 170,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFF39C12),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 5,
-                                          color: Color(0x23000000),
-                                          offset: Offset(0, 2),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          16, 16, 16, 16),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: Column(
+                                      16.0, 12.0, 16.0, 12.0),
+                                  child: AuthUserStreamWidget(
+                                    builder: (context) =>
+                                        FutureBuilder<ApiCallResponse>(
+                                      future: TasksCall.call(
+                                        token: valueOrDefault(
+                                            currentUserDocument?.token, ''),
+                                      ),
+                                      builder: (context, snapshot) {
+                                        // Customize what your widget looks like when it's loading.
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: SizedBox(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              child: CircularProgressIndicator(
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        final dashboardMainCardTasksResponse =
+                                            snapshot.data!;
+                                        return Container(
+                                          width: double.infinity,
+                                          height: 170.0,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFFF39C12),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                blurRadius: 5.0,
+                                                color: Color(0x23000000),
+                                                offset: Offset(0.0, 2.0),
+                                              )
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 16.0, 16.0, 16.0),
+                                            child: Row(
                                               mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  'Sales',
-                                                  style: FlutterFlowTheme.of(
-                                                          context)
-                                                      .title3
-                                                      .override(
-                                                        fontFamily: 'Outfit',
-                                                        color: Colors.white,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                                Expanded(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        'Bonuses',
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .headlineSmall
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Outfit',
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 20.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
                                                       ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    4.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Text(
+                                                          'Total bonuses today',
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .titleSmall
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Outfit',
+                                                                color: Color(
+                                                                    0x9AFFFFFF),
+                                                                fontSize: 16.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    8.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Text(
+                                                          formatNumber(
+                                                            functions.sumSubTotalPrime(
+                                                                dashboardMainCardTasksResponse
+                                                                    .jsonBody,
+                                                                'total_primes'),
+                                                            formatType:
+                                                                FormatType
+                                                                    .decimal,
+                                                            decimalType:
+                                                                DecimalType
+                                                                    .automatic,
+                                                            currency: 'DA ',
+                                                          ),
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .displaySmall
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Outfit',
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 32.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    8.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Text(
+                                                          formatNumber(
+                                                            functions.sumSubTotalPrime(
+                                                                dashboardMainCardTasksResponse
+                                                                    .jsonBody,
+                                                                'total_primes100'),
+                                                            formatType:
+                                                                FormatType
+                                                                    .decimal,
+                                                            decimalType:
+                                                                DecimalType
+                                                                    .automatic,
+                                                            currency: 'DA ',
+                                                          ),
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .displaySmall
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Outfit',
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 32.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ).animateOnPageLoad(animationsMap[
+                                                      'columnOnPageLoadAnimation1']!),
                                                 ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(0, 4, 0, 0),
-                                                  child: Text(
-                                                    'Total Sales Today',
+                                                CircularPercentIndicator(
+                                                  percent: 0.55,
+                                                  radius: 45.0,
+                                                  lineWidth: 4.0,
+                                                  animation: true,
+                                                  progressColor: Colors.white,
+                                                  backgroundColor:
+                                                      Color(0x2B202529),
+                                                  center: Text(
+                                                    formatNumber(
+                                                      functions.percTwoNum(
+                                                          functions.sumSubTotalPrime(
+                                                              dashboardMainCardTasksResponse
+                                                                  .jsonBody,
+                                                              'total_primes'),
+                                                          functions.sumSubTotalPrime(
+                                                              dashboardMainCardTasksResponse
+                                                                  .jsonBody,
+                                                              'total_primes100')),
+                                                      formatType:
+                                                          FormatType.percent,
+                                                    ),
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .subtitle2
+                                                        .headlineMedium
                                                         .override(
                                                           fontFamily: 'Outfit',
-                                                          color:
-                                                              Color(0x9AFFFFFF),
-                                                          fontSize: 16,
+                                                          color: Colors.white,
+                                                          fontSize: 22.0,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(0, 8, 0, 0),
-                                                  child: Text(
-                                                    '\$500.20',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .title1
-                                                        .override(
-                                                          fontFamily: 'Outfit',
-                                                          color: Colors.white,
-                                                          fontSize: 32,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                  ),
+                                                ).animateOnPageLoad(animationsMap[
+                                                    'progressBarOnPageLoadAnimation1']!),
+                                                Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.trending_up_sharp,
+                                                      color: Colors.white,
+                                                      size: 24.0,
+                                                    ).animateOnPageLoad(
+                                                        animationsMap[
+                                                            'iconOnPageLoadAnimation1']!),
+                                                  ],
                                                 ),
                                               ],
-                                            ).animated([
-                                              animationsMap[
-                                                  'columnOnPageLoadAnimation1']!
-                                            ]),
-                                          ),
-                                          CircularPercentIndicator(
-                                            percent: 0.55,
-                                            radius: 45,
-                                            lineWidth: 4,
-                                            animation: true,
-                                            progressColor: Colors.white,
-                                            backgroundColor: Color(0x2B202529),
-                                            center: Text(
-                                              '55%',
-                                              style:
-                                                  FlutterFlowTheme.of(context)
-                                                      .title2
-                                                      .override(
-                                                        fontFamily: 'Outfit',
-                                                        color: Colors.white,
-                                                        fontSize: 22,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
                                             ),
-                                          ).animated([
-                                            animationsMap[
-                                                'progressBarOnPageLoadAnimation1']!
-                                          ]),
-                                          Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Icon(
-                                                Icons.trending_up_sharp,
-                                                color: Colors.white,
-                                                size: 24,
-                                              ).animated([
-                                                animationsMap[
-                                                    'iconOnPageLoadAnimation1']!
-                                              ]),
-                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        ).animateOnPageLoad(animationsMap[
+                                            'containerOnPageLoadAnimation1']!);
+                                      },
                                     ),
-                                  ).animated([
-                                    animationsMap[
-                                        'containerOnPageLoadAnimation1']!
-                                  ]),
+                                  ),
                                 ),
-                                FutureBuilder<ApiCallResponse>(
-                                  future: (_apiRequestCompleter ??=
-                                          Completer<ApiCallResponse>()
-                                            ..complete(TasksCall.call()))
-                                      .future,
-                                  builder: (context, snapshot) {
-                                    // Customize what your widget looks like when it's loading.
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: SizedBox(
-                                          width: 50,
-                                          height: 50,
-                                          child: CircularProgressIndicator(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryColor,
+                                AuthUserStreamWidget(
+                                  builder: (context) =>
+                                      FutureBuilder<ApiCallResponse>(
+                                    future: (_model.apiRequestCompleter ??=
+                                            Completer<ApiCallResponse>()
+                                              ..complete(TasksCall.call(
+                                                token: valueOrDefault(
+                                                    currentUserDocument?.token,
+                                                    ''),
+                                              )))
+                                        .future,
+                                    builder: (context, snapshot) {
+                                      // Customize what your widget looks like when it's loading.
+                                      if (!snapshot.hasData) {
+                                        return Center(
+                                          child: SizedBox(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            child: CircularProgressIndicator(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    }
-                                    final listViewTasksResponse =
-                                        snapshot.data!;
-                                    return Builder(
-                                      builder: (context) {
-                                        final task = getJsonField(
-                                          listViewTasksResponse.jsonBody,
-                                          r'''$''',
-                                        ).toList();
-                                        return RefreshIndicator(
-                                          onRefresh: () async {
-                                            setState(() =>
-                                                _apiRequestCompleter = null);
-                                            await waitForApiRequestCompleter();
-                                          },
-                                          child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            primary: false,
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.vertical,
-                                            itemCount: task.length,
-                                            itemBuilder: (context, taskIndex) {
-                                              final taskItem = task[taskIndex];
-                                              return Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  if (functions.jsonToInt(
-                                                          getJsonField(
-                                                        taskItem,
-                                                        r'''$.type''',
-                                                      )) ==
-                                                      1)
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(20, 12,
-                                                                  20, 12),
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              blurRadius: 4,
-                                                              color: Color(
-                                                                  0x34090F13),
-                                                              offset:
-                                                                  Offset(0, 2),
-                                                            )
-                                                          ],
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      12,
-                                                                      16,
-                                                                      12,
-                                                                      12),
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: Color(
-                                                                          0xFF9B59B6),
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8),
-                                                                      shape: BoxShape
-                                                                          .rectangle,
-                                                                    ),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              3,
-                                                                              3,
-                                                                              3,
-                                                                              3),
-                                                                      child:
-                                                                          Text(
-                                                                        'Pack(${getJsonField(
-                                                                          taskItem,
-                                                                          r'''$.id''',
-                                                                        ).toString()})',
+                                        );
+                                      }
+                                      final listViewTasksResponse =
+                                          snapshot.data!;
+                                      return Builder(
+                                        builder: (context) {
+                                          final task = getJsonField(
+                                            listViewTasksResponse.jsonBody,
+                                            r'''$''',
+                                          ).toList();
+                                          return RefreshIndicator(
+                                            onRefresh: () async {
+                                              logFirebaseEvent(
+                                                  'TASKS_ListView_m35hyyvl_ON_PULL_TO_REFRE');
+                                              logFirebaseEvent(
+                                                  'ListView_refresh_database_request');
+                                              setState(() => _model
+                                                  .apiRequestCompleter = null);
+                                              await _model
+                                                  .waitForApiRequestCompleted();
+                                            },
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.zero,
+                                              primary: false,
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.vertical,
+                                              itemCount: task.length,
+                                              itemBuilder:
+                                                  (context, taskIndex) {
+                                                final taskItem =
+                                                    task[taskIndex];
+                                                return Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    if (functions.jsonToInt(
+                                                            getJsonField(
+                                                          taskItem,
+                                                          r'''$.type''',
+                                                        )) ==
+                                                        7)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    20.0,
+                                                                    12.0,
+                                                                    20.0,
+                                                                    12.0),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                blurRadius: 4.0,
+                                                                color: Color(
+                                                                    0x34090F13),
+                                                                offset: Offset(
+                                                                    0.0, 2.0),
+                                                              )
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        12.0,
+                                                                        16.0,
+                                                                        12.0,
+                                                                        12.0),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Total primes',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  fontSize: 12.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.total_primes''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
                                                                         style: FlutterFlowTheme.of(context)
-                                                                            .bodyText1
+                                                                            .bodyMedium
                                                                             .override(
                                                                               fontFamily: 'Poppins',
-                                                                              color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.normal,
+                                                                              color: Color(0xFF2ECC71),
                                                                             ),
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                  Expanded(
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              8,
-                                                                              0,
-                                                                              0,
-                                                                              0),
-                                                                      child:
-                                                                          AutoSizeText(
-                                                                        getJsonField(
-                                                                          taskItem,
-                                                                          r'''$.title''',
-                                                                        ).toString(),
-                                                                        maxLines:
-                                                                            2,
+                                                                      Text(
+                                                                        '/',
                                                                         style: FlutterFlowTheme.of(context)
-                                                                            .subtitle1
+                                                                            .bodyMedium
                                                                             .override(
-                                                                              fontFamily: 'Outfit',
-                                                                              color: Color(0xFF101213),
-                                                                              fontSize: 18,
-                                                                              fontWeight: FontWeight.w500,
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
                                                                             ),
                                                                       ),
-                                                                    ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.total_primes100''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).grayIcon,
+                                                                            ),
+                                                                      ),
+                                                                    ],
                                                                   ),
-                                                                ],
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0,
-                                                                            4,
-                                                                            0,
-                                                                            4),
-                                                                child:
-                                                                    AutoSizeText(
-                                                                  getJsonField(
-                                                                    taskItem,
-                                                                    r'''$.description''',
-                                                                  ).toString(),
-                                                                  maxLines: 2,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0),
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Prime Achat',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                fontSize: 12.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      '/',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime100''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).grayIcon,
+                                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          8.0,
+                                                                          0.0,
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Prime Achat Day',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  fontSize: 12.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.prime_day''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        '/',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.prime_day100''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).grayIcon,
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.title''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleMedium
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF101213),
+                                                                                fontSize: 18.0,
+                                                                                fontWeight: FontWeight.w500,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            4.0,
+                                                                            0.0,
+                                                                            4.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.description''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF57636C),
+                                                                                fontSize: 14.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Text(
+                                                                  'Created At: ${dateTimeFormat('relative', functions.jsonToDate(getJsonField(
+                                                                        taskItem,
+                                                                        r'''$.created_at''',
+                                                                      )))}',
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .bodyText2
+                                                                      .bodySmall
                                                                       .override(
                                                                         fontFamily:
                                                                             'Outfit',
                                                                         color: Color(
                                                                             0xFF57636C),
                                                                         fontSize:
-                                                                            14,
+                                                                            14.0,
                                                                         fontWeight:
                                                                             FontWeight.normal,
                                                                       ),
                                                                 ),
-                                                              ),
-                                                              Text(
-                                                                'Created: ${dateTimeFormat('relative', functions.jsonToDate(getJsonField(
-                                                                      taskItem,
-                                                                      r'''$.created_at''',
-                                                                    )))}',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText2
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Outfit',
-                                                                      color: Color(
-                                                                          0xFF57636C),
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal,
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          color:
+                                                                              Colors.white,
+                                                                          child:
+                                                                              ExpandableNotifier(
+                                                                            initialExpanded:
+                                                                                false,
+                                                                            child:
+                                                                                ExpandablePanel(
+                                                                              header: Text(
+                                                                                'Obj1: ${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.perc_real1''',
+                                                                                  )),
+                                                                                  formatType: FormatType.percent,
+                                                                                )}${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.obj1''',
+                                                                                  )),
+                                                                                  formatType: FormatType.decimal,
+                                                                                  decimalType: DecimalType.automatic,
+                                                                                  currency: 'DA ',
+                                                                                )}',
+                                                                                style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                              ),
+                                                                              collapsed: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Row(
+                                                                                    mainAxisSize: MainAxisSize.max,
+                                                                                    children: [
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation1''',
+                                                                                          )) >=
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_real1''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: FlutterFlowTheme.of(context).secondary,
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation1''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation1''',
+                                                                                          )) <
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_real1''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: Color(0xFF57636C),
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation1''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.realisation1''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF101213),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        ' of  ',
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 18.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.obj1''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                    child: LinearPercentIndicator(
+                                                                                      percent: functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_realisation1''',
+                                                                                      )),
+                                                                                      width: 310.0,
+                                                                                      lineHeight: 8.0,
+                                                                                      animation: true,
+                                                                                      progressColor: FlutterFlowTheme.of(context).primary,
+                                                                                      backgroundColor: FlutterFlowTheme.of(context).lineColor,
+                                                                                      barRadius: Radius.circular(16.0),
+                                                                                      padding: EdgeInsets.zero,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              expanded: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.jsonToDouble(getJsonField(
+                                                                                                        taskItem,
+                                                                                                        r'''$.gift_money1''',
+                                                                                                      )),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_money1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_money1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.gift_chiffre1''',
+                                                                                                    ).toString(),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_chiffre1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_chiffre1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_prods1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).tertiary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Products Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Builder(
+                                                                                                  builder: (context) {
+                                                                                                    final prodsGifts1 = getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.list_gift_prods1''',
+                                                                                                    ).toList();
+                                                                                                    return ListView.builder(
+                                                                                                      padding: EdgeInsets.zero,
+                                                                                                      shrinkWrap: true,
+                                                                                                      scrollDirection: Axis.vertical,
+                                                                                                      itemCount: prodsGifts1.length,
+                                                                                                      itemBuilder: (context, prodsGifts1Index) {
+                                                                                                        final prodsGifts1Item = prodsGifts1[prodsGifts1Index];
+                                                                                                        return Padding(
+                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                                                                                                          child: Container(
+                                                                                                            width: double.infinity,
+                                                                                                            height: 60.0,
+                                                                                                            decoration: BoxDecoration(
+                                                                                                              color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                                              boxShadow: [
+                                                                                                                BoxShadow(
+                                                                                                                  blurRadius: 5.0,
+                                                                                                                  color: Color(0x3416202A),
+                                                                                                                  offset: Offset(0.0, 2.0),
+                                                                                                                )
+                                                                                                              ],
+                                                                                                              borderRadius: BorderRadius.circular(12.0),
+                                                                                                              shape: BoxShape.rectangle,
+                                                                                                            ),
+                                                                                                            child: Padding(
+                                                                                                              padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                                                                                              child: Row(
+                                                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                                                children: [
+                                                                                                                  Container(
+                                                                                                                    width: 50.0,
+                                                                                                                    height: 50.0,
+                                                                                                                    decoration: BoxDecoration(
+                                                                                                                      color: FlutterFlowTheme.of(context).lineColor,
+                                                                                                                      shape: BoxShape.circle,
+                                                                                                                    ),
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                                                                                                                      child: Text(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.quantity''',
+                                                                                                                        ).toString(),
+                                                                                                                        textAlign: TextAlign.center,
+                                                                                                                        style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  Expanded(
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+                                                                                                                      child: AutoSizeText(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.product.name''',
+                                                                                                                        ).toString(),
+                                                                                                                        maxLines: 2,
+                                                                                                                        style: FlutterFlowTheme.of(context).bodySmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                ],
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    );
+                                                                                                  },
+                                                                                                ),
+                                                                                                if (functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_realisation1''',
+                                                                                                    )) >=
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_real1''',
+                                                                                                    )))
+                                                                                                  Padding(
+                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                                    child: FFButtonWidget(
+                                                                                                      onPressed: () {
+                                                                                                        print('Button pressed ...');
+                                                                                                      },
+                                                                                                      text: 'Get Products',
+                                                                                                      options: FFButtonOptions(
+                                                                                                        width: double.infinity,
+                                                                                                        height: 40.0,
+                                                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        color: FlutterFlowTheme.of(context).tertiary,
+                                                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                              fontFamily: 'Poppins',
+                                                                                                              color: Colors.white,
+                                                                                                              fontSize: 14.0,
+                                                                                                              fontWeight: FontWeight.normal,
+                                                                                                            ),
+                                                                                                        elevation: 2.0,
+                                                                                                        borderSide: BorderSide(
+                                                                                                          color: Colors.transparent,
+                                                                                                          width: 1.0,
+                                                                                                        ),
+                                                                                                        borderRadius: BorderRadius.circular(8.0),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                ],
+                                                                              ),
+                                                                              theme: ExpandableThemeData(
+                                                                                tapHeaderToExpand: true,
+                                                                                tapBodyToExpand: false,
+                                                                                tapBodyToCollapse: false,
+                                                                                headerAlignment: ExpandablePanelHeaderAlignment.center,
+                                                                                hasIcon: true,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
                                                                     ),
-                                                              ),
-                                                              Text(
-                                                                'Objectif: ${formatNumber(
-                                                                  functions
-                                                                      .jsonToInt(
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (functions.jsonToInt(
+                                                            getJsonField(
+                                                          taskItem,
+                                                          r'''$.type''',
+                                                        )) ==
+                                                        8)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    20.0,
+                                                                    12.0,
+                                                                    20.0,
+                                                                    12.0),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                blurRadius: 4.0,
+                                                                color: Color(
+                                                                    0x34090F13),
+                                                                offset: Offset(
+                                                                    0.0, 2.0),
+                                                              )
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        12.0,
+                                                                        16.0,
+                                                                        12.0,
+                                                                        12.0),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Total primes',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  fontSize: 12.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.total_primes''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        '/',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.total_primes100''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).grayIcon,
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0),
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Prime SUPRVISEUR',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                fontSize: 12.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      '/',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime100''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).grayIcon,
+                                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          8.0,
+                                                                          0.0,
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Prime SUPRVISEUR Day',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  fontSize: 12.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.prime_day''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        '/',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.prime_day100''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).grayIcon,
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            AutoSizeText(
                                                                           getJsonField(
-                                                                    taskItem,
-                                                                    r'''$.obj1''',
-                                                                  )),
-                                                                  formatType:
-                                                                      FormatType
-                                                                          .decimal,
-                                                                  decimalType:
-                                                                      DecimalType
-                                                                          .automatic,
-                                                                  currency:
-                                                                      'DA ',
-                                                                )}',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText2
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Outfit',
-                                                                      color: Color(
-                                                                          0xFF57636C),
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal,
+                                                                            taskItem,
+                                                                            r'''$.title''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleMedium
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF101213),
+                                                                                fontSize: 18.0,
+                                                                                fontWeight: FontWeight.w500,
+                                                                              ),
+                                                                        ),
+                                                                      ),
                                                                     ),
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: [
-                                                                  Text(
-                                                                    getJsonField(
-                                                                      taskItem,
-                                                                      r'''$.num_pack''',
-                                                                    ).toString(),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            4.0,
+                                                                            0.0,
+                                                                            4.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.description''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF57636C),
+                                                                                fontSize: 14.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Text(
+                                                                  'Created At: ${dateTimeFormat('relative', functions.jsonToDate(getJsonField(
+                                                                        taskItem,
+                                                                        r'''$.created_at''',
+                                                                      )))}',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14.0,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          color:
+                                                                              Colors.white,
+                                                                          child:
+                                                                              ExpandableNotifier(
+                                                                            initialExpanded:
+                                                                                false,
+                                                                            child:
+                                                                                ExpandablePanel(
+                                                                              header: Text(
+                                                                                'Obj1: ${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.perc_real1''',
+                                                                                  )),
+                                                                                  formatType: FormatType.percent,
+                                                                                )}${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.obj1''',
+                                                                                  )),
+                                                                                  formatType: FormatType.decimal,
+                                                                                  decimalType: DecimalType.automatic,
+                                                                                  currency: 'DA ',
+                                                                                )}',
+                                                                                style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                              ),
+                                                                              collapsed: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Row(
+                                                                                    mainAxisSize: MainAxisSize.max,
+                                                                                    children: [
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation1''',
+                                                                                          )) >=
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_real1''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: FlutterFlowTheme.of(context).secondary,
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation1''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation1''',
+                                                                                          )) <
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_real1''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: Color(0xFF57636C),
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation1''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.realisation1''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF101213),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        ' of  ',
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 18.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.obj1''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                    child: LinearPercentIndicator(
+                                                                                      percent: functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_realisation1''',
+                                                                                      )),
+                                                                                      width: 310.0,
+                                                                                      lineHeight: 8.0,
+                                                                                      animation: true,
+                                                                                      progressColor: FlutterFlowTheme.of(context).primary,
+                                                                                      backgroundColor: FlutterFlowTheme.of(context).lineColor,
+                                                                                      barRadius: Radius.circular(16.0),
+                                                                                      padding: EdgeInsets.zero,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              expanded: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.jsonToDouble(getJsonField(
+                                                                                                        taskItem,
+                                                                                                        r'''$.gift_money1''',
+                                                                                                      )),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_money1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_money1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.gift_chiffre1''',
+                                                                                                    ).toString(),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_chiffre1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_chiffre1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_prods1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).tertiary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Products Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Builder(
+                                                                                                  builder: (context) {
+                                                                                                    final prodsGifts1 = getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.list_gift_prods1''',
+                                                                                                    ).toList();
+                                                                                                    return ListView.builder(
+                                                                                                      padding: EdgeInsets.zero,
+                                                                                                      shrinkWrap: true,
+                                                                                                      scrollDirection: Axis.vertical,
+                                                                                                      itemCount: prodsGifts1.length,
+                                                                                                      itemBuilder: (context, prodsGifts1Index) {
+                                                                                                        final prodsGifts1Item = prodsGifts1[prodsGifts1Index];
+                                                                                                        return Padding(
+                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                                                                                                          child: Container(
+                                                                                                            width: double.infinity,
+                                                                                                            height: 60.0,
+                                                                                                            decoration: BoxDecoration(
+                                                                                                              color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                                              boxShadow: [
+                                                                                                                BoxShadow(
+                                                                                                                  blurRadius: 5.0,
+                                                                                                                  color: Color(0x3416202A),
+                                                                                                                  offset: Offset(0.0, 2.0),
+                                                                                                                )
+                                                                                                              ],
+                                                                                                              borderRadius: BorderRadius.circular(12.0),
+                                                                                                              shape: BoxShape.rectangle,
+                                                                                                            ),
+                                                                                                            child: Padding(
+                                                                                                              padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                                                                                              child: Row(
+                                                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                                                children: [
+                                                                                                                  Container(
+                                                                                                                    width: 50.0,
+                                                                                                                    height: 50.0,
+                                                                                                                    decoration: BoxDecoration(
+                                                                                                                      color: FlutterFlowTheme.of(context).lineColor,
+                                                                                                                      shape: BoxShape.circle,
+                                                                                                                    ),
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                                                                                                                      child: Text(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.quantity''',
+                                                                                                                        ).toString(),
+                                                                                                                        textAlign: TextAlign.center,
+                                                                                                                        style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  Expanded(
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+                                                                                                                      child: AutoSizeText(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.product.name''',
+                                                                                                                        ).toString(),
+                                                                                                                        maxLines: 2,
+                                                                                                                        style: FlutterFlowTheme.of(context).bodySmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                ],
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    );
+                                                                                                  },
+                                                                                                ),
+                                                                                                if (functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_realisation1''',
+                                                                                                    )) >=
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_real1''',
+                                                                                                    )))
+                                                                                                  Padding(
+                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                                    child: FFButtonWidget(
+                                                                                                      onPressed: () {
+                                                                                                        print('Button pressed ...');
+                                                                                                      },
+                                                                                                      text: 'Get Products',
+                                                                                                      options: FFButtonOptions(
+                                                                                                        width: double.infinity,
+                                                                                                        height: 40.0,
+                                                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        color: FlutterFlowTheme.of(context).tertiary,
+                                                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                              fontFamily: 'Poppins',
+                                                                                                              color: Colors.white,
+                                                                                                              fontSize: 14.0,
+                                                                                                              fontWeight: FontWeight.normal,
+                                                                                                            ),
+                                                                                                        elevation: 2.0,
+                                                                                                        borderSide: BorderSide(
+                                                                                                          color: Colors.transparent,
+                                                                                                          width: 1.0,
+                                                                                                        ),
+                                                                                                        borderRadius: BorderRadius.circular(8.0),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                ],
+                                                                              ),
+                                                                              theme: ExpandableThemeData(
+                                                                                tapHeaderToExpand: true,
+                                                                                tapBodyToExpand: false,
+                                                                                tapBodyToCollapse: false,
+                                                                                headerAlignment: ExpandablePanelHeaderAlignment.center,
+                                                                                hasIcon: true,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (functions.jsonToInt(
+                                                            getJsonField(
+                                                          taskItem,
+                                                          r'''$.type''',
+                                                        )) ==
+                                                        2)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    20.0,
+                                                                    12.0,
+                                                                    20.0,
+                                                                    12.0),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                blurRadius: 4.0,
+                                                                color: Color(
+                                                                    0x34090F13),
+                                                                offset: Offset(
+                                                                    0.0, 2.0),
+                                                              )
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        12.0,
+                                                                        16.0,
+                                                                        12.0,
+                                                                        12.0),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Total primes',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  fontSize: 12.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.total_primes''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        '/',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.total_primes100''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).grayIcon,
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0),
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Prime chef des vents',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                fontSize: 12.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      '/',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime100''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).grayIcon,
+                                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          8.0,
+                                                                          0.0,
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Prime chef des vents Day',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  fontSize: 12.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.prime_day''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        '/',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.prime_day100''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).grayIcon,
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.title''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleMedium
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF101213),
+                                                                                fontSize: 18.0,
+                                                                                fontWeight: FontWeight.w500,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            4.0,
+                                                                            0.0,
+                                                                            4.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.description''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF57636C),
+                                                                                fontSize: 14.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Text(
+                                                                  'Created At: ${dateTimeFormat('relative', functions.jsonToDate(getJsonField(
+                                                                        taskItem,
+                                                                        r'''$.created_at''',
+                                                                      )))}',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14.0,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          color:
+                                                                              Colors.white,
+                                                                          child:
+                                                                              ExpandableNotifier(
+                                                                            initialExpanded:
+                                                                                false,
+                                                                            child:
+                                                                                ExpandablePanel(
+                                                                              header: Text(
+                                                                                'Obj1: ${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.perc_real1''',
+                                                                                  )),
+                                                                                  formatType: FormatType.percent,
+                                                                                )}${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.obj1''',
+                                                                                  )),
+                                                                                  formatType: FormatType.decimal,
+                                                                                  decimalType: DecimalType.automatic,
+                                                                                  currency: 'DA ',
+                                                                                )}',
+                                                                                style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                              ),
+                                                                              collapsed: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Row(
+                                                                                    mainAxisSize: MainAxisSize.max,
+                                                                                    children: [
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation1''',
+                                                                                          )) >=
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_real1''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: FlutterFlowTheme.of(context).secondary,
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation1''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation1''',
+                                                                                          )) <
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_real1''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: Color(0xFF57636C),
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation1''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.realisation1''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF101213),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        ' of  ',
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 18.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.obj1''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                    child: LinearPercentIndicator(
+                                                                                      percent: functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_realisation1''',
+                                                                                      )),
+                                                                                      width: 310.0,
+                                                                                      lineHeight: 8.0,
+                                                                                      animation: true,
+                                                                                      progressColor: FlutterFlowTheme.of(context).primary,
+                                                                                      backgroundColor: FlutterFlowTheme.of(context).lineColor,
+                                                                                      barRadius: Radius.circular(16.0),
+                                                                                      padding: EdgeInsets.zero,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              expanded: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.jsonToDouble(getJsonField(
+                                                                                                        taskItem,
+                                                                                                        r'''$.gift_money1''',
+                                                                                                      )),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_money1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_money1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.gift_chiffre1''',
+                                                                                                    ).toString(),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_chiffre1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_chiffre1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_prods1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).tertiary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Products Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Builder(
+                                                                                                  builder: (context) {
+                                                                                                    final prodsGifts1 = getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.list_gift_prods1''',
+                                                                                                    ).toList();
+                                                                                                    return ListView.builder(
+                                                                                                      padding: EdgeInsets.zero,
+                                                                                                      shrinkWrap: true,
+                                                                                                      scrollDirection: Axis.vertical,
+                                                                                                      itemCount: prodsGifts1.length,
+                                                                                                      itemBuilder: (context, prodsGifts1Index) {
+                                                                                                        final prodsGifts1Item = prodsGifts1[prodsGifts1Index];
+                                                                                                        return Padding(
+                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                                                                                                          child: Container(
+                                                                                                            width: double.infinity,
+                                                                                                            height: 60.0,
+                                                                                                            decoration: BoxDecoration(
+                                                                                                              color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                                              boxShadow: [
+                                                                                                                BoxShadow(
+                                                                                                                  blurRadius: 5.0,
+                                                                                                                  color: Color(0x3416202A),
+                                                                                                                  offset: Offset(0.0, 2.0),
+                                                                                                                )
+                                                                                                              ],
+                                                                                                              borderRadius: BorderRadius.circular(12.0),
+                                                                                                              shape: BoxShape.rectangle,
+                                                                                                            ),
+                                                                                                            child: Padding(
+                                                                                                              padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                                                                                              child: Row(
+                                                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                                                children: [
+                                                                                                                  Container(
+                                                                                                                    width: 50.0,
+                                                                                                                    height: 50.0,
+                                                                                                                    decoration: BoxDecoration(
+                                                                                                                      color: FlutterFlowTheme.of(context).lineColor,
+                                                                                                                      shape: BoxShape.circle,
+                                                                                                                    ),
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                                                                                                                      child: Text(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.quantity''',
+                                                                                                                        ).toString(),
+                                                                                                                        textAlign: TextAlign.center,
+                                                                                                                        style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  Expanded(
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+                                                                                                                      child: AutoSizeText(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.product.name''',
+                                                                                                                        ).toString(),
+                                                                                                                        maxLines: 2,
+                                                                                                                        style: FlutterFlowTheme.of(context).bodySmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                ],
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    );
+                                                                                                  },
+                                                                                                ),
+                                                                                                if (functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_realisation1''',
+                                                                                                    )) >=
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_real1''',
+                                                                                                    )))
+                                                                                                  Padding(
+                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                                    child: FFButtonWidget(
+                                                                                                      onPressed: () {
+                                                                                                        print('Button pressed ...');
+                                                                                                      },
+                                                                                                      text: 'Get Products',
+                                                                                                      options: FFButtonOptions(
+                                                                                                        width: double.infinity,
+                                                                                                        height: 40.0,
+                                                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        color: FlutterFlowTheme.of(context).tertiary,
+                                                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                              fontFamily: 'Poppins',
+                                                                                                              color: Colors.white,
+                                                                                                              fontSize: 14.0,
+                                                                                                              fontWeight: FontWeight.normal,
+                                                                                                            ),
+                                                                                                        elevation: 2.0,
+                                                                                                        borderSide: BorderSide(
+                                                                                                          color: Colors.transparent,
+                                                                                                          width: 1.0,
+                                                                                                        ),
+                                                                                                        borderRadius: BorderRadius.circular(8.0),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                ],
+                                                                              ),
+                                                                              theme: ExpandableThemeData(
+                                                                                tapHeaderToExpand: true,
+                                                                                tapBodyToExpand: false,
+                                                                                tapBodyToCollapse: false,
+                                                                                headerAlignment: ExpandablePanelHeaderAlignment.center,
+                                                                                hasIcon: true,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (functions.jsonToInt(
+                                                            getJsonField(
+                                                          taskItem,
+                                                          r'''$.type''',
+                                                        )) ==
+                                                        5)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    20.0,
+                                                                    12.0,
+                                                                    20.0,
+                                                                    12.0),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                blurRadius: 4.0,
+                                                                color: Color(
+                                                                    0x34090F13),
+                                                                offset: Offset(
+                                                                    0.0, 2.0),
+                                                              )
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        12.0,
+                                                                        16.0,
+                                                                        12.0,
+                                                                        12.0),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Total primes',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  fontSize: 12.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.total_primes''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        '/',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.total_primes100''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).grayIcon,
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .primary,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0),
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Prime Op',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                fontSize: 12.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      '/',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime100''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).grayIcon,
+                                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          8.0,
+                                                                          0.0,
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .max,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8.0),
+                                                                          shape:
+                                                                              BoxShape.rectangle,
+                                                                        ),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0,
+                                                                              3.0),
+                                                                          child:
+                                                                              Text(
+                                                                            'Prime Op Day',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  fontSize: 12.0,
+                                                                                  fontWeight: FontWeight.normal,
+                                                                                ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.prime_day''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        '/',
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFF2ECC71),
+                                                                            ),
+                                                                      ),
+                                                                      Text(
+                                                                        formatNumber(
+                                                                          functions
+                                                                              .jsonToDouble(getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.prime_day100''',
+                                                                          )),
+                                                                          formatType:
+                                                                              FormatType.decimal,
+                                                                          decimalType:
+                                                                              DecimalType.automatic,
+                                                                          currency:
+                                                                              'DA ',
+                                                                        ),
+                                                                        style: FlutterFlowTheme.of(context)
+                                                                            .bodyMedium
+                                                                            .override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.of(context).grayIcon,
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.title''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleMedium
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF101213),
+                                                                                fontSize: 18.0,
+                                                                                fontWeight: FontWeight.w500,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            4.0,
+                                                                            0.0,
+                                                                            4.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.description''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF57636C),
+                                                                                fontSize: 14.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Text(
+                                                                  'Created At: ${dateTimeFormat('relative', functions.jsonToDate(getJsonField(
+                                                                        taskItem,
+                                                                        r'''$.created_at''',
+                                                                      )))}',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14.0,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          color:
+                                                                              Colors.white,
+                                                                          child:
+                                                                              ExpandableNotifier(
+                                                                            initialExpanded:
+                                                                                false,
+                                                                            child:
+                                                                                ExpandablePanel(
+                                                                              header: Text(
+                                                                                'Obj1: ${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.perc_real1''',
+                                                                                  )),
+                                                                                  formatType: FormatType.percent,
+                                                                                )}${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.obj1''',
+                                                                                  )),
+                                                                                  formatType: FormatType.decimal,
+                                                                                  decimalType: DecimalType.automatic,
+                                                                                  currency: 'DA ',
+                                                                                )}',
+                                                                                style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                              ),
+                                                                              collapsed: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Row(
+                                                                                    mainAxisSize: MainAxisSize.max,
+                                                                                    children: [
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation1''',
+                                                                                          )) >=
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_real1''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: FlutterFlowTheme.of(context).secondary,
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation1''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation1''',
+                                                                                          )) <
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_real1''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: Color(0xFF57636C),
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation1''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.realisation1''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF101213),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        ' of  ',
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 18.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.obj1''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                    child: LinearPercentIndicator(
+                                                                                      percent: functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_realisation1''',
+                                                                                      )),
+                                                                                      width: 310.0,
+                                                                                      lineHeight: 8.0,
+                                                                                      animation: true,
+                                                                                      progressColor: FlutterFlowTheme.of(context).primary,
+                                                                                      backgroundColor: FlutterFlowTheme.of(context).lineColor,
+                                                                                      barRadius: Radius.circular(16.0),
+                                                                                      padding: EdgeInsets.zero,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              expanded: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.jsonToDouble(getJsonField(
+                                                                                                        taskItem,
+                                                                                                        r'''$.gift_money1''',
+                                                                                                      )),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_money1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_money1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.gift_chiffre1''',
+                                                                                                    ).toString(),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_chiffre1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_chiffre1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_prods1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).tertiary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Products Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Builder(
+                                                                                                  builder: (context) {
+                                                                                                    final prodsGifts1 = getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.list_gift_prods1''',
+                                                                                                    ).toList();
+                                                                                                    return ListView.builder(
+                                                                                                      padding: EdgeInsets.zero,
+                                                                                                      shrinkWrap: true,
+                                                                                                      scrollDirection: Axis.vertical,
+                                                                                                      itemCount: prodsGifts1.length,
+                                                                                                      itemBuilder: (context, prodsGifts1Index) {
+                                                                                                        final prodsGifts1Item = prodsGifts1[prodsGifts1Index];
+                                                                                                        return Padding(
+                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                                                                                                          child: Container(
+                                                                                                            width: double.infinity,
+                                                                                                            height: 60.0,
+                                                                                                            decoration: BoxDecoration(
+                                                                                                              color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                                              boxShadow: [
+                                                                                                                BoxShadow(
+                                                                                                                  blurRadius: 5.0,
+                                                                                                                  color: Color(0x3416202A),
+                                                                                                                  offset: Offset(0.0, 2.0),
+                                                                                                                )
+                                                                                                              ],
+                                                                                                              borderRadius: BorderRadius.circular(12.0),
+                                                                                                              shape: BoxShape.rectangle,
+                                                                                                            ),
+                                                                                                            child: Padding(
+                                                                                                              padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                                                                                              child: Row(
+                                                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                                                children: [
+                                                                                                                  Container(
+                                                                                                                    width: 50.0,
+                                                                                                                    height: 50.0,
+                                                                                                                    decoration: BoxDecoration(
+                                                                                                                      color: FlutterFlowTheme.of(context).lineColor,
+                                                                                                                      shape: BoxShape.circle,
+                                                                                                                    ),
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                                                                                                                      child: Text(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.quantity''',
+                                                                                                                        ).toString(),
+                                                                                                                        textAlign: TextAlign.center,
+                                                                                                                        style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  Expanded(
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+                                                                                                                      child: AutoSizeText(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.product.name''',
+                                                                                                                        ).toString(),
+                                                                                                                        maxLines: 2,
+                                                                                                                        style: FlutterFlowTheme.of(context).bodySmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                ],
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    );
+                                                                                                  },
+                                                                                                ),
+                                                                                                if (functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_realisation1''',
+                                                                                                    )) >=
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_real1''',
+                                                                                                    )))
+                                                                                                  Padding(
+                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                                    child: FFButtonWidget(
+                                                                                                      onPressed: () {
+                                                                                                        print('Button pressed ...');
+                                                                                                      },
+                                                                                                      text: 'Get Products',
+                                                                                                      options: FFButtonOptions(
+                                                                                                        width: double.infinity,
+                                                                                                        height: 40.0,
+                                                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        color: FlutterFlowTheme.of(context).tertiary,
+                                                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                              fontFamily: 'Poppins',
+                                                                                                              color: Colors.white,
+                                                                                                              fontSize: 14.0,
+                                                                                                              fontWeight: FontWeight.normal,
+                                                                                                            ),
+                                                                                                        elevation: 2.0,
+                                                                                                        borderSide: BorderSide(
+                                                                                                          color: Colors.transparent,
+                                                                                                          width: 1.0,
+                                                                                                        ),
+                                                                                                        borderRadius: BorderRadius.circular(8.0),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                ],
+                                                                              ),
+                                                                              theme: ExpandableThemeData(
+                                                                                tapHeaderToExpand: true,
+                                                                                tapBodyToExpand: false,
+                                                                                tapBodyToCollapse: false,
+                                                                                headerAlignment: ExpandablePanelHeaderAlignment.center,
+                                                                                hasIcon: true,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    if (functions.jsonToInt(
+                                                            getJsonField(
+                                                          taskItem,
+                                                          r'''$.type''',
+                                                        )) ==
+                                                        6)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    20.0,
+                                                                    12.0,
+                                                                    20.0,
+                                                                    12.0),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                blurRadius: 4.0,
+                                                                color: Color(
+                                                                    0x34090F13),
+                                                                offset: Offset(
+                                                                    0.0, 2.0),
+                                                              )
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        12.0,
+                                                                        16.0,
+                                                                        12.0,
+                                                                        12.0),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: Color(
+                                                                            0xFF16A085),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0),
+                                                                        shape: BoxShape
+                                                                            .rectangle,
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Prime Op Labo',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                fontSize: 12.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      '/',
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                Color(0xFF2ECC71),
+                                                                          ),
+                                                                    ),
+                                                                    Text(
+                                                                      formatNumber(
+                                                                        functions
+                                                                            .jsonToDouble(getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.prime100''',
+                                                                        )),
+                                                                        formatType:
+                                                                            FormatType.decimal,
+                                                                        decimalType:
+                                                                            DecimalType.automatic,
+                                                                        currency:
+                                                                            'DA ',
+                                                                      ),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .bodyMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Poppins',
+                                                                            color:
+                                                                                FlutterFlowTheme.of(context).grayIcon,
+                                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.title''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleMedium
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF101213),
+                                                                                fontSize: 18.0,
+                                                                                fontWeight: FontWeight.w500,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            4.0,
+                                                                            0.0,
+                                                                            4.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.description''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodySmall
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF57636C),
+                                                                                fontSize: 14.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Text(
+                                                                  'Created At: ${dateTimeFormat('relative', functions.jsonToDate(getJsonField(
+                                                                        taskItem,
+                                                                        r'''$.created_at''',
+                                                                      )))}',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14.0,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          4.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                                  child: Text(
+                                                                    'Resets Jun 30, 2022',
                                                                     style: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .subtitle1
+                                                                        .bodySmall
                                                                         .override(
                                                                           fontFamily:
                                                                               'Outfit',
                                                                           color:
                                                                               Color(0xFF57636C),
                                                                           fontSize:
-                                                                              18,
+                                                                              14.0,
                                                                           fontWeight:
-                                                                              FontWeight.w500,
+                                                                              FontWeight.normal,
                                                                         ),
                                                                   ),
-                                                                ],
-                                                              ),
-                                                              Divider(
-                                                                height: 24,
-                                                                thickness: 2,
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .lineColor,
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: [
-                                                                  Expanded(
-                                                                    child: Wrap(
-                                                                      spacing:
-                                                                          2,
-                                                                      runSpacing:
-                                                                          2,
-                                                                      alignment:
-                                                                          WrapAlignment
-                                                                              .start,
-                                                                      crossAxisAlignment:
-                                                                          WrapCrossAlignment
-                                                                              .start,
-                                                                      direction:
-                                                                          Axis.horizontal,
-                                                                      runAlignment:
-                                                                          WrapAlignment
-                                                                              .start,
-                                                                      verticalDirection:
-                                                                          VerticalDirection
-                                                                              .down,
-                                                                      clipBehavior:
-                                                                          Clip.none,
-                                                                      children: [
-                                                                        Visibility(
-                                                                          visible: functions.jsonToInt(getJsonField(
-                                                                                taskItem,
-                                                                                r'''$.prods_oblg''',
-                                                                              )) ==
-                                                                              1,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0,
-                                                                                0,
-                                                                                2,
-                                                                                0),
-                                                                            child:
-                                                                                Container(
-                                                                              width: 100,
-                                                                              height: 24,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color(0xFFD35400),
-                                                                                boxShadow: [
-                                                                                  BoxShadow(
-                                                                                    blurRadius: 4,
-                                                                                    color: Color(0x2B202529),
-                                                                                    offset: Offset(0, 2),
-                                                                                  )
-                                                                                ],
-                                                                                borderRadius: BorderRadius.circular(8),
-                                                                                shape: BoxShape.rectangle,
-                                                                              ),
-                                                                              alignment: AlignmentDirectional(0, 0),
-                                                                              child: Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(2, 0, 2, 0),
-                                                                                child: Text(
-                                                                                  'Prods Oblg',
-                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                        fontFamily: 'Poppins',
-                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                        fontWeight: FontWeight.normal,
-                                                                                      ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Visibility(
-                                                                          visible: functions.jsonToInt(getJsonField(
-                                                                                taskItem,
-                                                                                r'''$.gift_prods1''',
-                                                                              )) ==
-                                                                              1,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0,
-                                                                                0,
-                                                                                2,
-                                                                                0),
-                                                                            child:
-                                                                                Container(
-                                                                              width: 100,
-                                                                              height: 24,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color(0xFF2ECC71),
-                                                                                boxShadow: [
-                                                                                  BoxShadow(
-                                                                                    blurRadius: 4,
-                                                                                    color: Color(0x2B202529),
-                                                                                    offset: Offset(0, 2),
-                                                                                  )
-                                                                                ],
-                                                                                borderRadius: BorderRadius.circular(8),
-                                                                                shape: BoxShape.rectangle,
-                                                                              ),
-                                                                              alignment: AlignmentDirectional(0, 0),
-                                                                              child: Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(2, 0, 2, 0),
-                                                                                child: Text(
-                                                                                  'Prods Gift',
-                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                        fontFamily: 'Poppins',
-                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                        fontWeight: FontWeight.normal,
-                                                                                      ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Visibility(
-                                                                          visible: functions.jsonToInt(getJsonField(
-                                                                                taskItem,
-                                                                                r'''$.gift_money1''',
-                                                                              )) >
-                                                                              0,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0,
-                                                                                0,
-                                                                                2,
-                                                                                0),
-                                                                            child:
-                                                                                Container(
-                                                                              width: 100,
-                                                                              height: 24,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color(0xFF3498DB),
-                                                                                boxShadow: [
-                                                                                  BoxShadow(
-                                                                                    blurRadius: 4,
-                                                                                    color: Color(0x2B202529),
-                                                                                    offset: Offset(0, 2),
-                                                                                  )
-                                                                                ],
-                                                                                borderRadius: BorderRadius.circular(8),
-                                                                                shape: BoxShape.rectangle,
-                                                                              ),
-                                                                              alignment: AlignmentDirectional(0, 0),
-                                                                              child: Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(2, 0, 2, 0),
-                                                                                child: Text(
-                                                                                  formatNumber(
-                                                                                    functions.jsonToInt(getJsonField(
-                                                                                      taskItem,
-                                                                                      r'''$.gift_money1''',
-                                                                                    )),
-                                                                                    formatType: FormatType.decimal,
-                                                                                    decimalType: DecimalType.automatic,
-                                                                                    currency: 'DA ',
-                                                                                  ),
-                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                        fontFamily: 'Poppins',
-                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                        fontWeight: FontWeight.normal,
-                                                                                      ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        Visibility(
-                                                                          visible: functions.jsonToInt(getJsonField(
-                                                                                taskItem,
-                                                                                r'''$.gift_chiffre1''',
-                                                                              )) >
-                                                                              0,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding: EdgeInsetsDirectional.fromSTEB(
-                                                                                0,
-                                                                                0,
-                                                                                2,
-                                                                                0),
-                                                                            child:
-                                                                                Container(
-                                                                              width: 100,
-                                                                              height: 24,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color(0xFF1ABC9C),
-                                                                                boxShadow: [
-                                                                                  BoxShadow(
-                                                                                    blurRadius: 4,
-                                                                                    color: Color(0x2B202529),
-                                                                                    offset: Offset(0, 2),
-                                                                                  )
-                                                                                ],
-                                                                                borderRadius: BorderRadius.circular(8),
-                                                                                shape: BoxShape.rectangle,
-                                                                              ),
-                                                                              alignment: AlignmentDirectional(0, 0),
-                                                                              child: Padding(
-                                                                                padding: EdgeInsetsDirectional.fromSTEB(2, 0, 2, 0),
-                                                                                child: Text(
-                                                                                  formatNumber(
-                                                                                    functions.jsonToInt(getJsonField(
-                                                                                      taskItem,
-                                                                                      r'''$.gift_chiffre1''',
-                                                                                    )),
-                                                                                    formatType: FormatType.decimal,
-                                                                                    decimalType: DecimalType.automatic,
-                                                                                  ),
-                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                        fontFamily: 'Poppins',
-                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                        fontWeight: FontWeight.normal,
-                                                                                      ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  FlutterFlowIconButton(
-                                                                    borderColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    borderRadius:
-                                                                        30,
-                                                                    borderWidth:
-                                                                        1,
-                                                                    buttonSize:
-                                                                        60,
-                                                                    icon: Icon(
-                                                                      Icons
-                                                                          .arrow_forward_ios,
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .grayIcon,
-                                                                      size: 30,
-                                                                    ),
-                                                                    onPressed:
-                                                                        () async {
-                                                                      await Navigator
-                                                                          .push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              ShowPackWidget(
-                                                                            pack:
-                                                                                getJsonField(
-                                                                              taskItem,
-                                                                              r'''$''',
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    },
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  if (getJsonField(
-                                                                        taskItem,
-                                                                        r'''$.packStatus.total''',
-                                                                      ) !=
-                                                                      null)
-                                                                    Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              0,
-                                                                              0,
-                                                                              8,
-                                                                              0),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
                                                                       child:
-                                                                          CircularPercentIndicator(
-                                                                        percent:
-                                                                            valueOrDefault<double>(
-                                                                          functions.percTwoNum(
-                                                                              valueOrDefault<double>(
-                                                                                functions.jsonToDouble(getJsonField(
-                                                                                  taskItem,
-                                                                                  r'''$.packStatus.total''',
-                                                                                )),
-                                                                                0.0,
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            Container(
+                                                                          width:
+                                                                              double.infinity,
+                                                                          color:
+                                                                              Colors.white,
+                                                                          child:
+                                                                              ExpandableNotifier(
+                                                                            initialExpanded:
+                                                                                false,
+                                                                            child:
+                                                                                ExpandablePanel(
+                                                                              header: Text(
+                                                                                'Obj1: ${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.perc_realisation''',
+                                                                                  )),
+                                                                                  formatType: FormatType.percent,
+                                                                                )}${formatNumber(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.objectif''',
+                                                                                  )),
+                                                                                  formatType: FormatType.decimal,
+                                                                                  decimalType: DecimalType.automatic,
+                                                                                  currency: 'DA ',
+                                                                                )}',
+                                                                                style: FlutterFlowTheme.of(context).headlineSmall,
                                                                               ),
-                                                                              functions.jsonToDouble(getJsonField(
-                                                                                taskItem,
-                                                                                r'''$.num_pack''',
-                                                                              ))),
-                                                                          0.0,
-                                                                        ),
-                                                                        radius:
-                                                                            45,
-                                                                        lineWidth:
-                                                                            12,
-                                                                        animation:
-                                                                            true,
-                                                                        progressColor:
-                                                                            Color(0xFFE67E22),
-                                                                        backgroundColor:
-                                                                            Color(0xFFF1F4F8),
-                                                                        center:
-                                                                            Text(
-                                                                          '${valueOrDefault<String>(
-                                                                            getJsonField(
-                                                                              taskItem,
-                                                                              r'''$.packStatus.total''',
-                                                                            ).toString(),
-                                                                            '0',
-                                                                          )}/${valueOrDefault<String>(
-                                                                            getJsonField(
-                                                                              taskItem,
-                                                                              r'''$.num_pack''',
-                                                                            ).toString(),
-                                                                            '0',
-                                                                          )}',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .bodyText1
-                                                                              .override(
-                                                                                fontFamily: 'Poppins',
-                                                                                color: Color(0xFFE67E22),
+                                                                              collapsed: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Row(
+                                                                                    mainAxisSize: MainAxisSize.max,
+                                                                                    children: [
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.realisation''',
+                                                                                          )) >=
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.objectif''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: FlutterFlowTheme.of(context).secondary,
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      if (functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.perc_realisation''',
+                                                                                          )) <
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.objectif''',
+                                                                                          )))
+                                                                                        Container(
+                                                                                          width: 40.0,
+                                                                                          height: 40.0,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: Color(0xFF57636C),
+                                                                                            boxShadow: [
+                                                                                              BoxShadow(
+                                                                                                blurRadius: 4.0,
+                                                                                                color: Color(0x2B202529),
+                                                                                                offset: Offset(0.0, 2.0),
+                                                                                              )
+                                                                                            ],
+                                                                                            shape: BoxShape.circle,
+                                                                                          ),
+                                                                                          alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                          child: Text(
+                                                                                            formatNumber(
+                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                taskItem,
+                                                                                                r'''$.perc_realisation''',
+                                                                                              )),
+                                                                                              formatType: FormatType.percent,
+                                                                                            ),
+                                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                  fontFamily: 'Poppins',
+                                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                                ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.realisation''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF101213),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        ' of  ',
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 18.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                      Text(
+                                                                                        formatNumber(
+                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                            taskItem,
+                                                                                            r'''$.objectif''',
+                                                                                          )),
+                                                                                          formatType: FormatType.decimal,
+                                                                                          decimalType: DecimalType.automatic,
+                                                                                          currency: 'DA ',
+                                                                                        ),
+                                                                                        style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                              fontFamily: 'Outfit',
+                                                                                              color: Color(0xFF57636C),
+                                                                                              fontSize: 16.0,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                            ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                    child: LinearPercentIndicator(
+                                                                                      percent: functions.jsonToDoublePercMax1(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_realisation''',
+                                                                                      )),
+                                                                                      width: 310.0,
+                                                                                      lineHeight: 8.0,
+                                                                                      animation: true,
+                                                                                      progressColor: FlutterFlowTheme.of(context).primary,
+                                                                                      backgroundColor: FlutterFlowTheme.of(context).lineColor,
+                                                                                      barRadius: Radius.circular(16.0),
+                                                                                      padding: EdgeInsets.zero,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
                                                                               ),
+                                                                              expanded: Column(
+                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                children: [
+                                                                                  Builder(
+                                                                                    builder: (context) {
+                                                                                      final labo = getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.labos''',
+                                                                                      ).toList();
+                                                                                      return ListView.builder(
+                                                                                        padding: EdgeInsets.zero,
+                                                                                        shrinkWrap: true,
+                                                                                        scrollDirection: Axis.vertical,
+                                                                                        itemCount: labo.length,
+                                                                                        itemBuilder: (context, laboIndex) {
+                                                                                          final laboItem = labo[laboIndex];
+                                                                                          return Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                                                                            child: Container(
+                                                                                              width: double.infinity,
+                                                                                              height: 90.0,
+                                                                                              decoration: BoxDecoration(
+                                                                                                color: Colors.white,
+                                                                                                boxShadow: [
+                                                                                                  BoxShadow(
+                                                                                                    blurRadius: 4.0,
+                                                                                                    color: Color(0x34090F13),
+                                                                                                    offset: Offset(0.0, 2.0),
+                                                                                                  )
+                                                                                                ],
+                                                                                                borderRadius: BorderRadius.circular(12.0),
+                                                                                              ),
+                                                                                              child: Padding(
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(12.0, 8.0, 12.0, 8.0),
+                                                                                                child: Column(
+                                                                                                  mainAxisSize: MainAxisSize.max,
+                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                  children: [
+                                                                                                    Row(
+                                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                                      children: [
+                                                                                                        Expanded(
+                                                                                                          child: Text(
+                                                                                                            getJsonField(
+                                                                                                              laboItem,
+                                                                                                              r'''$.name''',
+                                                                                                            ).toString(),
+                                                                                                            style: FlutterFlowTheme.of(context).titleMedium.override(
+                                                                                                                  fontFamily: 'Outfit',
+                                                                                                                  color: Color(0xFF101213),
+                                                                                                                  fontSize: 18.0,
+                                                                                                                  fontWeight: FontWeight.w500,
+                                                                                                                ),
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        Text(
+                                                                                                          formatNumber(
+                                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                                              laboItem,
+                                                                                                              r'''$.prime''',
+                                                                                                            )),
+                                                                                                            formatType: FormatType.decimal,
+                                                                                                            decimalType: DecimalType.automatic,
+                                                                                                            currency: 'DA ',
+                                                                                                          ),
+                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                fontFamily: 'Poppins',
+                                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                                fontWeight: FontWeight.normal,
+                                                                                                              ),
+                                                                                                        ),
+                                                                                                        Text(
+                                                                                                          '/',
+                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                fontFamily: 'Poppins',
+                                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                                fontWeight: FontWeight.normal,
+                                                                                                              ),
+                                                                                                        ),
+                                                                                                        Text(
+                                                                                                          formatNumber(
+                                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                                              laboItem,
+                                                                                                              r'''$.prime100''',
+                                                                                                            )),
+                                                                                                            formatType: FormatType.decimal,
+                                                                                                            decimalType: DecimalType.automatic,
+                                                                                                            currency: 'DA ',
+                                                                                                          ),
+                                                                                                          style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                                fontFamily: 'Poppins',
+                                                                                                                color: FlutterFlowTheme.of(context).grayIcon,
+                                                                                                                fontWeight: FontWeight.normal,
+                                                                                                              ),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                    Expanded(
+                                                                                                      child: Row(
+                                                                                                        mainAxisSize: MainAxisSize.max,
+                                                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                                        children: [
+                                                                                                          Text(
+                                                                                                            formatNumber(
+                                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                                laboItem,
+                                                                                                                r'''$.realisation''',
+                                                                                                              )),
+                                                                                                              formatType: FormatType.decimal,
+                                                                                                              decimalType: DecimalType.automatic,
+                                                                                                              currency: 'DA ',
+                                                                                                            ),
+                                                                                                            style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                                                                  fontFamily: 'Outfit',
+                                                                                                                  color: Color(0xFF57636C),
+                                                                                                                  fontSize: 14.0,
+                                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                                ),
+                                                                                                          ),
+                                                                                                          Text(
+                                                                                                            '/',
+                                                                                                            style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                                                                  fontFamily: 'Outfit',
+                                                                                                                  color: Color(0xFF57636C),
+                                                                                                                  fontSize: 14.0,
+                                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                                ),
+                                                                                                          ),
+                                                                                                          Expanded(
+                                                                                                            child: Text(
+                                                                                                              formatNumber(
+                                                                                                                functions.jsonToDouble(getJsonField(
+                                                                                                                  laboItem,
+                                                                                                                  r'''$.objectif''',
+                                                                                                                )),
+                                                                                                                formatType: FormatType.decimal,
+                                                                                                                decimalType: DecimalType.automatic,
+                                                                                                                currency: 'DA ',
+                                                                                                              ),
+                                                                                                              style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                                                                    fontFamily: 'Outfit',
+                                                                                                                    color: Color(0xFF57636C),
+                                                                                                                    fontSize: 14.0,
+                                                                                                                    fontWeight: FontWeight.normal,
+                                                                                                                  ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                          Text(
+                                                                                                            formatNumber(
+                                                                                                              functions.jsonToDouble(getJsonField(
+                                                                                                                laboItem,
+                                                                                                                r'''$.perc_realisation''',
+                                                                                                              )),
+                                                                                                              formatType: FormatType.percent,
+                                                                                                            ),
+                                                                                                            style: FlutterFlowTheme.of(context).bodySmall.override(
+                                                                                                                  fontFamily: 'Outfit',
+                                                                                                                  color: Color(0xFF57636C),
+                                                                                                                  fontSize: 14.0,
+                                                                                                                  fontWeight: FontWeight.normal,
+                                                                                                                ),
+                                                                                                          ),
+                                                                                                        ],
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    Expanded(
+                                                                                                      child: LinearPercentIndicator(
+                                                                                                        percent: functions.jsonToDoublePercMax1(getJsonField(
+                                                                                                          laboItem,
+                                                                                                          r'''$.perc_realisation''',
+                                                                                                        )),
+                                                                                                        width: MediaQuery.of(context).size.width * 0.75,
+                                                                                                        lineHeight: 8.0,
+                                                                                                        animation: true,
+                                                                                                        progressColor: Color(0xFF4B39EF),
+                                                                                                        backgroundColor: Color(0xFFE0E3E7),
+                                                                                                        barRadius: Radius.circular(8.0),
+                                                                                                        padding: EdgeInsets.zero,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ],
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          );
+                                                                                        },
+                                                                                      );
+                                                                                    },
+                                                                                  ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.jsonToDouble(getJsonField(
+                                                                                                        taskItem,
+                                                                                                        r'''$.gift_money1''',
+                                                                                                      )),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.perc_gift_money1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).primary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Money (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_money1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_money1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).primary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Money',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).primary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.gift_chiffre1''',
+                                                                                                    ).toString(),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: 70.0,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).secondary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Chiffre Quota (${formatNumber(
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_gift_chiffre1''',
+                                                                                                    )),
+                                                                                                    formatType: FormatType.percent,
+                                                                                                  )})',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 0.0),
+                                                                                                  child: Text(
+                                                                                                    formatNumber(
+                                                                                                      functions.multiplicationTwoNum(
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.perc_gift_chiffre1''',
+                                                                                                          )),
+                                                                                                          functions.jsonToDouble(getJsonField(
+                                                                                                            taskItem,
+                                                                                                            r'''$.realisation1''',
+                                                                                                          ))),
+                                                                                                      formatType: FormatType.decimal,
+                                                                                                      decimalType: DecimalType.automatic,
+                                                                                                      currency: 'DA ',
+                                                                                                    ),
+                                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                                          fontFamily: 'Poppins',
+                                                                                                          color: FlutterFlowTheme.of(context).secondary,
+                                                                                                          fontWeight: FontWeight.w500,
+                                                                                                        ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_realisation1''',
+                                                                                            )) >=
+                                                                                            functions.jsonToDouble(getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.perc_real1''',
+                                                                                            )))
+                                                                                          Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                            child: FFButtonWidget(
+                                                                                              onPressed: () {
+                                                                                                print('Button pressed ...');
+                                                                                              },
+                                                                                              text: 'Get Chiffre',
+                                                                                              options: FFButtonOptions(
+                                                                                                width: 130.0,
+                                                                                                height: 40.0,
+                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                color: FlutterFlowTheme.of(context).secondary,
+                                                                                                textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                      fontFamily: 'Poppins',
+                                                                                                      color: Colors.white,
+                                                                                                      fontSize: 14.0,
+                                                                                                      fontWeight: FontWeight.normal,
+                                                                                                    ),
+                                                                                                elevation: 2.0,
+                                                                                                borderSide: BorderSide(
+                                                                                                  color: Colors.transparent,
+                                                                                                  width: 1.0,
+                                                                                                ),
+                                                                                                borderRadius: BorderRadius.circular(8.0),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  if (functions.jsonToDouble(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_prods1''',
+                                                                                      )) >
+                                                                                      0.0)
+                                                                                    Row(
+                                                                                      mainAxisSize: MainAxisSize.max,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        Padding(
+                                                                                          padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
+                                                                                          child: Container(
+                                                                                            width: 4.0,
+                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: FlutterFlowTheme.of(context).tertiary,
+                                                                                              borderRadius: BorderRadius.circular(4.0),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Expanded(
+                                                                                          child: Padding(
+                                                                                            padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 16.0, 12.0),
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Text(
+                                                                                                  'Products Quota',
+                                                                                                  style: FlutterFlowTheme.of(context).titleSmall,
+                                                                                                ),
+                                                                                                Builder(
+                                                                                                  builder: (context) {
+                                                                                                    final prodsGifts1 = getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.list_gift_prods1''',
+                                                                                                    ).toList();
+                                                                                                    return ListView.builder(
+                                                                                                      padding: EdgeInsets.zero,
+                                                                                                      shrinkWrap: true,
+                                                                                                      scrollDirection: Axis.vertical,
+                                                                                                      itemCount: prodsGifts1.length,
+                                                                                                      itemBuilder: (context, prodsGifts1Index) {
+                                                                                                        final prodsGifts1Item = prodsGifts1[prodsGifts1Index];
+                                                                                                        return Padding(
+                                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                                                                                                          child: Container(
+                                                                                                            width: double.infinity,
+                                                                                                            height: 60.0,
+                                                                                                            decoration: BoxDecoration(
+                                                                                                              color: FlutterFlowTheme.of(context).secondaryBackground,
+                                                                                                              boxShadow: [
+                                                                                                                BoxShadow(
+                                                                                                                  blurRadius: 5.0,
+                                                                                                                  color: Color(0x3416202A),
+                                                                                                                  offset: Offset(0.0, 2.0),
+                                                                                                                )
+                                                                                                              ],
+                                                                                                              borderRadius: BorderRadius.circular(12.0),
+                                                                                                              shape: BoxShape.rectangle,
+                                                                                                            ),
+                                                                                                            child: Padding(
+                                                                                                              padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                                                                                                              child: Row(
+                                                                                                                mainAxisSize: MainAxisSize.max,
+                                                                                                                children: [
+                                                                                                                  Container(
+                                                                                                                    width: 50.0,
+                                                                                                                    height: 50.0,
+                                                                                                                    decoration: BoxDecoration(
+                                                                                                                      color: FlutterFlowTheme.of(context).lineColor,
+                                                                                                                      shape: BoxShape.circle,
+                                                                                                                    ),
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
+                                                                                                                      child: Text(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.quantity''',
+                                                                                                                        ).toString(),
+                                                                                                                        textAlign: TextAlign.center,
+                                                                                                                        style: FlutterFlowTheme.of(context).headlineSmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                  Expanded(
+                                                                                                                    child: Padding(
+                                                                                                                      padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 0.0, 0.0),
+                                                                                                                      child: AutoSizeText(
+                                                                                                                        getJsonField(
+                                                                                                                          prodsGifts1Item,
+                                                                                                                          r'''$.product.name''',
+                                                                                                                        ).toString(),
+                                                                                                                        maxLines: 2,
+                                                                                                                        style: FlutterFlowTheme.of(context).bodySmall,
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ),
+                                                                                                                ],
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    );
+                                                                                                  },
+                                                                                                ),
+                                                                                                if (functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_realisation1''',
+                                                                                                    )) >=
+                                                                                                    functions.jsonToDouble(getJsonField(
+                                                                                                      taskItem,
+                                                                                                      r'''$.perc_real1''',
+                                                                                                    )))
+                                                                                                  Padding(
+                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                                                                                                    child: FFButtonWidget(
+                                                                                                      onPressed: () {
+                                                                                                        print('Button pressed ...');
+                                                                                                      },
+                                                                                                      text: 'Get Products',
+                                                                                                      options: FFButtonOptions(
+                                                                                                        width: double.infinity,
+                                                                                                        height: 40.0,
+                                                                                                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                                                        color: FlutterFlowTheme.of(context).tertiary,
+                                                                                                        textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                                              fontFamily: 'Poppins',
+                                                                                                              color: Colors.white,
+                                                                                                              fontSize: 14.0,
+                                                                                                              fontWeight: FontWeight.normal,
+                                                                                                            ),
+                                                                                                        elevation: 2.0,
+                                                                                                        borderSide: BorderSide(
+                                                                                                          color: Colors.transparent,
+                                                                                                          width: 1.0,
+                                                                                                        ),
+                                                                                                        borderRadius: BorderRadius.circular(8.0),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                ],
+                                                                              ),
+                                                                              theme: ExpandableThemeData(
+                                                                                tapHeaderToExpand: true,
+                                                                                tapBodyToExpand: false,
+                                                                                tapBodyToCollapse: false,
+                                                                                headerAlignment: ExpandablePanelHeaderAlignment.center,
+                                                                                hasIcon: true,
+                                                                              ),
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                  Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    children: [
-                                                                      if (getJsonField(
-                                                                            taskItem,
-                                                                            r'''$.packStatus.total''',
-                                                                          ) !=
-                                                                          null)
-                                                                        Text(
-                                                                          '${valueOrDefault<String>(
-                                                                            getJsonField(
-                                                                              taskItem,
-                                                                              r'''$.packStatus.total''',
-                                                                            ).toString(),
-                                                                            '0',
-                                                                          )} Total Get',
-                                                                          style:
-                                                                              FlutterFlowTheme.of(context).bodyText1,
-                                                                        ),
-                                                                      if (getJsonField(
-                                                                            taskItem,
-                                                                            r'''$.packStatus.reserved''',
-                                                                          ) !=
-                                                                          null)
-                                                                        Text(
-                                                                          '${valueOrDefault<String>(
-                                                                            getJsonField(
-                                                                              taskItem,
-                                                                              r'''$.packStatus.reserved''',
-                                                                            ).toString(),
-                                                                            '0',
-                                                                          )} Reserve',
-                                                                          style:
-                                                                              FlutterFlowTheme.of(context).bodyText1,
-                                                                        ),
-                                                                    ],
-                                                                  ),
-                                                                  Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    children: [
-                                                                      if (functions
-                                                                              .jsonToDouble(getJsonField(
-                                                                            taskItem,
-                                                                            r'''$.reserved''',
-                                                                          )) ==
-                                                                          0.0)
-                                                                        FFButtonWidget(
-                                                                          onPressed:
-                                                                              () async {
-                                                                            await showModalBottomSheet(
-                                                                              isScrollControlled: true,
-                                                                              backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                              context: context,
-                                                                              builder: (context) {
-                                                                                return Padding(
-                                                                                  padding: MediaQuery.of(context).viewInsets,
-                                                                                  child: Container(
-                                                                                    height: MediaQuery.of(context).size.height * 0.25,
-                                                                                    child: SelectCountReservedWidget(
-                                                                                      task: taskItem,
-                                                                                    ),
-                                                                                  ),
-                                                                                );
-                                                                              },
-                                                                            );
-                                                                            setState(() =>
-                                                                                _apiRequestCompleter = null);
-                                                                            await waitForApiRequestCompleter();
-                                                                          },
-                                                                          text:
-                                                                              'Reserve',
-                                                                          options:
-                                                                              FFButtonOptions(
-                                                                            width:
-                                                                                130,
-                                                                            height:
-                                                                                40,
-                                                                            color:
-                                                                                Colors.white,
-                                                                            textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                                                                                  fontFamily: 'Poppins',
-                                                                                  color: Color(0xFF3498DB),
-                                                                                ),
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: Color(0xFF3498DB),
-                                                                              width: 1,
-                                                                            ),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8),
-                                                                          ),
-                                                                        ),
-                                                                      if (functions
-                                                                              .jsonToDouble(getJsonField(
-                                                                            taskItem,
-                                                                            r'''$.reserved''',
-                                                                          )) >
-                                                                          0.0)
-                                                                        FFButtonWidget(
-                                                                          onPressed:
-                                                                              () async {
-                                                                            setState(() =>
-                                                                                _apiRequestCompleter = null);
-                                                                            await waitForApiRequestCompleter();
-                                                                          },
-                                                                          text:
-                                                                              'Reserved(${getJsonField(
-                                                                            taskItem,
-                                                                            r'''$.reserved''',
-                                                                          ).toString()})',
-                                                                          options:
-                                                                              FFButtonOptions(
-                                                                            width:
-                                                                                130,
-                                                                            height:
-                                                                                40,
-                                                                            color:
-                                                                                FlutterFlowTheme.of(context).tertiaryColor,
-                                                                            textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                                                                                  fontFamily: 'Poppins',
-                                                                                  color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                ),
-                                                                            borderSide:
-                                                                                BorderSide(
-                                                                              color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                              width: 1,
-                                                                            ),
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8),
-                                                                          ),
-                                                                        ),
-                                                                    ],
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  if (functions.jsonToInt(
-                                                          getJsonField(
-                                                        taskItem,
-                                                        r'''$.type''',
-                                                      )) ==
-                                                      2)
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(20, 12,
-                                                                  20, 12),
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              blurRadius: 4,
-                                                              color: Color(
-                                                                  0x34090F13),
-                                                              offset:
-                                                                  Offset(0, 2),
-                                                            )
-                                                          ],
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(12),
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      12,
-                                                                      16,
-                                                                      12,
-                                                                      12),
-                                                          child: Column(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .primaryColor,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              8),
-                                                                      shape: BoxShape
-                                                                          .rectangle,
-                                                                    ),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              3,
-                                                                              3,
-                                                                              3,
-                                                                              3),
-                                                                      child:
-                                                                          Text(
-                                                                        'Global Chiffre',
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .bodyText1
-                                                                            .override(
-                                                                              fontFamily: 'Poppins',
-                                                                              color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.normal,
-                                                                            ),
+                                                    if (functions.jsonToInt(
+                                                            getJsonField(
+                                                          taskItem,
+                                                          r'''$.type''',
+                                                        )) ==
+                                                        1)
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    20.0,
+                                                                    12.0,
+                                                                    20.0,
+                                                                    12.0),
+                                                        child: Container(
+                                                          width:
+                                                              double.infinity,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                blurRadius: 4.0,
+                                                                color: Color(
+                                                                    0x34090F13),
+                                                                offset: Offset(
+                                                                    0.0, 2.0),
+                                                              )
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12.0),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        12.0,
+                                                                        16.0,
+                                                                        12.0,
+                                                                        12.0),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: Color(
+                                                                            0xFF9B59B6),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(8.0),
+                                                                        shape: BoxShape
+                                                                            .rectangle,
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                  Expanded(
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              8,
-                                                                              0,
-                                                                              0,
-                                                                              0),
                                                                       child:
-                                                                          AutoSizeText(
-                                                                        getJsonField(
-                                                                          taskItem,
-                                                                          r'''$.title''',
-                                                                        ).toString(),
-                                                                        maxLines:
-                                                                            2,
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .subtitle1
-                                                                            .override(
-                                                                              fontFamily: 'Outfit',
-                                                                              color: Color(0xFF101213),
-                                                                              fontSize: 18,
-                                                                              fontWeight: FontWeight.w500,
-                                                                            ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                    'DA 0',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyText1
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              'Poppins',
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).grayIcon,
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0,
+                                                                            3.0),
+                                                                        child:
+                                                                            Text(
+                                                                          'Pack(${getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.id''',
+                                                                          ).toString()})',
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .bodyMedium
+                                                                              .override(
+                                                                                fontFamily: 'Poppins',
+                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                fontSize: 12.0,
+                                                                                fontWeight: FontWeight.normal,
+                                                                              ),
                                                                         ),
-                                                                  ),
-                                                                  Text(
-                                                                    'DA 500',
-                                                                    style: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .bodyText1
-                                                                        .override(
-                                                                          fontFamily:
-                                                                              'Poppins',
-                                                                          color:
-                                                                              Color(0xFF2ECC71),
-                                                                        ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: [
-                                                                  Expanded(
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              0,
-                                                                              4,
-                                                                              0,
-                                                                              4),
-                                                                      child:
-                                                                          AutoSizeText(
-                                                                        getJsonField(
-                                                                          taskItem,
-                                                                          r'''$.description''',
-                                                                        ).toString(),
-                                                                        maxLines:
-                                                                            2,
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .bodyText2
-                                                                            .override(
-                                                                              fontFamily: 'Outfit',
-                                                                              color: Color(0xFF57636C),
-                                                                              fontSize: 14,
-                                                                              fontWeight: FontWeight.normal,
-                                                                            ),
                                                                       ),
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              Text(
-                                                                'Created At: ${dateTimeFormat('relative', functions.jsonToDate(getJsonField(
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            8.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            AutoSizeText(
+                                                                          getJsonField(
+                                                                            taskItem,
+                                                                            r'''$.title''',
+                                                                          ).toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          style: FlutterFlowTheme.of(context)
+                                                                              .titleMedium
+                                                                              .override(
+                                                                                fontFamily: 'Outfit',
+                                                                                color: Color(0xFF101213),
+                                                                                fontSize: 18.0,
+                                                                                fontWeight: FontWeight.w500,
+                                                                              ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          4.0,
+                                                                          0.0,
+                                                                          4.0),
+                                                                  child:
+                                                                      AutoSizeText(
+                                                                    getJsonField(
                                                                       taskItem,
-                                                                      r'''$.created_at''',
-                                                                    )))}',
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyText2
-                                                                    .override(
-                                                                      fontFamily:
-                                                                          'Outfit',
-                                                                      color: Color(
-                                                                          0xFF57636C),
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal,
-                                                                    ),
-                                                              ),
-                                                              Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0,
-                                                                            4,
-                                                                            0,
-                                                                            0),
-                                                                child: Text(
-                                                                  'Resets Jun 30, 2022',
+                                                                      r'''$.description''',
+                                                                    ).toString(),
+                                                                    maxLines: 2,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodySmall
+                                                                        .override(
+                                                                          fontFamily:
+                                                                              'Outfit',
+                                                                          color:
+                                                                              Color(0xFF57636C),
+                                                                          fontSize:
+                                                                              14.0,
+                                                                          fontWeight:
+                                                                              FontWeight.normal,
+                                                                        ),
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  'Created: ${dateTimeFormat('relative', functions.jsonToDate(getJsonField(
+                                                                        taskItem,
+                                                                        r'''$.created_at''',
+                                                                      )))}',
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .bodyText2
+                                                                      .bodySmall
                                                                       .override(
                                                                         fontFamily:
                                                                             'Outfit',
                                                                         color: Color(
                                                                             0xFF57636C),
                                                                         fontSize:
-                                                                            14,
+                                                                            14.0,
                                                                         fontWeight:
                                                                             FontWeight.normal,
                                                                       ),
                                                                 ),
-                                                              ),
-                                                              Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: [
-                                                                  Expanded(
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional
-                                                                          .fromSTEB(
-                                                                              0,
-                                                                              8,
-                                                                              0,
-                                                                              0),
+                                                                Text(
+                                                                  'Objectif: ${formatNumber(
+                                                                    functions
+                                                                        .jsonToInt(
+                                                                            getJsonField(
+                                                                      taskItem,
+                                                                      r'''$.obj1''',
+                                                                    )),
+                                                                    formatType:
+                                                                        FormatType
+                                                                            .decimal,
+                                                                    decimalType:
+                                                                        DecimalType
+                                                                            .automatic,
+                                                                    currency:
+                                                                        'DA ',
+                                                                  )}',
+                                                                  style: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .override(
+                                                                        fontFamily:
+                                                                            'Outfit',
+                                                                        color: Color(
+                                                                            0xFF57636C),
+                                                                        fontSize:
+                                                                            14.0,
+                                                                        fontWeight:
+                                                                            FontWeight.normal,
+                                                                      ),
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Text(
+                                                                      getJsonField(
+                                                                        taskItem,
+                                                                        r'''$.num_pack''',
+                                                                      ).toString(),
+                                                                      style: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .titleMedium
+                                                                          .override(
+                                                                            fontFamily:
+                                                                                'Outfit',
+                                                                            color:
+                                                                                Color(0xFF57636C),
+                                                                            fontSize:
+                                                                                18.0,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                          ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Divider(
+                                                                  height: 24.0,
+                                                                  thickness:
+                                                                      2.0,
+                                                                  color: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .lineColor,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  children: [
+                                                                    Expanded(
                                                                       child:
-                                                                          Container(
-                                                                        width: double
-                                                                            .infinity,
-                                                                        color: Colors
-                                                                            .white,
-                                                                        child:
-                                                                            ExpandableNotifier(
-                                                                          initialExpanded:
-                                                                              false,
-                                                                          child:
-                                                                              ExpandablePanel(
-                                                                            header:
-                                                                                Text(
-                                                                              'Obj1: ${formatNumber(
-                                                                                functions.jsonToDouble(getJsonField(
+                                                                          Wrap(
+                                                                        spacing:
+                                                                            2.0,
+                                                                        runSpacing:
+                                                                            2.0,
+                                                                        alignment:
+                                                                            WrapAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            WrapCrossAlignment.start,
+                                                                        direction:
+                                                                            Axis.horizontal,
+                                                                        runAlignment:
+                                                                            WrapAlignment.start,
+                                                                        verticalDirection:
+                                                                            VerticalDirection.down,
+                                                                        clipBehavior:
+                                                                            Clip.none,
+                                                                        children: [
+                                                                          Visibility(
+                                                                            visible: functions.jsonToInt(getJsonField(
                                                                                   taskItem,
-                                                                                  r'''$.perc_real1''',
-                                                                                )),
-                                                                                formatType: FormatType.percent,
-                                                                              )}${formatNumber(
-                                                                                functions.jsonToDouble(getJsonField(
-                                                                                  taskItem,
-                                                                                  r'''$.obj1''',
-                                                                                )),
-                                                                                formatType: FormatType.decimal,
-                                                                                decimalType: DecimalType.automatic,
-                                                                                currency: 'DA ',
-                                                                              )}',
-                                                                              style: FlutterFlowTheme.of(context).title3,
-                                                                            ),
-                                                                            collapsed:
-                                                                                Column(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              children: [
-                                                                                Row(
-                                                                                  mainAxisSize: MainAxisSize.max,
-                                                                                  children: [
-                                                                                    if (functions.jsonToDouble(getJsonField(
-                                                                                          taskItem,
-                                                                                          r'''$.perc_realisation1''',
-                                                                                        )) >=
-                                                                                        functions.jsonToDouble(getJsonField(
-                                                                                          taskItem,
-                                                                                          r'''$.perc_real1''',
-                                                                                        )))
-                                                                                      Container(
-                                                                                        width: 40,
-                                                                                        height: 40,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                          boxShadow: [
-                                                                                            BoxShadow(
-                                                                                              blurRadius: 4,
-                                                                                              color: Color(0x2B202529),
-                                                                                              offset: Offset(0, 2),
-                                                                                            )
-                                                                                          ],
-                                                                                          shape: BoxShape.circle,
-                                                                                        ),
-                                                                                        alignment: AlignmentDirectional(0, 0),
-                                                                                        child: Text(
-                                                                                          formatNumber(
-                                                                                            functions.jsonToDouble(getJsonField(
-                                                                                              taskItem,
-                                                                                              r'''$.perc_realisation1''',
-                                                                                            )),
-                                                                                            formatType: FormatType.percent,
-                                                                                          ),
-                                                                                          style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                fontFamily: 'Poppins',
-                                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                              ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    if (functions.jsonToDouble(getJsonField(
-                                                                                          taskItem,
-                                                                                          r'''$.perc_realisation1''',
-                                                                                        )) <
-                                                                                        functions.jsonToDouble(getJsonField(
-                                                                                          taskItem,
-                                                                                          r'''$.perc_real1''',
-                                                                                        )))
-                                                                                      Container(
-                                                                                        width: 40,
-                                                                                        height: 40,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: Color(0xFF57636C),
-                                                                                          boxShadow: [
-                                                                                            BoxShadow(
-                                                                                              blurRadius: 4,
-                                                                                              color: Color(0x2B202529),
-                                                                                              offset: Offset(0, 2),
-                                                                                            )
-                                                                                          ],
-                                                                                          shape: BoxShape.circle,
-                                                                                        ),
-                                                                                        alignment: AlignmentDirectional(0, 0),
-                                                                                        child: Text(
-                                                                                          formatNumber(
-                                                                                            functions.jsonToDouble(getJsonField(
-                                                                                              taskItem,
-                                                                                              r'''$.perc_realisation1''',
-                                                                                            )),
-                                                                                            formatType: FormatType.percent,
-                                                                                          ),
-                                                                                          style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                fontFamily: 'Poppins',
-                                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                              ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    Text(
-                                                                                      formatNumber(
-                                                                                        functions.jsonToDouble(getJsonField(
-                                                                                          taskItem,
-                                                                                          r'''$.realisation1''',
-                                                                                        )),
-                                                                                        formatType: FormatType.decimal,
-                                                                                        decimalType: DecimalType.automatic,
-                                                                                        currency: 'DA ',
-                                                                                      ),
-                                                                                      style: FlutterFlowTheme.of(context).subtitle1.override(
-                                                                                            fontFamily: 'Outfit',
-                                                                                            color: Color(0xFF101213),
-                                                                                            fontSize: 16,
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                          ),
-                                                                                    ),
-                                                                                    Text(
-                                                                                      ' of  ',
-                                                                                      style: FlutterFlowTheme.of(context).subtitle1.override(
-                                                                                            fontFamily: 'Outfit',
-                                                                                            color: Color(0xFF57636C),
-                                                                                            fontSize: 18,
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                          ),
-                                                                                    ),
-                                                                                    Text(
-                                                                                      formatNumber(
-                                                                                        functions.jsonToDouble(getJsonField(
-                                                                                          taskItem,
-                                                                                          r'''$.obj1''',
-                                                                                        )),
-                                                                                        formatType: FormatType.decimal,
-                                                                                        decimalType: DecimalType.automatic,
-                                                                                        currency: 'DA ',
-                                                                                      ),
-                                                                                      style: FlutterFlowTheme.of(context).subtitle1.override(
-                                                                                            fontFamily: 'Outfit',
-                                                                                            color: Color(0xFF57636C),
-                                                                                            fontSize: 16,
-                                                                                            fontWeight: FontWeight.w500,
-                                                                                          ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
+                                                                                  r'''$.prods_oblg''',
+                                                                                )) >
+                                                                                0,
+                                                                            child:
                                                                                 Padding(
-                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                                                                                  child: LinearPercentIndicator(
-                                                                                    percent: functions.jsonToDouble(getJsonField(
-                                                                                      taskItem,
-                                                                                      r'''$.perc_realisation1''',
-                                                                                    )),
-                                                                                    width: 310,
-                                                                                    lineHeight: 8,
-                                                                                    animation: true,
-                                                                                    progressColor: FlutterFlowTheme.of(context).primaryColor,
-                                                                                    backgroundColor: FlutterFlowTheme.of(context).lineColor,
-                                                                                    barRadius: Radius.circular(16),
-                                                                                    padding: EdgeInsets.zero,
+                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 2.0, 0.0),
+                                                                              child: InkWell(
+                                                                                onTap: () async {
+                                                                                  logFirebaseEvent('TASKS_PAGE_Container_t3g3zuj2_ON_TAP');
+                                                                                  logFirebaseEvent('Container_bottom_sheet');
+                                                                                  await showModalBottomSheet(
+                                                                                    isScrollControlled: true,
+                                                                                    backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                    barrierColor: Color(0x00000000),
+                                                                                    context: context,
+                                                                                    builder: (bottomSheetContext) {
+                                                                                      return Padding(
+                                                                                        padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                                                                                        child: Container(
+                                                                                          height: MediaQuery.of(context).size.height * 0.5,
+                                                                                          child: ShowProdsWidget(
+                                                                                            prods: getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.list_prods_oblg''',
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  ).then((value) => setState(() {}));
+                                                                                },
+                                                                                child: Container(
+                                                                                  width: 100.0,
+                                                                                  height: 24.0,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Color(0xFFD35400),
+                                                                                    boxShadow: [
+                                                                                      BoxShadow(
+                                                                                        blurRadius: 4.0,
+                                                                                        color: Color(0x2B202529),
+                                                                                        offset: Offset(0.0, 2.0),
+                                                                                      )
+                                                                                    ],
+                                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                                    shape: BoxShape.rectangle,
+                                                                                  ),
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 2.0, 0.0),
+                                                                                    child: Text(
+                                                                                      'Prods Oblg',
+                                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                            fontFamily: 'Poppins',
+                                                                                            color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                            fontWeight: FontWeight.normal,
+                                                                                          ),
+                                                                                    ),
                                                                                   ),
                                                                                 ),
-                                                                              ],
+                                                                              ),
                                                                             ),
-                                                                            expanded:
-                                                                                Column(
-                                                                              mainAxisSize: MainAxisSize.max,
-                                                                              children: [
-                                                                                if (functions.jsonToDouble(getJsonField(
-                                                                                      taskItem,
-                                                                                      r'''$.gift_money1''',
-                                                                                    )) >
-                                                                                    0.0)
-                                                                                  Row(
-                                                                                    mainAxisSize: MainAxisSize.max,
-                                                                                    children: [
-                                                                                      Padding(
-                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8, 8, 4, 8),
+                                                                          ),
+                                                                          Visibility(
+                                                                            visible: functions.jsonToInt(getJsonField(
+                                                                                  taskItem,
+                                                                                  r'''$.gift_prods1''',
+                                                                                )) >
+                                                                                0,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 2.0, 0.0),
+                                                                              child: InkWell(
+                                                                                onTap: () async {
+                                                                                  logFirebaseEvent('TASKS_PAGE_Container_i6lyynn6_ON_TAP');
+                                                                                  logFirebaseEvent('Container_bottom_sheet');
+                                                                                  await showModalBottomSheet(
+                                                                                    isScrollControlled: true,
+                                                                                    backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                    barrierColor: Color(0x00000000),
+                                                                                    context: context,
+                                                                                    builder: (bottomSheetContext) {
+                                                                                      return Padding(
+                                                                                        padding: MediaQuery.of(bottomSheetContext).viewInsets,
                                                                                         child: Container(
-                                                                                          width: 4,
-                                                                                          height: 70,
-                                                                                          decoration: BoxDecoration(
-                                                                                            color: FlutterFlowTheme.of(context).primaryColor,
-                                                                                            borderRadius: BorderRadius.circular(4),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        child: Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(12, 12, 16, 12),
-                                                                                          child: Column(
-                                                                                            mainAxisSize: MainAxisSize.max,
-                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                            children: [
-                                                                                              Text(
-                                                                                                'Money',
-                                                                                                style: FlutterFlowTheme.of(context).subtitle2,
-                                                                                              ),
-                                                                                              Padding(
-                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                                                                                                child: Text(
-                                                                                                  formatNumber(
-                                                                                                    functions.jsonToDouble(getJsonField(
-                                                                                                      taskItem,
-                                                                                                      r'''$.gift_money1''',
-                                                                                                    )),
-                                                                                                    formatType: FormatType.decimal,
-                                                                                                    decimalType: DecimalType.automatic,
-                                                                                                    currency: 'DA ',
-                                                                                                  ),
-                                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                        fontFamily: 'Poppins',
-                                                                                                        color: FlutterFlowTheme.of(context).primaryColor,
-                                                                                                        fontWeight: FontWeight.w500,
-                                                                                                      ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      if (functions.jsonToDouble(getJsonField(
-                                                                                            taskItem,
-                                                                                            r'''$.perc_realisation1''',
-                                                                                          )) >=
-                                                                                          functions.jsonToDouble(getJsonField(
-                                                                                            taskItem,
-                                                                                            r'''$.perc_real1''',
-                                                                                          )))
-                                                                                        Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                                                                                          child: FFButtonWidget(
-                                                                                            onPressed: () {
-                                                                                              print('Button pressed ...');
-                                                                                            },
-                                                                                            text: 'Get Money',
-                                                                                            options: FFButtonOptions(
-                                                                                              width: 130,
-                                                                                              height: 40,
-                                                                                              color: FlutterFlowTheme.of(context).primaryColor,
-                                                                                              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                                                                                                    fontFamily: 'Poppins',
-                                                                                                    color: Colors.white,
-                                                                                                    fontSize: 14,
-                                                                                                    fontWeight: FontWeight.normal,
-                                                                                                  ),
-                                                                                              borderSide: BorderSide(
-                                                                                                color: Colors.transparent,
-                                                                                                width: 1,
-                                                                                              ),
-                                                                                              borderRadius: BorderRadius.circular(8),
+                                                                                          height: MediaQuery.of(context).size.height * 0.5,
+                                                                                          child: ShowProdsWidget(
+                                                                                            prods: getJsonField(
+                                                                                              taskItem,
+                                                                                              r'''$.list_gift_prods1''',
                                                                                             ),
                                                                                           ),
                                                                                         ),
+                                                                                      );
+                                                                                    },
+                                                                                  ).then((value) => setState(() {}));
+                                                                                },
+                                                                                child: Container(
+                                                                                  width: 100.0,
+                                                                                  height: 24.0,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Color(0xFF2ECC71),
+                                                                                    boxShadow: [
+                                                                                      BoxShadow(
+                                                                                        blurRadius: 4.0,
+                                                                                        color: Color(0x2B202529),
+                                                                                        offset: Offset(0.0, 2.0),
+                                                                                      )
                                                                                     ],
+                                                                                    borderRadius: BorderRadius.circular(8.0),
+                                                                                    shape: BoxShape.rectangle,
                                                                                   ),
-                                                                                if (functions.jsonToDouble(getJsonField(
-                                                                                      taskItem,
-                                                                                      r'''$.perc_gift_money1''',
-                                                                                    )) >
-                                                                                    0.0)
-                                                                                  Row(
-                                                                                    mainAxisSize: MainAxisSize.max,
-                                                                                    children: [
-                                                                                      Padding(
-                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8, 8, 4, 8),
-                                                                                        child: Container(
-                                                                                          width: 4,
-                                                                                          height: 70,
-                                                                                          decoration: BoxDecoration(
-                                                                                            color: FlutterFlowTheme.of(context).primaryColor,
-                                                                                            borderRadius: BorderRadius.circular(4),
+                                                                                  alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 2.0, 0.0),
+                                                                                    child: Text(
+                                                                                      'Prods Gift',
+                                                                                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                            fontFamily: 'Poppins',
+                                                                                            color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                            fontWeight: FontWeight.normal,
                                                                                           ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        child: Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(12, 12, 16, 12),
-                                                                                          child: Column(
-                                                                                            mainAxisSize: MainAxisSize.max,
-                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                            children: [
-                                                                                              Text(
-                                                                                                'Money (${formatNumber(
-                                                                                                  functions.jsonToDouble(getJsonField(
-                                                                                                    taskItem,
-                                                                                                    r'''$.perc_gift_money1''',
-                                                                                                  )),
-                                                                                                  formatType: FormatType.percent,
-                                                                                                )})',
-                                                                                                style: FlutterFlowTheme.of(context).subtitle2,
-                                                                                              ),
-                                                                                              Padding(
-                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                                                                                                child: Text(
-                                                                                                  formatNumber(
-                                                                                                    functions.multiplicationTwoNum(
-                                                                                                        functions.jsonToDouble(getJsonField(
-                                                                                                          taskItem,
-                                                                                                          r'''$.perc_gift_money1''',
-                                                                                                        )),
-                                                                                                        functions.jsonToDouble(getJsonField(
-                                                                                                          taskItem,
-                                                                                                          r'''$.realisation1''',
-                                                                                                        ))),
-                                                                                                    formatType: FormatType.decimal,
-                                                                                                    decimalType: DecimalType.automatic,
-                                                                                                    currency: 'DA ',
-                                                                                                  ),
-                                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                        fontFamily: 'Poppins',
-                                                                                                        color: FlutterFlowTheme.of(context).primaryColor,
-                                                                                                        fontWeight: FontWeight.w500,
-                                                                                                      ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      if (functions.jsonToDouble(getJsonField(
-                                                                                            taskItem,
-                                                                                            r'''$.perc_realisation1''',
-                                                                                          )) >=
-                                                                                          functions.jsonToDouble(getJsonField(
-                                                                                            taskItem,
-                                                                                            r'''$.perc_real1''',
-                                                                                          )))
-                                                                                        Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                                                                                          child: FFButtonWidget(
-                                                                                            onPressed: () {
-                                                                                              print('Button pressed ...');
-                                                                                            },
-                                                                                            text: 'Get Money',
-                                                                                            options: FFButtonOptions(
-                                                                                              width: 130,
-                                                                                              height: 40,
-                                                                                              color: FlutterFlowTheme.of(context).primaryColor,
-                                                                                              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                                                                                                    fontFamily: 'Poppins',
-                                                                                                    color: Colors.white,
-                                                                                                    fontSize: 14,
-                                                                                                    fontWeight: FontWeight.normal,
-                                                                                                  ),
-                                                                                              borderSide: BorderSide(
-                                                                                                color: Colors.transparent,
-                                                                                                width: 1,
-                                                                                              ),
-                                                                                              borderRadius: BorderRadius.circular(8),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                    ],
+                                                                                    ),
                                                                                   ),
-                                                                                if (functions.jsonToDouble(getJsonField(
-                                                                                      taskItem,
-                                                                                      r'''$.gift_chiffre1''',
-                                                                                    )) >
-                                                                                    0.0)
-                                                                                  Row(
-                                                                                    mainAxisSize: MainAxisSize.max,
-                                                                                    children: [
-                                                                                      Padding(
-                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8, 8, 4, 8),
-                                                                                        child: Container(
-                                                                                          width: 4,
-                                                                                          height: 70,
-                                                                                          decoration: BoxDecoration(
-                                                                                            color: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                            borderRadius: BorderRadius.circular(4),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        child: Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(12, 12, 16, 12),
-                                                                                          child: Column(
-                                                                                            mainAxisSize: MainAxisSize.max,
-                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                            children: [
-                                                                                              Text(
-                                                                                                'Chiffre Quota',
-                                                                                                style: FlutterFlowTheme.of(context).subtitle2,
-                                                                                              ),
-                                                                                              Padding(
-                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                                                                                                child: Text(
-                                                                                                  getJsonField(
-                                                                                                    taskItem,
-                                                                                                    r'''$.gift_chiffre1''',
-                                                                                                  ).toString(),
-                                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                        fontFamily: 'Poppins',
-                                                                                                        color: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                                        fontWeight: FontWeight.w500,
-                                                                                                      ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      if (functions.jsonToDouble(getJsonField(
-                                                                                            taskItem,
-                                                                                            r'''$.perc_realisation1''',
-                                                                                          )) >=
-                                                                                          functions.jsonToDouble(getJsonField(
-                                                                                            taskItem,
-                                                                                            r'''$.perc_real1''',
-                                                                                          )))
-                                                                                        Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                                                                                          child: FFButtonWidget(
-                                                                                            onPressed: () async {
-                                                                                              rGetChiffreQuota = await TaskGetChiffreQuotaCall.call(
-                                                                                                taskId: getJsonField(
-                                                                                                  taskItem,
-                                                                                                  r'''$.id''',
-                                                                                                ),
-                                                                                              );
-                                                                                              if ((rGetChiffreQuota?.succeeded ?? true)) {
-                                                                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                  SnackBar(
-                                                                                                    content: Text(
-                                                                                                      getJsonField(
-                                                                                                        (rGetChiffreQuota?.jsonBody ?? ''),
-                                                                                                        r'''$.seccess''',
-                                                                                                      ).toString(),
-                                                                                                      style: GoogleFonts.getFont(
-                                                                                                        'Roboto',
-                                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    duration: Duration(milliseconds: 4000),
-                                                                                                    backgroundColor: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                                  ),
-                                                                                                );
-                                                                                              } else {
-                                                                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                  SnackBar(
-                                                                                                    content: Text(
-                                                                                                      getJsonField(
-                                                                                                        (rGetChiffreQuota?.jsonBody ?? ''),
-                                                                                                        r'''$.error''',
-                                                                                                      ).toString(),
-                                                                                                      style: GoogleFonts.getFont(
-                                                                                                        'Roboto',
-                                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    duration: Duration(milliseconds: 4000),
-                                                                                                    backgroundColor: FlutterFlowTheme.of(context).customColor3,
-                                                                                                  ),
-                                                                                                );
-                                                                                              }
-
-                                                                                              setState(() {});
-                                                                                            },
-                                                                                            text: 'Get Chiffre',
-                                                                                            options: FFButtonOptions(
-                                                                                              width: 130,
-                                                                                              height: 40,
-                                                                                              color: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                                                                                                    fontFamily: 'Poppins',
-                                                                                                    color: Colors.white,
-                                                                                                    fontSize: 14,
-                                                                                                    fontWeight: FontWeight.normal,
-                                                                                                  ),
-                                                                                              borderSide: BorderSide(
-                                                                                                color: Colors.transparent,
-                                                                                                width: 1,
-                                                                                              ),
-                                                                                              borderRadius: BorderRadius.circular(8),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                    ],
-                                                                                  ),
-                                                                                if (functions.jsonToDouble(getJsonField(
-                                                                                      taskItem,
-                                                                                      r'''$.gift_chiffre1''',
-                                                                                    )) >
-                                                                                    0.0)
-                                                                                  Row(
-                                                                                    mainAxisSize: MainAxisSize.max,
-                                                                                    children: [
-                                                                                      Padding(
-                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8, 8, 4, 8),
-                                                                                        child: Container(
-                                                                                          width: 4,
-                                                                                          height: 70,
-                                                                                          decoration: BoxDecoration(
-                                                                                            color: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                            borderRadius: BorderRadius.circular(4),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        child: Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(12, 12, 16, 12),
-                                                                                          child: Column(
-                                                                                            mainAxisSize: MainAxisSize.max,
-                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                            children: [
-                                                                                              Text(
-                                                                                                'Chiffre Quota (${formatNumber(
-                                                                                                  functions.jsonToDouble(getJsonField(
-                                                                                                    taskItem,
-                                                                                                    r'''$.perc_gift_chiffre1''',
-                                                                                                  )),
-                                                                                                  formatType: FormatType.percent,
-                                                                                                )})',
-                                                                                                style: FlutterFlowTheme.of(context).subtitle2,
-                                                                                              ),
-                                                                                              Padding(
-                                                                                                padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                                                                                                child: Text(
-                                                                                                  formatNumber(
-                                                                                                    functions.multiplicationTwoNum(
-                                                                                                        functions.jsonToDouble(getJsonField(
-                                                                                                          taskItem,
-                                                                                                          r'''$.perc_gift_chiffre1''',
-                                                                                                        )),
-                                                                                                        functions.jsonToDouble(getJsonField(
-                                                                                                          taskItem,
-                                                                                                          r'''$.realisation1''',
-                                                                                                        ))),
-                                                                                                    formatType: FormatType.decimal,
-                                                                                                    decimalType: DecimalType.automatic,
-                                                                                                    currency: 'DA ',
-                                                                                                  ),
-                                                                                                  style: FlutterFlowTheme.of(context).bodyText1.override(
-                                                                                                        fontFamily: 'Poppins',
-                                                                                                        color: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                                        fontWeight: FontWeight.w500,
-                                                                                                      ),
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      if (functions.jsonToDouble(getJsonField(
-                                                                                            taskItem,
-                                                                                            r'''$.perc_realisation1''',
-                                                                                          )) >=
-                                                                                          functions.jsonToDouble(getJsonField(
-                                                                                            taskItem,
-                                                                                            r'''$.perc_real1''',
-                                                                                          )))
-                                                                                        Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                                                                                          child: FFButtonWidget(
-                                                                                            onPressed: () async {
-                                                                                              rGetChiffreQuotaPerc = await TaskGetChiffreQuotaCall.call(
-                                                                                                taskId: getJsonField(
-                                                                                                  taskItem,
-                                                                                                  r'''$.id''',
-                                                                                                ),
-                                                                                              );
-                                                                                              if ((rGetChiffreQuotaPerc?.succeeded ?? true)) {
-                                                                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                  SnackBar(
-                                                                                                    content: Text(
-                                                                                                      getJsonField(
-                                                                                                        (rGetChiffreQuotaPerc?.jsonBody ?? ''),
-                                                                                                        r'''$.seccess''',
-                                                                                                      ).toString(),
-                                                                                                      style: GoogleFonts.getFont(
-                                                                                                        'Roboto',
-                                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    duration: Duration(milliseconds: 4000),
-                                                                                                    backgroundColor: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                                  ),
-                                                                                                );
-                                                                                              } else {
-                                                                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                  SnackBar(
-                                                                                                    content: Text(
-                                                                                                      getJsonField(
-                                                                                                        (rGetChiffreQuotaPerc?.jsonBody ?? ''),
-                                                                                                        r'''$.error''',
-                                                                                                      ).toString(),
-                                                                                                      style: GoogleFonts.getFont(
-                                                                                                        'Roboto',
-                                                                                                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    duration: Duration(milliseconds: 4000),
-                                                                                                    backgroundColor: FlutterFlowTheme.of(context).customColor3,
-                                                                                                  ),
-                                                                                                );
-                                                                                              }
-
-                                                                                              setState(() {});
-                                                                                            },
-                                                                                            text: 'Get Chiffre',
-                                                                                            options: FFButtonOptions(
-                                                                                              width: 130,
-                                                                                              height: 40,
-                                                                                              color: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                              textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                                                                                                    fontFamily: 'Poppins',
-                                                                                                    color: Colors.white,
-                                                                                                    fontSize: 14,
-                                                                                                    fontWeight: FontWeight.normal,
-                                                                                                  ),
-                                                                                              borderSide: BorderSide(
-                                                                                                color: Colors.transparent,
-                                                                                                width: 1,
-                                                                                              ),
-                                                                                              borderRadius: BorderRadius.circular(8),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                    ],
-                                                                                  ),
-                                                                                if (functions.jsonToDouble(getJsonField(
-                                                                                      taskItem,
-                                                                                      r'''$.gift_prods1''',
-                                                                                    )) >
-                                                                                    0.0)
-                                                                                  Row(
-                                                                                    mainAxisSize: MainAxisSize.max,
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: [
-                                                                                      Padding(
-                                                                                        padding: EdgeInsetsDirectional.fromSTEB(8, 8, 4, 8),
-                                                                                        child: Container(
-                                                                                          width: 4,
-                                                                                          height: MediaQuery.of(context).size.height * 0.1,
-                                                                                          decoration: BoxDecoration(
-                                                                                            color: FlutterFlowTheme.of(context).tertiaryColor,
-                                                                                            borderRadius: BorderRadius.circular(4),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        child: Padding(
-                                                                                          padding: EdgeInsetsDirectional.fromSTEB(12, 12, 16, 12),
-                                                                                          child: Column(
-                                                                                            mainAxisSize: MainAxisSize.max,
-                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                            children: [
-                                                                                              Text(
-                                                                                                'Products Quota',
-                                                                                                style: FlutterFlowTheme.of(context).subtitle2,
-                                                                                              ),
-                                                                                              Builder(
-                                                                                                builder: (context) {
-                                                                                                  final prodsGifts1 = getJsonField(
-                                                                                                    taskItem,
-                                                                                                    r'''$.list_gift_prods1''',
-                                                                                                  ).toList();
-                                                                                                  return ListView.builder(
-                                                                                                    padding: EdgeInsets.zero,
-                                                                                                    shrinkWrap: true,
-                                                                                                    scrollDirection: Axis.vertical,
-                                                                                                    itemCount: prodsGifts1.length,
-                                                                                                    itemBuilder: (context, prodsGifts1Index) {
-                                                                                                      final prodsGifts1Item = prodsGifts1[prodsGifts1Index];
-                                                                                                      return Padding(
-                                                                                                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-                                                                                                        child: Container(
-                                                                                                          width: double.infinity,
-                                                                                                          height: 60,
-                                                                                                          decoration: BoxDecoration(
-                                                                                                            color: FlutterFlowTheme.of(context).secondaryBackground,
-                                                                                                            boxShadow: [
-                                                                                                              BoxShadow(
-                                                                                                                blurRadius: 5,
-                                                                                                                color: Color(0x3416202A),
-                                                                                                                offset: Offset(0, 2),
-                                                                                                              )
-                                                                                                            ],
-                                                                                                            borderRadius: BorderRadius.circular(12),
-                                                                                                            shape: BoxShape.rectangle,
-                                                                                                          ),
-                                                                                                          child: Padding(
-                                                                                                            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                                                                                                            child: Row(
-                                                                                                              mainAxisSize: MainAxisSize.max,
-                                                                                                              children: [
-                                                                                                                Container(
-                                                                                                                  width: 50,
-                                                                                                                  height: 50,
-                                                                                                                  decoration: BoxDecoration(
-                                                                                                                    color: FlutterFlowTheme.of(context).lineColor,
-                                                                                                                    shape: BoxShape.circle,
-                                                                                                                  ),
-                                                                                                                  child: Padding(
-                                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-                                                                                                                    child: Text(
-                                                                                                                      getJsonField(
-                                                                                                                        prodsGifts1Item,
-                                                                                                                        r'''$.quantity''',
-                                                                                                                      ).toString(),
-                                                                                                                      textAlign: TextAlign.center,
-                                                                                                                      style: FlutterFlowTheme.of(context).title3,
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                                Expanded(
-                                                                                                                  child: Padding(
-                                                                                                                    padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                                                                                                                    child: AutoSizeText(
-                                                                                                                      getJsonField(
-                                                                                                                        prodsGifts1Item,
-                                                                                                                        r'''$.product.name''',
-                                                                                                                      ).toString(),
-                                                                                                                      maxLines: 2,
-                                                                                                                      style: FlutterFlowTheme.of(context).bodyText2,
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ),
-                                                                                                              ],
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                      );
-                                                                                                    },
-                                                                                                  );
-                                                                                                },
-                                                                                              ),
-                                                                                              if (functions.jsonToDouble(getJsonField(
-                                                                                                    taskItem,
-                                                                                                    r'''$.perc_realisation1''',
-                                                                                                  )) >=
-                                                                                                  functions.jsonToDouble(getJsonField(
-                                                                                                    taskItem,
-                                                                                                    r'''$.perc_real1''',
-                                                                                                  )))
-                                                                                                Padding(
-                                                                                                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                                                                                                  child: FFButtonWidget(
-                                                                                                    onPressed: () async {
-                                                                                                      rGetProdsQuota = await TaskGetProdsQuotaCall.call();
-                                                                                                      if ((rGetProdsQuota?.succeeded ?? true)) {
-                                                                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                          SnackBar(
-                                                                                                            content: Text(
-                                                                                                              getJsonField(
-                                                                                                                (rGetProdsQuota?.jsonBody ?? ''),
-                                                                                                                r'''$.seccess''',
-                                                                                                              ).toString(),
-                                                                                                              style: GoogleFonts.getFont(
-                                                                                                                'Roboto',
-                                                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                            duration: Duration(milliseconds: 4000),
-                                                                                                            backgroundColor: FlutterFlowTheme.of(context).secondaryColor,
-                                                                                                          ),
-                                                                                                        );
-                                                                                                      } else {
-                                                                                                        ScaffoldMessenger.of(context).showSnackBar(
-                                                                                                          SnackBar(
-                                                                                                            content: Text(
-                                                                                                              getJsonField(
-                                                                                                                (rGetProdsQuota?.jsonBody ?? ''),
-                                                                                                                r'''$.error''',
-                                                                                                              ).toString(),
-                                                                                                              style: GoogleFonts.getFont(
-                                                                                                                'Roboto',
-                                                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                            duration: Duration(milliseconds: 4000),
-                                                                                                            backgroundColor: FlutterFlowTheme.of(context).customColor3,
-                                                                                                          ),
-                                                                                                        );
-                                                                                                      }
-
-                                                                                                      setState(() {});
-                                                                                                    },
-                                                                                                    text: 'Get Products',
-                                                                                                    options: FFButtonOptions(
-                                                                                                      width: double.infinity,
-                                                                                                      height: 40,
-                                                                                                      color: FlutterFlowTheme.of(context).tertiaryColor,
-                                                                                                      textStyle: FlutterFlowTheme.of(context).subtitle2.override(
-                                                                                                            fontFamily: 'Poppins',
-                                                                                                            color: Colors.white,
-                                                                                                            fontSize: 14,
-                                                                                                            fontWeight: FontWeight.normal,
-                                                                                                          ),
-                                                                                                      borderSide: BorderSide(
-                                                                                                        color: Colors.transparent,
-                                                                                                        width: 1,
-                                                                                                      ),
-                                                                                                      borderRadius: BorderRadius.circular(8),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                              ],
+                                                                                ),
+                                                                              ),
                                                                             ),
-                                                                            theme:
-                                                                                ExpandableThemeData(
-                                                                              tapHeaderToExpand: true,
-                                                                              tapBodyToExpand: false,
-                                                                              tapBodyToCollapse: false,
-                                                                              headerAlignment: ExpandablePanelHeaderAlignment.center,
-                                                                              hasIcon: true,
+                                                                          ),
+                                                                          Visibility(
+                                                                            visible: functions.jsonToInt(getJsonField(
+                                                                                  taskItem,
+                                                                                  r'''$.gift_money1''',
+                                                                                )) >
+                                                                                0,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 2.0, 0.0),
+                                                                              child: Container(
+                                                                                width: 100.0,
+                                                                                height: 24.0,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Color(0xFF3498DB),
+                                                                                  boxShadow: [
+                                                                                    BoxShadow(
+                                                                                      blurRadius: 4.0,
+                                                                                      color: Color(0x2B202529),
+                                                                                      offset: Offset(0.0, 2.0),
+                                                                                    )
+                                                                                  ],
+                                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                                                  shape: BoxShape.rectangle,
+                                                                                ),
+                                                                                alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 2.0, 0.0),
+                                                                                  child: Text(
+                                                                                    formatNumber(
+                                                                                      functions.jsonToInt(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_money1''',
+                                                                                      )),
+                                                                                      formatType: FormatType.decimal,
+                                                                                      decimalType: DecimalType.automatic,
+                                                                                      currency: 'DA ',
+                                                                                    ),
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          fontFamily: 'Poppins',
+                                                                                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                          fontWeight: FontWeight.normal,
+                                                                                        ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
                                                                             ),
+                                                                          ),
+                                                                          Visibility(
+                                                                            visible: functions.jsonToInt(getJsonField(
+                                                                                  taskItem,
+                                                                                  r'''$.gift_chiffre1''',
+                                                                                )) >
+                                                                                0,
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 2.0, 0.0),
+                                                                              child: Container(
+                                                                                width: 100.0,
+                                                                                height: 24.0,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Color(0xFF1ABC9C),
+                                                                                  boxShadow: [
+                                                                                    BoxShadow(
+                                                                                      blurRadius: 4.0,
+                                                                                      color: Color(0x2B202529),
+                                                                                      offset: Offset(0.0, 2.0),
+                                                                                    )
+                                                                                  ],
+                                                                                  borderRadius: BorderRadius.circular(8.0),
+                                                                                  shape: BoxShape.rectangle,
+                                                                                ),
+                                                                                alignment: AlignmentDirectional(0.0, 0.0),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 2.0, 0.0),
+                                                                                  child: Text(
+                                                                                    formatNumber(
+                                                                                      functions.jsonToInt(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.gift_chiffre1''',
+                                                                                      )),
+                                                                                      formatType: FormatType.decimal,
+                                                                                      decimalType: DecimalType.automatic,
+                                                                                    ),
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                          fontFamily: 'Poppins',
+                                                                                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                          fontWeight: FontWeight.normal,
+                                                                                        ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    FlutterFlowIconButton(
+                                                                      borderColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      borderRadius:
+                                                                          30.0,
+                                                                      borderWidth:
+                                                                          1.0,
+                                                                      buttonSize:
+                                                                          60.0,
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .arrow_forward_ios,
+                                                                        color: FlutterFlowTheme.of(context)
+                                                                            .grayIcon,
+                                                                        size:
+                                                                            30.0,
+                                                                      ),
+                                                                      onPressed:
+                                                                          () async {
+                                                                        logFirebaseEvent(
+                                                                            'TASKS_PAGE_arrow_forward_ios_ICN_ON_TAP');
+                                                                        logFirebaseEvent(
+                                                                            'IconButton_navigate_to');
+
+                                                                        context
+                                                                            .pushNamed(
+                                                                          'ShowPack',
+                                                                          queryParams:
+                                                                              {
+                                                                            'pack':
+                                                                                serializeParam(
+                                                                              getJsonField(
+                                                                                taskItem,
+                                                                                r'''$''',
+                                                                              ),
+                                                                              ParamType.JSON,
+                                                                            ),
+                                                                          }.withoutNulls,
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .max,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    if (getJsonField(
+                                                                          taskItem,
+                                                                          r'''$.packStatus.total''',
+                                                                        ) !=
+                                                                        null)
+                                                                      Padding(
+                                                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                                                            0.0,
+                                                                            0.0,
+                                                                            8.0,
+                                                                            0.0),
+                                                                        child:
+                                                                            CircularPercentIndicator(
+                                                                          percent:
+                                                                              valueOrDefault<double>(
+                                                                            functions.percTwoNum(
+                                                                                valueOrDefault<double>(
+                                                                                  functions.jsonToDouble(getJsonField(
+                                                                                    taskItem,
+                                                                                    r'''$.packStatus.total''',
+                                                                                  )),
+                                                                                  0.0,
+                                                                                ),
+                                                                                functions.jsonToDouble(getJsonField(
+                                                                                  taskItem,
+                                                                                  r'''$.num_pack''',
+                                                                                ))),
+                                                                            0.0,
+                                                                          ),
+                                                                          radius:
+                                                                              45.0,
+                                                                          lineWidth:
+                                                                              12.0,
+                                                                          animation:
+                                                                              true,
+                                                                          progressColor:
+                                                                              Color(0xFFE67E22),
+                                                                          backgroundColor:
+                                                                              Color(0xFFF1F4F8),
+                                                                          center:
+                                                                              Text(
+                                                                            '${valueOrDefault<String>(
+                                                                              getJsonField(
+                                                                                taskItem,
+                                                                                r'''$.packStatus.total''',
+                                                                              ).toString(),
+                                                                              '0',
+                                                                            )}/${valueOrDefault<String>(
+                                                                              getJsonField(
+                                                                                taskItem,
+                                                                                r'''$.num_pack''',
+                                                                              ).toString(),
+                                                                              '0',
+                                                                            )}',
+                                                                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                                                                                  fontFamily: 'Poppins',
+                                                                                  color: Color(0xFFE67E22),
+                                                                                ),
                                                                           ),
                                                                         ),
                                                                       ),
+                                                                    Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      children: [
+                                                                        if (getJsonField(
+                                                                              taskItem,
+                                                                              r'''$.packStatus.total''',
+                                                                            ) !=
+                                                                            null)
+                                                                          Text(
+                                                                            '${valueOrDefault<String>(
+                                                                              getJsonField(
+                                                                                taskItem,
+                                                                                r'''$.packStatus.total''',
+                                                                              ).toString(),
+                                                                              '0',
+                                                                            )} Total Get',
+                                                                            style:
+                                                                                FlutterFlowTheme.of(context).bodyMedium,
+                                                                          ),
+                                                                        if (getJsonField(
+                                                                              taskItem,
+                                                                              r'''$.packStatus.reserved''',
+                                                                            ) !=
+                                                                            null)
+                                                                          Text(
+                                                                            '${valueOrDefault<String>(
+                                                                              getJsonField(
+                                                                                taskItem,
+                                                                                r'''$.packStatus.reserved''',
+                                                                              ).toString(),
+                                                                              '0',
+                                                                            )} Reserve',
+                                                                            style:
+                                                                                FlutterFlowTheme.of(context).bodyMedium,
+                                                                          ),
+                                                                      ],
                                                                     ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                                    Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .max,
+                                                                      children: [
+                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                              taskItem,
+                                                                              r'''$.restTimeReserve''',
+                                                                            )) <=
+                                                                            0.0)
+                                                                          FFButtonWidget(
+                                                                            onPressed:
+                                                                                () async {
+                                                                              logFirebaseEvent('TASKS_PAGE_RESERVE_BTN_ON_TAP');
+                                                                              logFirebaseEvent('Button_bottom_sheet');
+                                                                              await showModalBottomSheet(
+                                                                                isScrollControlled: true,
+                                                                                backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                barrierColor: Color(0x00000000),
+                                                                                context: context,
+                                                                                builder: (bottomSheetContext) {
+                                                                                  return Padding(
+                                                                                    padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                                                                                    child: Container(
+                                                                                      height: MediaQuery.of(context).size.height * 0.25,
+                                                                                      child: SelectCountReservedWidget(
+                                                                                        task: taskItem,
+                                                                                      ),
+                                                                                    ),
+                                                                                  );
+                                                                                },
+                                                                              ).then((value) => setState(() {}));
+
+                                                                              logFirebaseEvent('Button_refresh_database_request');
+                                                                              setState(() => _model.apiRequestCompleter = null);
+                                                                              await _model.waitForApiRequestCompleted();
+                                                                            },
+                                                                            text:
+                                                                                'Reserve',
+                                                                            options:
+                                                                                FFButtonOptions(
+                                                                              width: 130.0,
+                                                                              height: 40.0,
+                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                              iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                              color: Colors.white,
+                                                                              textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                    fontFamily: 'Poppins',
+                                                                                    color: Color(0xFF3498DB),
+                                                                                  ),
+                                                                              elevation: 2.0,
+                                                                              borderSide: BorderSide(
+                                                                                color: Color(0xFF3498DB),
+                                                                                width: 1.0,
+                                                                              ),
+                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                            ),
+                                                                          ),
+                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                              taskItem,
+                                                                              r'''$.restTimeReserve''',
+                                                                            )) >
+                                                                            0.0)
+                                                                          FFButtonWidget(
+                                                                            onPressed:
+                                                                                () async {
+                                                                              logFirebaseEvent('TASKS_PAGE_RESERVED_BTN_ON_TAP');
+                                                                              logFirebaseEvent('Button_refresh_database_request');
+                                                                              setState(() => _model.apiRequestCompleter = null);
+                                                                              await _model.waitForApiRequestCompleted();
+                                                                            },
+                                                                            text:
+                                                                                'Reserved(${getJsonField(
+                                                                              taskItem,
+                                                                              r'''$.reserved''',
+                                                                            ).toString()})',
+                                                                            options:
+                                                                                FFButtonOptions(
+                                                                              width: 130.0,
+                                                                              height: 40.0,
+                                                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                              iconPadding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                                                              color: FlutterFlowTheme.of(context).tertiary,
+                                                                              textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                                                                                    fontFamily: 'Poppins',
+                                                                                    color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                  ),
+                                                                              elevation: 2.0,
+                                                                              borderSide: BorderSide(
+                                                                                color: FlutterFlowTheme.of(context).primaryBtnText,
+                                                                                width: 1.0,
+                                                                              ),
+                                                                              borderRadius: BorderRadius.circular(8.0),
+                                                                            ),
+                                                                          ),
+                                                                        if (functions.jsonToDouble(getJsonField(
+                                                                              taskItem,
+                                                                              r'''$.restTimeReserve''',
+                                                                            )) >
+                                                                            0.0)
+                                                                          Padding(
+                                                                            padding: EdgeInsetsDirectional.fromSTEB(
+                                                                                8.0,
+                                                                                8.0,
+                                                                                8.0,
+                                                                                8.0),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisSize: MainAxisSize.max,
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Padding(
+                                                                                  padding: EdgeInsetsDirectional.fromSTEB(4.0, 4.0, 4.0, 4.0),
+                                                                                  child: Container(
+                                                                                    width: 40.0,
+                                                                                    height: 20.0,
+                                                                                    child: custom_widgets.TimerReserve(
+                                                                                      width: 40.0,
+                                                                                      height: 20.0,
+                                                                                      time: functions.jsonToInt(getJsonField(
+                                                                                        taskItem,
+                                                                                        r'''$.restTimeReserve''',
+                                                                                      )),
+                                                                                      color: FlutterFlowTheme.of(context).customColor3,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                           Material(
                             color: Colors.transparent,
-                            elevation: 5,
+                            elevation: 5.0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(0),
-                                bottomRight: Radius.circular(0),
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16),
+                                bottomLeft: Radius.circular(0.0),
+                                bottomRight: Radius.circular(0.0),
+                                topLeft: Radius.circular(16.0),
+                                topRight: Radius.circular(16.0),
                               ),
                             ),
                             child: Container(
                               width: double.infinity,
-                              height: 400,
+                              height: 400.0,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(0),
-                                  bottomRight: Radius.circular(0),
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
+                                  bottomLeft: Radius.circular(0.0),
+                                  bottomRight: Radius.circular(0.0),
+                                  topLeft: Radius.circular(16.0),
+                                  topRight: Radius.circular(16.0),
                                 ),
                               ),
                               child: Column(
@@ -2305,24 +7335,25 @@ class _TasksWidgetState extends State<TasksWidget>
                                 children: [
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        16, 12, 16, 12),
+                                        16.0, 12.0, 16.0, 12.0),
                                     child: Container(
                                       width: double.infinity,
-                                      height: 170,
+                                      height: 170.0,
                                       decoration: BoxDecoration(
                                         color: Color(0xFF2ECC71),
                                         boxShadow: [
                                           BoxShadow(
-                                            blurRadius: 5,
+                                            blurRadius: 5.0,
                                             color: Color(0x23000000),
-                                            offset: Offset(0, 2),
+                                            offset: Offset(0.0, 2.0),
                                           )
                                         ],
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
                                       ),
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            16, 16, 16, 16),
+                                            16.0, 16.0, 16.0, 16.0),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
@@ -2338,11 +7369,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                     'Sales',
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .title3
+                                                        .headlineSmall
                                                         .override(
                                                           fontFamily: 'Outfit',
                                                           color: Colors.white,
-                                                          fontSize: 20,
+                                                          fontSize: 20.0,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),
@@ -2350,19 +7381,19 @@ class _TasksWidgetState extends State<TasksWidget>
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 4, 0, 0),
+                                                            .fromSTEB(0.0, 4.0,
+                                                                0.0, 0.0),
                                                     child: Text(
                                                       'Total Sales Today',
                                                       style: FlutterFlowTheme
                                                               .of(context)
-                                                          .subtitle2
+                                                          .titleSmall
                                                           .override(
                                                             fontFamily:
                                                                 'Outfit',
                                                             color: Color(
                                                                 0x9AFFFFFF),
-                                                            fontSize: 16,
+                                                            fontSize: 16.0,
                                                             fontWeight:
                                                                 FontWeight.w500,
                                                           ),
@@ -2371,33 +7402,31 @@ class _TasksWidgetState extends State<TasksWidget>
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 8, 0, 0),
+                                                            .fromSTEB(0.0, 8.0,
+                                                                0.0, 0.0),
                                                     child: Text(
                                                       '\$500.20',
                                                       style: FlutterFlowTheme
                                                               .of(context)
-                                                          .title1
+                                                          .displaySmall
                                                           .override(
                                                             fontFamily:
                                                                 'Outfit',
                                                             color: Colors.white,
-                                                            fontSize: 32,
+                                                            fontSize: 32.0,
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                           ),
                                                     ),
                                                   ),
                                                 ],
-                                              ).animated([
-                                                animationsMap[
-                                                    'columnOnPageLoadAnimation2']!
-                                              ]),
+                                              ).animateOnPageLoad(animationsMap[
+                                                  'columnOnPageLoadAnimation2']!),
                                             ),
                                             CircularPercentIndicator(
                                               percent: 0.55,
-                                              radius: 45,
-                                              lineWidth: 4,
+                                              radius: 45.0,
+                                              lineWidth: 4.0,
                                               animation: true,
                                               progressColor: Colors.white,
                                               backgroundColor:
@@ -2406,63 +7435,62 @@ class _TasksWidgetState extends State<TasksWidget>
                                                 '55%',
                                                 style:
                                                     FlutterFlowTheme.of(context)
-                                                        .title2
+                                                        .headlineMedium
                                                         .override(
                                                           fontFamily: 'Outfit',
                                                           color: Colors.white,
-                                                          fontSize: 22,
+                                                          fontSize: 22.0,
                                                           fontWeight:
                                                               FontWeight.w500,
                                                         ),
                                               ),
-                                            ).animated([
-                                              animationsMap[
-                                                  'progressBarOnPageLoadAnimation2']!
-                                            ]),
+                                            ).animateOnPageLoad(animationsMap[
+                                                'progressBarOnPageLoadAnimation2']!),
                                             Column(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
                                                 Icon(
                                                   Icons.trending_up_sharp,
                                                   color: Colors.white,
-                                                  size: 24,
-                                                ).animated([
-                                                  animationsMap[
-                                                      'iconOnPageLoadAnimation2']!
-                                                ]),
+                                                  size: 24.0,
+                                                ).animateOnPageLoad(animationsMap[
+                                                    'iconOnPageLoadAnimation2']!),
                                               ],
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ).animated([
-                                      animationsMap[
-                                          'containerOnPageLoadAnimation2']!
-                                    ]),
+                                    ).animateOnPageLoad(animationsMap[
+                                        'containerOnPageLoadAnimation2']!),
                                   ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        16, 4, 16, 0),
+                                        16.0, 4.0, 16.0, 0.0),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0, 12, 0, 0),
+                                                  0.0, 12.0, 0.0, 0.0),
                                           child: InkWell(
                                             onTap: () async {
+                                              logFirebaseEvent(
+                                                  'TASKS_PAGE_Container_jl8tch6c_ON_TAP');
+                                              logFirebaseEvent(
+                                                  'Container_bottom_sheet');
                                               await showModalBottomSheet(
                                                 isScrollControlled: true,
                                                 backgroundColor:
                                                     FlutterFlowTheme.of(context)
                                                         .primaryBtnText,
+                                                barrierColor: Color(0x00000000),
                                                 context: context,
-                                                builder: (context) {
+                                                builder: (bottomSheetContext) {
                                                   return Padding(
-                                                    padding:
-                                                        MediaQuery.of(context)
-                                                            .viewInsets,
+                                                    padding: MediaQuery.of(
+                                                            bottomSheetContext)
+                                                        .viewInsets,
                                                     child: Container(
                                                       height:
                                                           MediaQuery.of(context)
@@ -2474,24 +7502,26 @@ class _TasksWidgetState extends State<TasksWidget>
                                                     ),
                                                   );
                                                 },
-                                              );
+                                              ).then(
+                                                  (value) => setState(() {}));
                                             },
                                             child: Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                    BorderRadius.circular(16),
+                                                    BorderRadius.circular(16.0),
                                                 border: Border.all(
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .lineColor,
-                                                  width: 2,
+                                                  width: 2.0,
                                                 ),
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(16, 12, 16, 12),
+                                                    .fromSTEB(
+                                                        16.0, 12.0, 16.0, 12.0),
                                                 child: Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -2502,20 +7532,19 @@ class _TasksWidgetState extends State<TasksWidget>
                                                     Expanded(
                                                       child: Text(
                                                         'Global chiffre',
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyText1
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Outfit',
-                                                                  color: Color(
-                                                                      0xFF090F13),
-                                                                  fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                ),
+                                                        style: FlutterFlowTheme
+                                                                .of(context)
+                                                            .bodyMedium
+                                                            .override(
+                                                              fontFamily:
+                                                                  'Outfit',
+                                                              color: Color(
+                                                                  0xFF090F13),
+                                                              fontSize: 16.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
                                                       ),
                                                     ),
                                                     Text(
@@ -2523,7 +7552,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .bodyText1
+                                                              .bodyMedium
                                                               .override(
                                                                 fontFamily:
                                                                     'Poppins',
@@ -2535,7 +7564,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                       Icons
                                                           .chevron_right_rounded,
                                                       color: Color(0xFF7C8791),
-                                                      size: 24,
+                                                      size: 24.0,
                                                     ),
                                                   ],
                                                 ),
@@ -2546,23 +7575,24 @@ class _TasksWidgetState extends State<TasksWidget>
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0, 12, 0, 0),
+                                                  0.0, 12.0, 0.0, 0.0),
                                           child: Container(
                                             width: double.infinity,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius:
-                                                  BorderRadius.circular(16),
+                                                  BorderRadius.circular(16.0),
                                               border: Border.all(
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .lineColor,
-                                                width: 2,
+                                                width: 2.0,
                                               ),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(16, 12, 16, 12),
+                                                  .fromSTEB(
+                                                      16.0, 12.0, 16.0, 12.0),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
@@ -2573,12 +7603,12 @@ class _TasksWidgetState extends State<TasksWidget>
                                                     'Category Name',
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .bodyText1
+                                                        .bodyMedium
                                                         .override(
                                                           fontFamily: 'Outfit',
                                                           color:
                                                               Color(0xFF090F13),
-                                                          fontSize: 16,
+                                                          fontSize: 16.0,
                                                           fontWeight:
                                                               FontWeight.normal,
                                                         ),
@@ -2586,7 +7616,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                   Icon(
                                                     Icons.chevron_right_rounded,
                                                     color: Color(0xFF7C8791),
-                                                    size: 24,
+                                                    size: 24.0,
                                                   ),
                                                 ],
                                               ),
@@ -2596,23 +7626,24 @@ class _TasksWidgetState extends State<TasksWidget>
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0, 12, 0, 0),
+                                                  0.0, 12.0, 0.0, 0.0),
                                           child: Container(
                                             width: double.infinity,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius:
-                                                  BorderRadius.circular(16),
+                                                  BorderRadius.circular(16.0),
                                               border: Border.all(
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .lineColor,
-                                                width: 2,
+                                                width: 2.0,
                                               ),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(16, 12, 16, 12),
+                                                  .fromSTEB(
+                                                      16.0, 12.0, 16.0, 12.0),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 mainAxisAlignment:
@@ -2623,12 +7654,12 @@ class _TasksWidgetState extends State<TasksWidget>
                                                     'Category Name',
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .bodyText1
+                                                        .bodyMedium
                                                         .override(
                                                           fontFamily: 'Outfit',
                                                           color:
                                                               Color(0xFF090F13),
-                                                          fontSize: 16,
+                                                          fontSize: 16.0,
                                                           fontWeight:
                                                               FontWeight.normal,
                                                         ),
@@ -2636,7 +7667,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                   Icon(
                                                     Icons.chevron_right_rounded,
                                                     color: Color(0xFF7C8791),
-                                                    size: 24,
+                                                    size: 24.0,
                                                   ),
                                                 ],
                                               ),
@@ -2660,14 +7691,14 @@ class _TasksWidgetState extends State<TasksWidget>
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 4, 0, 0),
+                                      0.0, 4.0, 0.0, 0.0),
                                   child: Container(
                                     width: double.infinity,
-                                    height: 270,
+                                    height: 270.0,
                                     decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
-                                      borderRadius: BorderRadius.circular(0),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      borderRadius: BorderRadius.circular(0.0),
                                     ),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
@@ -2677,15 +7708,15 @@ class _TasksWidgetState extends State<TasksWidget>
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  16, 12, 0, 0),
+                                                  16.0, 12.0, 0.0, 0.0),
                                           child: Text(
                                             'You quotes',
                                             style: FlutterFlowTheme.of(context)
-                                                .title2
+                                                .headlineMedium
                                                 .override(
                                                   fontFamily: 'Outfit',
                                                   color: Colors.white,
-                                                  fontSize: 28,
+                                                  fontSize: 28.0,
                                                   fontWeight: FontWeight.normal,
                                                 ),
                                           ),
@@ -2693,15 +7724,15 @@ class _TasksWidgetState extends State<TasksWidget>
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  16, 0, 0, 12),
+                                                  16.0, 0.0, 0.0, 12.0),
                                           child: Text(
                                             'You will find your quote options below.',
                                             style: FlutterFlowTheme.of(context)
-                                                .bodyText1
+                                                .bodyMedium
                                                 .override(
                                                   fontFamily: 'Outfit',
                                                   color: Colors.white,
-                                                  fontSize: 14,
+                                                  fontSize: 14.0,
                                                   fontWeight: FontWeight.normal,
                                                 ),
                                           ),
@@ -2715,29 +7746,34 @@ class _TasksWidgetState extends State<TasksWidget>
                                             children: [
                                               Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(12, 12, 0, 12),
+                                                    .fromSTEB(
+                                                        12.0, 12.0, 0.0, 12.0),
                                                 child: Container(
-                                                  width: 270,
-                                                  height: 100,
+                                                  width: 270.0,
+                                                  height: 100.0,
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        blurRadius: 4,
+                                                        blurRadius: 4.0,
                                                         color:
                                                             Color(0x2B202529),
-                                                        offset: Offset(0, 2),
+                                                        offset:
+                                                            Offset(0.0, 2.0),
                                                       )
                                                     ],
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            12),
+                                                            12.0),
                                                   ),
                                                   child: Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
                                                             .fromSTEB(
-                                                                12, 12, 12, 12),
+                                                                12.0,
+                                                                12.0,
+                                                                12.0,
+                                                                12.0),
                                                     child: Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -2754,14 +7790,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                 'Company Name',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .subtitle2
+                                                                    .titleSmall
                                                                     .override(
                                                                       fontFamily:
                                                                           'Outfit',
                                                                       color: Color(
                                                                           0xFF14181B),
                                                                       fontSize:
-                                                                          16,
+                                                                          16.0,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w500,
@@ -2773,28 +7809,28 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                   .star_rounded,
                                                               color: Color(
                                                                   0xFF4B39EF),
-                                                              size: 24,
+                                                              size: 24.0,
                                                             ),
                                                             Padding(
                                                               padding:
                                                                   EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          0,
-                                                                          0,
-                                                                          4,
-                                                                          0),
+                                                                          0.0,
+                                                                          0.0,
+                                                                          4.0,
+                                                                          0.0),
                                                               child: Text(
                                                                 '4.5',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .bodyText1
+                                                                    .bodyMedium
                                                                     .override(
                                                                       fontFamily:
                                                                           'Outfit',
                                                                       color: Color(
                                                                           0xFF14181B),
                                                                       fontSize:
-                                                                          14,
+                                                                          14.0,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .normal,
@@ -2805,14 +7841,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                               '(242)',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .bodyText2
+                                                                  .bodySmall
                                                                   .override(
                                                                     fontFamily:
                                                                         'Outfit',
                                                                     color: Color(
                                                                         0xFF57636C),
                                                                     fontSize:
-                                                                        14,
+                                                                        14.0,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .normal,
@@ -2823,8 +7859,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
-                                                                  .fromSTEB(0,
-                                                                      50, 0, 0),
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      50.0,
+                                                                      0.0,
+                                                                      0.0),
                                                           child: Row(
                                                             mainAxisSize:
                                                                 MainAxisSize
@@ -2837,14 +7876,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                 '\$194.25',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .title1
+                                                                    .displaySmall
                                                                     .override(
                                                                       fontFamily:
                                                                           'Outfit',
                                                                       color: Color(
                                                                           0xFF14181B),
                                                                       fontSize:
-                                                                          34,
+                                                                          34.0,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w500,
@@ -2855,14 +7894,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                   '/mo',
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .bodyText2
+                                                                      .bodySmall
                                                                       .override(
                                                                         fontFamily:
                                                                             'Outfit',
                                                                         color: Color(
                                                                             0xFF57636C),
                                                                         fontSize:
-                                                                            14,
+                                                                            14.0,
                                                                         fontWeight:
                                                                             FontWeight.normal,
                                                                       ),
@@ -2872,15 +7911,17 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                 borderColor: Color(
                                                                     0xFFF1F4F8),
                                                                 borderRadius:
-                                                                    30,
-                                                                borderWidth: 2,
-                                                                buttonSize: 44,
+                                                                    30.0,
+                                                                borderWidth:
+                                                                    2.0,
+                                                                buttonSize:
+                                                                    44.0,
                                                                 icon: Icon(
                                                                   Icons
                                                                       .arrow_forward_rounded,
                                                                   color: Color(
                                                                       0xFF57636C),
-                                                                  size: 24,
+                                                                  size: 24.0,
                                                                 ),
                                                                 onPressed: () {
                                                                   print(
@@ -2899,20 +7940,20 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                   .local_fire_department_sharp,
                                                               color: Color(
                                                                   0xFFFFA130),
-                                                              size: 24,
+                                                              size: 24.0,
                                                             ),
                                                             Text(
                                                               '\$124.29 yearly savings',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .bodyText1
+                                                                  .bodyMedium
                                                                   .override(
                                                                     fontFamily:
                                                                         'Outfit',
                                                                     color: Color(
                                                                         0xFF14181B),
                                                                     fontSize:
-                                                                        14,
+                                                                        14.0,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .normal,
@@ -2927,29 +7968,34 @@ class _TasksWidgetState extends State<TasksWidget>
                                               ),
                                               Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(12, 12, 12, 12),
+                                                    .fromSTEB(
+                                                        12.0, 12.0, 12.0, 12.0),
                                                 child: Container(
-                                                  width: 270,
-                                                  height: 100,
+                                                  width: 270.0,
+                                                  height: 100.0,
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        blurRadius: 4,
+                                                        blurRadius: 4.0,
                                                         color:
                                                             Color(0x2B202529),
-                                                        offset: Offset(0, 2),
+                                                        offset:
+                                                            Offset(0.0, 2.0),
                                                       )
                                                     ],
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            12),
+                                                            12.0),
                                                   ),
                                                   child: Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
                                                             .fromSTEB(
-                                                                12, 12, 12, 12),
+                                                                12.0,
+                                                                12.0,
+                                                                12.0,
+                                                                12.0),
                                                     child: Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -2966,14 +8012,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                 'Company Name',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .subtitle2
+                                                                    .titleSmall
                                                                     .override(
                                                                       fontFamily:
                                                                           'Outfit',
                                                                       color: Color(
                                                                           0xFF14181B),
                                                                       fontSize:
-                                                                          16,
+                                                                          16.0,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w500,
@@ -2985,28 +8031,28 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                   .star_rounded,
                                                               color: Color(
                                                                   0xFF4B39EF),
-                                                              size: 24,
+                                                              size: 24.0,
                                                             ),
                                                             Padding(
                                                               padding:
                                                                   EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          0,
-                                                                          0,
-                                                                          4,
-                                                                          0),
+                                                                          0.0,
+                                                                          0.0,
+                                                                          4.0,
+                                                                          0.0),
                                                               child: Text(
                                                                 '4.5',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .bodyText1
+                                                                    .bodyMedium
                                                                     .override(
                                                                       fontFamily:
                                                                           'Outfit',
                                                                       color: Color(
                                                                           0xFF14181B),
                                                                       fontSize:
-                                                                          14,
+                                                                          14.0,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .normal,
@@ -3017,14 +8063,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                               '(242)',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .bodyText2
+                                                                  .bodySmall
                                                                   .override(
                                                                     fontFamily:
                                                                         'Outfit',
                                                                     color: Color(
                                                                         0xFF57636C),
                                                                     fontSize:
-                                                                        14,
+                                                                        14.0,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .normal,
@@ -3035,8 +8081,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
-                                                                  .fromSTEB(0,
-                                                                      50, 0, 0),
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      50.0,
+                                                                      0.0,
+                                                                      0.0),
                                                           child: Row(
                                                             mainAxisSize:
                                                                 MainAxisSize
@@ -3049,14 +8098,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                 '\$194.25',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .title1
+                                                                    .displaySmall
                                                                     .override(
                                                                       fontFamily:
                                                                           'Outfit',
                                                                       color: Color(
                                                                           0xFF14181B),
                                                                       fontSize:
-                                                                          34,
+                                                                          34.0,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w500,
@@ -3067,14 +8116,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                   '/mo',
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .bodyText2
+                                                                      .bodySmall
                                                                       .override(
                                                                         fontFamily:
                                                                             'Outfit',
                                                                         color: Color(
                                                                             0xFF57636C),
                                                                         fontSize:
-                                                                            14,
+                                                                            14.0,
                                                                         fontWeight:
                                                                             FontWeight.normal,
                                                                       ),
@@ -3084,15 +8133,17 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                 borderColor: Color(
                                                                     0xFFF1F4F8),
                                                                 borderRadius:
-                                                                    30,
-                                                                borderWidth: 2,
-                                                                buttonSize: 44,
+                                                                    30.0,
+                                                                borderWidth:
+                                                                    2.0,
+                                                                buttonSize:
+                                                                    44.0,
                                                                 icon: Icon(
                                                                   Icons
                                                                       .arrow_forward_rounded,
                                                                   color: Color(
                                                                       0xFF57636C),
-                                                                  size: 24,
+                                                                  size: 24.0,
                                                                 ),
                                                                 onPressed: () {
                                                                   print(
@@ -3111,20 +8162,20 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                   .local_fire_department_sharp,
                                                               color: Color(
                                                                   0xFFFFA130),
-                                                              size: 24,
+                                                              size: 24.0,
                                                             ),
                                                             Text(
                                                               '\$124.29 yearly savings',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .bodyText1
+                                                                  .bodyMedium
                                                                   .override(
                                                                     fontFamily:
                                                                         'Outfit',
                                                                     color: Color(
                                                                         0xFF14181B),
                                                                     fontSize:
-                                                                        14,
+                                                                        14.0,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .normal,
@@ -3151,11 +8202,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                     if (!snapshot.hasData) {
                                       return Center(
                                         child: SizedBox(
-                                          width: 50,
-                                          height: 50,
+                                          width: 50.0,
+                                          height: 50.0,
                                           child: CircularProgressIndicator(
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryColor,
+                                                .primary,
                                           ),
                                         ),
                                       );
@@ -3175,38 +8226,40 @@ class _TasksWidgetState extends State<TasksWidget>
                                         return Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  16, 12, 16, 0),
+                                                  16.0, 12.0, 16.0, 0.0),
                                           child: Container(
                                             width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            height: 100,
+                                                    .size
+                                                    .width *
+                                                1.0,
+                                            height: 100.0,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               boxShadow: [
                                                 BoxShadow(
-                                                  blurRadius: 12,
+                                                  blurRadius: 12.0,
                                                   color: Color(0x34000000),
-                                                  offset: Offset(-2, 5),
+                                                  offset: Offset(-2.0, 5.0),
                                                 )
                                               ],
                                               borderRadius:
-                                                  BorderRadius.circular(8),
+                                                  BorderRadius.circular(8.0),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(8, 8, 12, 8),
+                                                  .fromSTEB(
+                                                      8.0, 8.0, 12.0, 8.0),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Container(
-                                                    width: 4,
+                                                    width: 4.0,
                                                     height: double.infinity,
                                                     decoration: BoxDecoration(
                                                       color: Color(0xFF4B39EF),
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              4),
+                                                              4.0),
                                                     ),
                                                   ),
                                                   Expanded(
@@ -3214,7 +8267,10 @@ class _TasksWidgetState extends State<TasksWidget>
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  12, 0, 0, 0),
+                                                                  12.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0),
                                                       child: Column(
                                                         mainAxisSize:
                                                             MainAxisSize.max,
@@ -3229,13 +8285,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                             'Pending Order',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodyText1
+                                                                .bodyMedium
                                                                 .override(
                                                                   fontFamily:
                                                                       'Outfit',
                                                                   color: Color(
                                                                       0xFF4B39EF),
-                                                                  fontSize: 14,
+                                                                  fontSize:
+                                                                      14.0,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,
@@ -3245,13 +8302,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                             'Estimated Pickup TIme',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodyText1
+                                                                .bodyMedium
                                                                 .override(
                                                                   fontFamily:
                                                                       'Outfit',
                                                                   color: Color(
                                                                       0xFF101213),
-                                                                  fontSize: 14,
+                                                                  fontSize:
+                                                                      14.0,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .normal,
@@ -3261,22 +8319,22 @@ class _TasksWidgetState extends State<TasksWidget>
                                                             padding:
                                                                 EdgeInsetsDirectional
                                                                     .fromSTEB(
-                                                                        0,
-                                                                        4,
-                                                                        0,
-                                                                        0),
+                                                                        0.0,
+                                                                        4.0,
+                                                                        0.0,
+                                                                        0.0),
                                                             child: Text(
                                                               '4:00pm',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .title1
+                                                                  .displaySmall
                                                                   .override(
                                                                     fontFamily:
                                                                         'Outfit',
                                                                     color: Color(
                                                                         0xFF101213),
                                                                     fontSize:
-                                                                        32,
+                                                                        32.0,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w600,
@@ -3290,8 +8348,8 @@ class _TasksWidgetState extends State<TasksWidget>
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                12, 0, 0, 0),
+                                                            .fromSTEB(12.0, 0.0,
+                                                                0.0, 0.0),
                                                     child: Column(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -3306,13 +8364,13 @@ class _TasksWidgetState extends State<TasksWidget>
                                                           'Global Chiffre',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
-                                                              .bodyText2
+                                                              .bodySmall
                                                               .override(
                                                                 fontFamily:
                                                                     'Outfit',
                                                                 color: Color(
                                                                     0xFF57636C),
-                                                                fontSize: 14,
+                                                                fontSize: 14.0,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .normal,
@@ -3321,8 +8379,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
-                                                                  .fromSTEB(0,
-                                                                      4, 0, 4),
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      4.0,
+                                                                      0.0,
+                                                                      4.0),
                                                           child: Row(
                                                             mainAxisSize:
                                                                 MainAxisSize
@@ -3335,10 +8396,10 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                 padding:
                                                                     EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            4,
-                                                                            4,
-                                                                            0,
-                                                                            0),
+                                                                            4.0,
+                                                                            4.0,
+                                                                            0.0,
+                                                                            0.0),
                                                                 child: Text(
                                                                   formatNumber(
                                                                     listViewGiftsRecord
@@ -3354,14 +8415,14 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                   ),
                                                                   style: FlutterFlowTheme.of(
                                                                           context)
-                                                                      .title3
+                                                                      .headlineSmall
                                                                       .override(
                                                                         fontFamily:
                                                                             'Outfit',
                                                                         color: Color(
                                                                             0xFF101213),
                                                                         fontSize:
-                                                                            20,
+                                                                            20.0,
                                                                         fontWeight:
                                                                             FontWeight.w500,
                                                                       ),
@@ -3373,19 +8434,23 @@ class _TasksWidgetState extends State<TasksWidget>
                                                         Padding(
                                                           padding:
                                                               EdgeInsetsDirectional
-                                                                  .fromSTEB(0,
-                                                                      4, 0, 8),
+                                                                  .fromSTEB(
+                                                                      0.0,
+                                                                      4.0,
+                                                                      0.0,
+                                                                      8.0),
                                                           child: Text(
                                                             '(4 items)',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodyText1
+                                                                .bodyMedium
                                                                 .override(
                                                                   fontFamily:
                                                                       'Outfit',
                                                                   color: Color(
                                                                       0xFF101213),
-                                                                  fontSize: 14,
+                                                                  fontSize:
+                                                                      14.0,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .normal,
@@ -3418,20 +8483,5 @@ class _TasksWidgetState extends State<TasksWidget>
         ),
       ),
     );
-  }
-
-  Future waitForApiRequestCompleter({
-    double minWait = 0,
-    double maxWait = double.infinity,
-  }) async {
-    final stopwatch = Stopwatch()..start();
-    while (true) {
-      await Future.delayed(Duration(milliseconds: 50));
-      final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = _apiRequestCompleter?.isCompleted ?? false;
-      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
-        break;
-      }
-    }
   }
 }

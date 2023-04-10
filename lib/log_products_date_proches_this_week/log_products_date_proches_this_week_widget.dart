@@ -1,9 +1,12 @@
-import '../backend/api_requests/api_calls.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'log_products_date_proches_this_week_model.dart';
+export 'log_products_date_proches_this_week_model.dart';
 
 class LogProductsDateProchesThisWeekWidget extends StatefulWidget {
   const LogProductsDateProchesThisWeekWidget({Key? key}) : super(key: key);
@@ -15,45 +18,70 @@ class LogProductsDateProchesThisWeekWidget extends StatefulWidget {
 
 class _LogProductsDateProchesThisWeekWidgetState
     extends State<LogProductsDateProchesThisWeekWidget> {
+  late LogProductsDateProchesThisWeekModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => LogProductsDateProchesThisWeekModel());
+
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'Log_products_date_proches_this_week'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    _unfocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        leading: FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30,
-          borderWidth: 1,
-          buttonSize: 60,
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: Colors.white,
-            size: 30,
+    context.watch<FFAppState>();
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        appBar: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          automaticallyImplyLeading: false,
+          leading: FlutterFlowIconButton(
+            borderColor: Colors.transparent,
+            borderRadius: 30.0,
+            borderWidth: 1.0,
+            buttonSize: 60.0,
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.white,
+              size: 30.0,
+            ),
+            onPressed: () async {
+              logFirebaseEvent('LOG_PRODUCTS_DATE_PROCHES_THIS_WEEK_arro');
+              logFirebaseEvent('IconButton_navigate_back');
+              context.pop();
+            },
           ),
-          onPressed: () async {
-            Navigator.pop(context);
-          },
+          title: Text(
+            'Logs',
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                  fontSize: 22.0,
+                ),
+          ),
+          actions: [],
+          centerTitle: true,
+          elevation: 2.0,
         ),
-        title: Text(
-          'Logs',
-          style: FlutterFlowTheme.of(context).title2.override(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontSize: 22,
-              ),
-        ),
-        actions: [],
-        centerTitle: true,
-        elevation: 2,
-      ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+        body: SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -65,10 +93,10 @@ class _LogProductsDateProchesThisWeekWidgetState
                     if (!snapshot.hasData) {
                       return Center(
                         child: SizedBox(
-                          width: 50,
-                          height: 50,
+                          width: 50.0,
+                          height: 50.0,
                           child: CircularProgressIndicator(
-                            color: FlutterFlowTheme.of(context).primaryColor,
+                            color: FlutterFlowTheme.of(context).primary,
                           ),
                         ),
                       );
@@ -95,23 +123,23 @@ class _LogProductsDateProchesThisWeekWidgetState
                                   logProdsItem,
                                   r'''$.name''',
                                 ).toString(),
-                                style: FlutterFlowTheme.of(context).subtitle2,
+                                style: FlutterFlowTheme.of(context).titleSmall,
                               ),
                               subtitle: Text(
                                 'Lorem ipsum dolor...',
-                                style: FlutterFlowTheme.of(context).bodyText2,
+                                style: FlutterFlowTheme.of(context).bodySmall,
                               ),
                               trailing: Icon(
                                 Icons.arrow_forward_ios,
                                 color: Color(0xFF303030),
-                                size: 20,
+                                size: 20.0,
                               ),
                               tileColor: Color(0xFFF5F5F5),
                               dense: false,
-                              contentPadding:
-                                  EdgeInsetsDirectional.fromSTEB(2, 2, 2, 2),
+                              contentPadding: EdgeInsetsDirectional.fromSTEB(
+                                  2.0, 2.0, 2.0, 2.0),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(20.0),
                               ),
                             );
                           },

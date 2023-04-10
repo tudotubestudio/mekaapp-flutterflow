@@ -1,13 +1,15 @@
-import '../backend/api_requests/api_calls.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../log_products_date_proches_this_week/log_products_date_proches_this_week_widget.dart';
-import '../flutter_flow/custom_functions.dart' as functions;
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
+import 'list_date_proches_this_week_model.dart';
+export 'list_date_proches_this_week_model.dart';
 
 class ListDateProchesThisWeekWidget extends StatefulWidget {
   const ListDateProchesThisWeekWidget({Key? key}) : super(key: key);
@@ -19,23 +21,46 @@ class ListDateProchesThisWeekWidget extends StatefulWidget {
 
 class _ListDateProchesThisWeekWidgetState
     extends State<ListDateProchesThisWeekWidget> {
+  late ListDateProchesThisWeekModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => ListDateProchesThisWeekModel());
+
+    logFirebaseEvent('screen_view',
+        parameters: {'screen_name': 'List_date_proches_this_week'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    _unfocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        actions: [],
-        centerTitle: false,
-        elevation: 2,
-      ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+    context.watch<FFAppState>();
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        appBar: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          automaticallyImplyLeading: false,
+          actions: [],
+          centerTitle: false,
+          elevation: 2.0,
+        ),
+        body: SafeArea(
           child: FutureBuilder<ApiCallResponse>(
             future: DateProchesThisWeekCall.call(),
             builder: (context, snapshot) {
@@ -43,10 +68,10 @@ class _ListDateProchesThisWeekWidgetState
               if (!snapshot.hasData) {
                 return Center(
                   child: SizedBox(
-                    width: 50,
-                    height: 50,
+                    width: 50.0,
+                    height: 50.0,
                     child: CircularProgressIndicator(
-                      color: FlutterFlowTheme.of(context).primaryColor,
+                      color: FlutterFlowTheme.of(context).primary,
                     ),
                   ),
                 );
@@ -57,7 +82,8 @@ class _ListDateProchesThisWeekWidgetState
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
                       child: Text(
                         'Initial value: ${formatNumber(
                           functions.sumSubTotal(
@@ -65,50 +91,55 @@ class _ListDateProchesThisWeekWidgetState
                           formatType: FormatType.decimal,
                           decimalType: DecimalType.automatic,
                         )} DA',
-                        style: FlutterFlowTheme.of(context).title1.override(
-                              fontFamily: 'Poppins',
-                              color: Color(0xFF3498DB),
-                            ),
+                        style:
+                            FlutterFlowTheme.of(context).displaySmall.override(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFF3498DB),
+                                ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
                       child: FFButtonWidget(
                         onPressed: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  LogProductsDateProchesThisWeekWidget(),
-                            ),
-                          );
+                          logFirebaseEvent(
+                              'LIST_DATE_PROCHES_THIS_WEEK_LOG_SELL_PRO');
+                          logFirebaseEvent('Button_navigate_to');
+
+                          context
+                              .pushNamed('Log_products_date_proches_this_week');
                         },
                         text: 'Log sell products',
                         icon: Icon(
                           Icons.list,
-                          size: 15,
+                          size: 15.0,
                         ),
                         options: FFButtonOptions(
                           width: double.infinity,
-                          height: 50,
+                          height: 50.0,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
                           color: FlutterFlowTheme.of(context).primaryBtnText,
-                          textStyle: FlutterFlowTheme.of(context)
-                              .subtitle2
-                              .override(
-                                fontFamily: 'Poppins',
-                                color:
-                                    FlutterFlowTheme.of(context).primaryColor,
-                              ),
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Poppins',
+                                    color: FlutterFlowTheme.of(context).primary,
+                                  ),
+                          elevation: 2.0,
                           borderSide: BorderSide(
-                            color: FlutterFlowTheme.of(context).primaryColor,
-                            width: 1,
+                            color: FlutterFlowTheme.of(context).primary,
+                            width: 1.0,
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 20),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 20.0),
                       child: FutureBuilder<ApiCallResponse>(
                         future: StatusScoreDateProcheCall.call(
                           targetId: 1,
@@ -118,11 +149,10 @@ class _ListDateProchesThisWeekWidgetState
                           if (!snapshot.hasData) {
                             return Center(
                               child: SizedBox(
-                                width: 50,
-                                height: 50,
+                                width: 50.0,
+                                height: 50.0,
                                 child: CircularProgressIndicator(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryColor,
+                                  color: FlutterFlowTheme.of(context).primary,
                                 ),
                               ),
                             );
@@ -130,12 +160,12 @@ class _ListDateProchesThisWeekWidgetState
                           final containerStatusScoreDateProcheResponse =
                               snapshot.data!;
                           return Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width * 1.0,
                             decoration: BoxDecoration(
                               color: Color(0xFFEEEEEE),
                               border: Border.all(
                                 color: Color(0xFFF39C12),
-                                width: 1,
+                                width: 1.0,
                               ),
                             ),
                             child: Column(
@@ -143,7 +173,7 @@ class _ListDateProchesThisWeekWidgetState
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 8, 0, 8),
+                                      0.0, 8.0, 0.0, 8.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -161,8 +191,8 @@ class _ListDateProchesThisWeekWidgetState
                                                   r'''$.objectif_ca_oper''',
                                                 ).toString(),
                                                 FFAppState().percOb1),
-                                            radius: 60,
-                                            lineWidth: 24,
+                                            radius: 60.0,
+                                            lineWidth: 24.0,
                                             animation: true,
                                             progressColor: Color(0xFFF39C12),
                                             backgroundColor: Color(0xFFF1F4F8),
@@ -180,7 +210,7 @@ class _ListDateProchesThisWeekWidgetState
                                               ),
                                               style:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyText1
+                                                      .bodyMedium
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color:
@@ -201,11 +231,11 @@ class _ListDateProchesThisWeekWidgetState
                                                   DecimalType.automatic,
                                             )} DA',
                                             style: FlutterFlowTheme.of(context)
-                                                .subtitle1
+                                                .titleMedium
                                                 .override(
                                                   fontFamily: 'Poppins',
                                                   color: Color(0xFFF39C12),
-                                                  fontSize: 16,
+                                                  fontSize: 16.0,
                                                 ),
                                           ),
                                         ],
@@ -217,8 +247,8 @@ class _ListDateProchesThisWeekWidgetState
                                           children: [
                                             Lottie.asset(
                                               'assets/lottie_animations/99684-success-gif.json',
-                                              width: 120,
-                                              height: 110,
+                                              width: 120.0,
+                                              height: 110.0,
                                               fit: BoxFit.cover,
                                               repeat: false,
                                               animate: true,
@@ -237,7 +267,7 @@ class _ListDateProchesThisWeekWidgetState
                                               )} DA',
                                               style:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyText1
+                                                      .bodyMedium
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color:
@@ -260,10 +290,10 @@ class _ListDateProchesThisWeekWidgetState
                                     1.0)
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        8, 0, 8, 0),
+                                        8.0, 0.0, 8.0, 0.0),
                                     child: Container(
                                       width: double.infinity,
-                                      height: 60,
+                                      height: 60.0,
                                       decoration: BoxDecoration(
                                         color: Color(0xFFEEEEEE),
                                       ),
@@ -274,9 +304,13 @@ class _ListDateProchesThisWeekWidgetState
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0, 8, 0, 8),
+                                                  0.0, 8.0, 0.0, 8.0),
                                           child: FFButtonWidget(
                                             onPressed: () async {
+                                              logFirebaseEvent(
+                                                  'LIST_DATE_PROCHES_THIS_WEEK__BTN_ON_TAP');
+                                              logFirebaseEvent(
+                                                  'Button_backend_call');
                                               await AddScoreDateProcheCall.call(
                                                 total: functions.obDateProche1(
                                                     getJsonField(
@@ -286,6 +320,8 @@ class _ListDateProchesThisWeekWidgetState
                                                     FFAppState().scoreOb1),
                                                 targetId: 1,
                                               );
+                                              logFirebaseEvent(
+                                                  'Button_show_snack_bar');
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
@@ -315,22 +351,27 @@ class _ListDateProchesThisWeekWidgetState
                                                   DecimalType.automatic,
                                             )} DA',
                                             options: FFButtonOptions(
-                                              width: 300,
-                                              height: 40,
+                                              width: 300.0,
+                                              height: 40.0,
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                              iconPadding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
                                               color: Color(0xFFF39C12),
                                               textStyle:
                                                   FlutterFlowTheme.of(context)
-                                                      .subtitle2
+                                                      .titleSmall
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color: Colors.white,
                                                       ),
+                                              elevation: 2.0,
                                               borderSide: BorderSide(
                                                 color: Colors.transparent,
-                                                width: 1,
+                                                width: 1.0,
                                               ),
                                               borderRadius:
-                                                  BorderRadius.circular(12),
+                                                  BorderRadius.circular(12.0),
                                             ),
                                           ),
                                         ),
@@ -344,7 +385,8 @@ class _ListDateProchesThisWeekWidgetState
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 20),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 20.0),
                       child: FutureBuilder<ApiCallResponse>(
                         future: StatusScoreDateProcheCall.call(
                           targetId: 2,
@@ -354,11 +396,10 @@ class _ListDateProchesThisWeekWidgetState
                           if (!snapshot.hasData) {
                             return Center(
                               child: SizedBox(
-                                width: 50,
-                                height: 50,
+                                width: 50.0,
+                                height: 50.0,
                                 child: CircularProgressIndicator(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryColor,
+                                  color: FlutterFlowTheme.of(context).primary,
                                 ),
                               ),
                             );
@@ -366,12 +407,12 @@ class _ListDateProchesThisWeekWidgetState
                           final containerStatusScoreDateProcheResponse =
                               snapshot.data!;
                           return Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width * 1.0,
                             decoration: BoxDecoration(
                               color: Color(0xFFEEEEEE),
                               border: Border.all(
                                 color: Color(0xFF3498DB),
-                                width: 1,
+                                width: 1.0,
                               ),
                             ),
                             child: Column(
@@ -379,7 +420,7 @@ class _ListDateProchesThisWeekWidgetState
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 8, 0, 8),
+                                      0.0, 8.0, 0.0, 8.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -397,8 +438,8 @@ class _ListDateProchesThisWeekWidgetState
                                                   r'''$.objectif_ca_oper''',
                                                 ).toString(),
                                                 FFAppState().percOb2),
-                                            radius: 60,
-                                            lineWidth: 24,
+                                            radius: 60.0,
+                                            lineWidth: 24.0,
                                             animation: true,
                                             progressColor: Color(0xFF3498DB),
                                             backgroundColor: Color(0xFFF1F4F8),
@@ -416,7 +457,7 @@ class _ListDateProchesThisWeekWidgetState
                                               ),
                                               style:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyText1
+                                                      .bodyMedium
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color:
@@ -437,11 +478,11 @@ class _ListDateProchesThisWeekWidgetState
                                                   DecimalType.automatic,
                                             )} DA',
                                             style: FlutterFlowTheme.of(context)
-                                                .subtitle1
+                                                .titleMedium
                                                 .override(
                                                   fontFamily: 'Poppins',
                                                   color: Color(0xFF3498DB),
-                                                  fontSize: 16,
+                                                  fontSize: 16.0,
                                                 ),
                                           ),
                                         ],
@@ -453,8 +494,8 @@ class _ListDateProchesThisWeekWidgetState
                                           children: [
                                             Lottie.asset(
                                               'assets/lottie_animations/99684-success-gif.json',
-                                              width: 120,
-                                              height: 110,
+                                              width: 120.0,
+                                              height: 110.0,
                                               fit: BoxFit.cover,
                                               repeat: false,
                                               animate: true,
@@ -473,7 +514,7 @@ class _ListDateProchesThisWeekWidgetState
                                               )} DA',
                                               style:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyText1
+                                                      .bodyMedium
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color:
@@ -496,10 +537,10 @@ class _ListDateProchesThisWeekWidgetState
                                     1.0)
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        8, 0, 8, 0),
+                                        8.0, 0.0, 8.0, 0.0),
                                     child: Container(
                                       width: double.infinity,
-                                      height: 60,
+                                      height: 60.0,
                                       decoration: BoxDecoration(
                                         color: Color(0xFFEEEEEE),
                                       ),
@@ -510,9 +551,13 @@ class _ListDateProchesThisWeekWidgetState
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0, 8, 0, 8),
+                                                  0.0, 8.0, 0.0, 8.0),
                                           child: FFButtonWidget(
                                             onPressed: () async {
+                                              logFirebaseEvent(
+                                                  'LIST_DATE_PROCHES_THIS_WEEK__BTN_ON_TAP');
+                                              logFirebaseEvent(
+                                                  'Button_backend_call');
                                               await AddScoreDateProcheCall.call(
                                                 total: functions.obDateProche1(
                                                     getJsonField(
@@ -522,6 +567,8 @@ class _ListDateProchesThisWeekWidgetState
                                                     FFAppState().scoreOb2),
                                                 targetId: 2,
                                               );
+                                              logFirebaseEvent(
+                                                  'Button_show_snack_bar');
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
@@ -551,22 +598,27 @@ class _ListDateProchesThisWeekWidgetState
                                                   DecimalType.automatic,
                                             )} DA',
                                             options: FFButtonOptions(
-                                              width: 300,
-                                              height: 40,
+                                              width: 300.0,
+                                              height: 40.0,
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                              iconPadding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
                                               color: Color(0xFF3498DB),
                                               textStyle:
                                                   FlutterFlowTheme.of(context)
-                                                      .subtitle2
+                                                      .titleSmall
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color: Colors.white,
                                                       ),
+                                              elevation: 2.0,
                                               borderSide: BorderSide(
                                                 color: Colors.transparent,
-                                                width: 1,
+                                                width: 1.0,
                                               ),
                                               borderRadius:
-                                                  BorderRadius.circular(12),
+                                                  BorderRadius.circular(12.0),
                                             ),
                                           ),
                                         ),
@@ -580,7 +632,8 @@ class _ListDateProchesThisWeekWidgetState
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 20),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 20.0),
                       child: FutureBuilder<ApiCallResponse>(
                         future: StatusScoreDateProcheCall.call(
                           targetId: 3,
@@ -590,11 +643,10 @@ class _ListDateProchesThisWeekWidgetState
                           if (!snapshot.hasData) {
                             return Center(
                               child: SizedBox(
-                                width: 50,
-                                height: 50,
+                                width: 50.0,
+                                height: 50.0,
                                 child: CircularProgressIndicator(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryColor,
+                                  color: FlutterFlowTheme.of(context).primary,
                                 ),
                               ),
                             );
@@ -602,12 +654,12 @@ class _ListDateProchesThisWeekWidgetState
                           final containerStatusScoreDateProcheResponse =
                               snapshot.data!;
                           return Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width * 1.0,
                             decoration: BoxDecoration(
                               color: Color(0xFFEEEEEE),
                               border: Border.all(
                                 color: Color(0xFF2ECC71),
-                                width: 1,
+                                width: 1.0,
                               ),
                             ),
                             child: Column(
@@ -615,7 +667,7 @@ class _ListDateProchesThisWeekWidgetState
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 8, 0, 8),
+                                      0.0, 8.0, 0.0, 8.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment:
@@ -633,8 +685,8 @@ class _ListDateProchesThisWeekWidgetState
                                                   r'''$.objectif_ca_oper''',
                                                 ).toString(),
                                                 FFAppState().percOb3),
-                                            radius: 60,
-                                            lineWidth: 24,
+                                            radius: 60.0,
+                                            lineWidth: 24.0,
                                             animation: true,
                                             progressColor: Color(0xFF2ECC71),
                                             backgroundColor: Color(0xFFF1F4F8),
@@ -652,7 +704,7 @@ class _ListDateProchesThisWeekWidgetState
                                               ),
                                               style:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyText1
+                                                      .bodyMedium
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color:
@@ -673,11 +725,11 @@ class _ListDateProchesThisWeekWidgetState
                                                   DecimalType.automatic,
                                             )} DA',
                                             style: FlutterFlowTheme.of(context)
-                                                .subtitle1
+                                                .titleMedium
                                                 .override(
                                                   fontFamily: 'Poppins',
                                                   color: Color(0xFF2ECC71),
-                                                  fontSize: 16,
+                                                  fontSize: 16.0,
                                                 ),
                                           ),
                                         ],
@@ -689,8 +741,8 @@ class _ListDateProchesThisWeekWidgetState
                                           children: [
                                             Lottie.asset(
                                               'assets/lottie_animations/99684-success-gif.json',
-                                              width: 120,
-                                              height: 110,
+                                              width: 120.0,
+                                              height: 110.0,
                                               fit: BoxFit.cover,
                                               repeat: false,
                                               animate: true,
@@ -709,7 +761,7 @@ class _ListDateProchesThisWeekWidgetState
                                               )} DA',
                                               style:
                                                   FlutterFlowTheme.of(context)
-                                                      .bodyText1
+                                                      .bodyMedium
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color:
@@ -732,10 +784,10 @@ class _ListDateProchesThisWeekWidgetState
                                     1.0)
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        8, 0, 8, 0),
+                                        8.0, 0.0, 8.0, 0.0),
                                     child: Container(
                                       width: double.infinity,
-                                      height: 60,
+                                      height: 60.0,
                                       decoration: BoxDecoration(
                                         color: Color(0xFFEEEEEE),
                                       ),
@@ -746,9 +798,13 @@ class _ListDateProchesThisWeekWidgetState
                                         child: Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  0, 8, 0, 8),
+                                                  0.0, 8.0, 0.0, 8.0),
                                           child: FFButtonWidget(
                                             onPressed: () async {
+                                              logFirebaseEvent(
+                                                  'LIST_DATE_PROCHES_THIS_WEEK__BTN_ON_TAP');
+                                              logFirebaseEvent(
+                                                  'Button_backend_call');
                                               await AddScoreDateProcheCall.call(
                                                 total: functions.obDateProche1(
                                                     getJsonField(
@@ -758,6 +814,8 @@ class _ListDateProchesThisWeekWidgetState
                                                     FFAppState().scoreOb2),
                                                 targetId: 3,
                                               );
+                                              logFirebaseEvent(
+                                                  'Button_show_snack_bar');
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 SnackBar(
@@ -787,22 +845,27 @@ class _ListDateProchesThisWeekWidgetState
                                                   DecimalType.automatic,
                                             )} DA',
                                             options: FFButtonOptions(
-                                              width: 300,
-                                              height: 40,
+                                              width: 300.0,
+                                              height: 40.0,
+                                              padding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
+                                              iconPadding: EdgeInsetsDirectional
+                                                  .fromSTEB(0.0, 0.0, 0.0, 0.0),
                                               color: Color(0xFF2ECC71),
                                               textStyle:
                                                   FlutterFlowTheme.of(context)
-                                                      .subtitle2
+                                                      .titleSmall
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color: Colors.white,
                                                       ),
+                                              elevation: 2.0,
                                               borderSide: BorderSide(
                                                 color: Colors.transparent,
-                                                width: 1,
+                                                width: 1.0,
                                               ),
                                               borderRadius:
-                                                  BorderRadius.circular(12),
+                                                  BorderRadius.circular(12.0),
                                             ),
                                           ),
                                         ),

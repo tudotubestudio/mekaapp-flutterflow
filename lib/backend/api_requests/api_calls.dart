@@ -1,38 +1,602 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import '../../flutter_flow/flutter_flow_util.dart';
 
 import 'api_manager.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
 
+const _kPrivateApiFunctionName = 'ffPrivateApiCall';
+
+/// Start Clients Group Code
+
+class ClientsGroup {
+  static String baseUrl = 'https://mekaapp.com/bcd/backend/api';
+  static Map<String, String> headers = {};
+  static ListClientsByOpCall listClientsByOpCall = ListClientsByOpCall();
+  static DebloqeClientCall debloqeClientCall = DebloqeClientCall();
+  static TasksDebloqeClientsCall tasksDebloqeClientsCall =
+      TasksDebloqeClientsCall();
+  static UpdateTaskClientCall updateTaskClientCall = UpdateTaskClientCall();
+  static RefuserBlockCall refuserBlockCall = RefuserBlockCall();
+  static TasksNoValidTodayCall tasksNoValidTodayCall = TasksNoValidTodayCall();
+  static TasksNoValidCall tasksNoValidCall = TasksNoValidCall();
+  static RapportRouteByMonthsCall rapportRouteByMonthsCall =
+      RapportRouteByMonthsCall();
+  static LogCallCall logCallCall = LogCallCall();
+}
+
+class ListClientsByOpCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? page,
+    int? sizePage,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'list clients by op',
+      apiUrl: '${ClientsGroup.baseUrl}/clients',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'page': page,
+        'sizePage': sizePage,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic clientsStop(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.socreditstatus=='S'),?(@.socreditstatus=='H')]''',
+        true,
+      );
+  dynamic clientsWatch(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.socreditstatus=='W')]''',
+        true,
+      );
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+  dynamic rateAPlus(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.rate=='B')]''',
+        true,
+      );
+}
+
+class DebloqeClientCall {
+  Future<ApiCallResponse> call({
+    String? cBpartnerId = '',
+    int? type,
+    String? disc = '',
+    String? token = '',
+    String? datePay = '',
+    double? montant,
+    String? typePay = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Debloqe client',
+      apiUrl: '${ClientsGroup.baseUrl}/addTaskClientBlock',
+      callType: ApiCallType.POST,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'c_bpartner_id': cBpartnerId,
+        'type': type,
+        'disc': disc,
+        'token': token,
+        'date_pay': datePay,
+        'montant': montant,
+        'type_pay': typePay,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class TasksDebloqeClientsCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? page,
+    int? sizePage,
+    String? cBpartnerId = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Tasks Debloqe clients',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'order': "desc",
+        'col': "created_at",
+        'sizePage': sizePage,
+        'page': page,
+        'c_bpartner_id': cBpartnerId,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+  dynamic tasksEncoure(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.status=='0')]''',
+        true,
+      );
+  dynamic tasksTerminer(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.status=='1')]''',
+        true,
+      );
+  dynamic tasksRefus(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.status=='2')]''',
+        true,
+      );
+}
+
+class UpdateTaskClientCall {
+  Future<ApiCallResponse> call({
+    int? type,
+    int? cBpartnerId,
+    String? xxDate = '',
+    double? soCreditlimit,
+    int? charkTasksId,
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Update Task Client',
+      apiUrl: '${ClientsGroup.baseUrl}/updateTaskClientBlock',
+      callType: ApiCallType.PUT,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'type': type,
+        'c_bpartner_id': cBpartnerId,
+        'xx_date': xxDate,
+        'so_creditlimit': soCreditlimit,
+        'chark_tasks_id': charkTasksId,
+        'token': token,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class RefuserBlockCall {
+  Future<ApiCallResponse> call({
+    int? taskId,
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Refuser Block',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks/client/block/refuser_order',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'taskId': taskId,
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class TasksNoValidTodayCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? page,
+    int? sizePage,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Tasks no valid today',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks/tasks_no_valid_today',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'page': page,
+        'sizePage': sizePage,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class TasksNoValidCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? page,
+    int? sizePage,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Tasks no valid',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks/tasks_no_valid',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'page': page,
+        'sizePage': sizePage,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class RapportRouteByMonthsCall {
+  Future<ApiCallResponse> call({
+    int? cBpartnerId,
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'rapport route by months',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks/rapport_route_month',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'c_bpartner_id': cBpartnerId,
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class LogCallCall {
+  Future<ApiCallResponse> call({
+    String? data = '',
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Log Call',
+      apiUrl: '${ClientsGroup.baseUrl}/syncs/log_call',
+      callType: ApiCallType.POST,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'data': data,
+        'token': token,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+/// End Clients Group Code
+
+/// Start Order Mission Group Code
+
+class OrderMissionGroup {
+  static String baseUrl = 'https://mekaapp.com/backend/api';
+  static Map<String, String> headers = {};
+  static ListRegionCall listRegionCall = ListRegionCall();
+  static AddOrdreMissionCall addOrdreMissionCall = AddOrdreMissionCall();
+  static OrdreMissionsCall ordreMissionsCall = OrdreMissionsCall();
+  static ClientsHoreEchoOrdreMissionCall clientsHoreEchoOrdreMissionCall =
+      ClientsHoreEchoOrdreMissionCall();
+  static AddPaymentCall addPaymentCall = AddPaymentCall();
+}
+
+class ListRegionCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'List Region',
+      apiUrl: '${OrderMissionGroup.baseUrl}/payments/regions',
+      callType: ApiCallType.GET,
+      headers: {
+        ...OrderMissionGroup.headers,
+      },
+      params: {
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class AddOrdreMissionCall {
+  Future<ApiCallResponse> call({
+    int? cBpartnerId,
+    int? cSalesregionId,
+    String? destination = '',
+    String? truck = '',
+    String? dateStart = '',
+    String? dateEnd = '',
+    String? barecode = '',
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'addOrdreMission',
+      apiUrl: '${OrderMissionGroup.baseUrl}/payments/add_ordre_mission',
+      callType: ApiCallType.POST,
+      headers: {
+        ...OrderMissionGroup.headers,
+      },
+      params: {
+        'c_bpartner_id': cBpartnerId,
+        'c_salesregion_id': cSalesregionId,
+        'destination': destination,
+        'truck': truck,
+        'date_start': dateStart,
+        'date_end': dateEnd,
+        'barecode': barecode,
+        'token': token,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class OrdreMissionsCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Ordre Missions',
+      apiUrl: '${OrderMissionGroup.baseUrl}/payments/ordre_missions',
+      callType: ApiCallType.GET,
+      headers: {
+        ...OrderMissionGroup.headers,
+      },
+      params: {
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class ClientsHoreEchoOrdreMissionCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? cSalesregionId,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Clients Hore Echo Ordre Mission',
+      apiUrl: '${OrderMissionGroup.baseUrl}/payments/clients_ordre_mission',
+      callType: ApiCallType.GET,
+      headers: {
+        ...OrderMissionGroup.headers,
+      },
+      params: {
+        'token': token,
+        'c_salesregion_id': cSalesregionId,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class AddPaymentCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    String? barecode = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Add Payment',
+      apiUrl: '${OrderMissionGroup.baseUrl}/payments/add_payment',
+      callType: ApiCallType.GET,
+      headers: {
+        ...OrderMissionGroup.headers,
+      },
+      params: {
+        'token': token,
+        'barecode': barecode,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+/// End Order Mission Group Code
+
+/// Start Auth Group Code
+
+class AuthGroup {
+  static String baseUrl = 'https://mekaapp.com/bcd/backend/api';
+  static Map<String, String> headers = {};
+  static LoginCall loginCall = LoginCall();
+  static MeCall meCall = MeCall();
+  static UsersCall usersCall = UsersCall();
+}
+
 class LoginCall {
-  static Future<ApiCallResponse> call({
+  Future<ApiCallResponse> call({
     String? email = '',
     String? password = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'login',
-      apiUrl: 'https://mekaapp.com/bcd/backend/api/login',
+      apiUrl: '${AuthGroup.baseUrl}/login',
       callType: ApiCallType.POST,
-      headers: {},
+      headers: {
+        ...AuthGroup.headers,
+      },
       params: {
         'email': email,
         'password': password,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
 
+class MeCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'me',
+      apiUrl: '${AuthGroup.baseUrl}/me',
+      callType: ApiCallType.GET,
+      headers: {
+        ...AuthGroup.headers,
+      },
+      params: {
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class UsersCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Users',
+      apiUrl: '${AuthGroup.baseUrl}/users',
+      callType: ApiCallType.GET,
+      headers: {
+        ...AuthGroup.headers,
+      },
+      params: {
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+/// End Auth Group Code
+
 class ProductsQuotasCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'products quotas',
       apiUrl: 'https://mekaapp.com/bcd/backend/api/products_quotas',
       callType: ApiCallType.GET,
       headers: {},
-      params: {},
+      params: {
+        'token': token,
+      },
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -46,6 +610,9 @@ class PercOpCall {
       headers: {},
       params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -59,6 +626,9 @@ class PercChiffreCall {
       headers: {},
       params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -70,12 +640,12 @@ class DateProchesThisWeekCall {
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/products/date_proches_this_week',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 
@@ -85,42 +655,28 @@ class DateProchesThisWeekCall {
       );
 }
 
-class MeCall {
-  static Future<ApiCallResponse> call() {
-    return ApiManager.instance.makeApiCall(
-      callName: 'me',
-      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/me',
-      callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
-      params: {},
-      returnBody: true,
-    );
-  }
-}
-
 class AddScoreDateProcheCall {
   static Future<ApiCallResponse> call({
     double? total,
     int? targetId,
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'addScoreDateProche',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/products/add_score_date_proche',
       callType: ApiCallType.POST,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'total': total,
         'target_id': targetId,
+        'token': token,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -128,21 +684,23 @@ class AddScoreDateProcheCall {
 class StatusScoreDateProcheCall {
   static Future<ApiCallResponse> call({
     int? targetId,
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'statusScoreDateProche',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/products/status_score_date_proche',
       callType: ApiCallType.POST,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'target_id': targetId,
+        'token': token,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 
@@ -157,94 +715,117 @@ class ObjectsCall {
     return ApiManager.instance.makeApiCall(
       callName: 'OBJECTS',
       apiUrl:
-          'http://164.68.108.117/api/api.php?api=user&ver=1.0&key=11FFAC0DF1A3FDDA888AE0160E923D9A&cmd=USER_GET_OBJECTS',
+          'https://gsh27.net/id30/api/api.php?api=user&ver=1.0&key=11FFAC0DF1A3FDDA888AE0160E923D9A&cmd=USER_GET_OBJECTS',
       callType: ApiCallType.GET,
       headers: {},
       params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
 
 class RealisationOpTodayCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'realisation op today',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/statis/obj_day_by_op',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      headers: {},
+      params: {
+        'token': token,
       },
-      params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
 
 class RealisationOpMonthCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'realisation op month',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/statis/obj_month_by_op',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      headers: {},
+      params: {
+        'token': token,
       },
-      params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
 
 class RealisationLabosOpTodayCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'realisation labos op today',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/statis/obj_day_labo_by_op',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      headers: {},
+      params: {
+        'token': token,
       },
-      params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
 
 class RealisationLabosOpMonthCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'realisation labos op month',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/statis/obj_month_labo_by_op',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      headers: {},
+      params: {
+        'token': token,
       },
-      params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
 
 class GetAllProductsActivePharmaCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'getAllProductsActivePharma',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/products/getAllProductsActive',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      headers: {},
+      params: {
+        'token': token,
       },
-      params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 
@@ -258,21 +839,23 @@ class GetSearchProductsActivePharmaCall {
   static Future<ApiCallResponse> call({
     String? search = '',
     String? labo = '',
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'getSearchProductsActivePharma',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/products/getSearchProductsActive',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'search': search,
         'labo': labo,
+        'token': token,
       },
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 
@@ -283,18 +866,22 @@ class GetSearchProductsActivePharmaCall {
 }
 
 class GetAllLabosActiveCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'getAllLabosActive',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/products/getAllLabosActive',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      headers: {},
+      params: {
+        'token': token,
       },
-      params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 
@@ -308,37 +895,43 @@ class TaskAddListCall {
   static Future<ApiCallResponse> call({
     String? name = '',
     String? products = '',
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task add list',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/sell/add_list',
       callType: ApiCallType.POST,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'name': name,
         'products': products,
+        'token': token,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
 
 class TaskGetListsCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task get lists',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/sell/search_name_lists',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      headers: {},
+      params: {
+        'token': token,
       },
-      params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 
@@ -348,39 +941,22 @@ class TaskGetListsCall {
       );
 }
 
-class UsersCall {
-  static Future<ApiCallResponse> call() {
-    return ApiManager.instance.makeApiCall(
-      callName: 'users',
-      apiUrl: 'https://www.mekaapp.com/bcd/backend/api/users',
-      callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
-      params: {},
-      returnBody: true,
-    );
-  }
-
-  static dynamic listNames(dynamic response) => getJsonField(
-        response,
-        r'''$..name''',
-      );
-}
-
 class TasksCall {
-  static Future<ApiCallResponse> call() {
+  static Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'tasks',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/tasks/list',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
+      headers: {},
+      params: {
+        'token': token,
       },
-      params: {},
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 
@@ -393,20 +969,22 @@ class TasksCall {
 class TaskOrdersPackByUserCall {
   static Future<ApiCallResponse> call({
     int? packId,
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task orders pack by user',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/tasks/orders_task_pack_by_user',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'packId': packId,
+        'token': token,
       },
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -415,20 +993,22 @@ class TaskCheckOrderPackCall {
   static Future<ApiCallResponse> call({
     String? orderId = '',
     String? packId = '',
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task check order pack',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/tasks/check_order_pack',
       callType: ApiCallType.GET,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'orderId': orderId,
         'packId': packId,
+        'token': token,
       },
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -437,23 +1017,25 @@ class TaskGetChiffreQuotaCall {
   static Future<ApiCallResponse> call({
     int? taskId,
     bool? perc,
-    int? orderId,
+    String? orderId = '',
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task get chiffre quota',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/tasks/get_chiffre_quota',
       callType: ApiCallType.POST,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'taskId': taskId,
         'perc': perc,
         'orderId': orderId,
+        'token': token,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -461,22 +1043,24 @@ class TaskGetChiffreQuotaCall {
 class TaskGetProdsQuotaCall {
   static Future<ApiCallResponse> call({
     String? packId = '',
-    int? orderId,
+    String? orderId = '',
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task get prods quota ',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/tasks/get_prods_quota',
       callType: ApiCallType.POST,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'packId': packId,
         'orderId': orderId,
+        'token': token,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -506,15 +1090,13 @@ class TaskAddCall {
     int? dayMonth,
     String? dayYear = '',
     int? numPack,
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task add',
       apiUrl: 'https://www.mekaapp.com/bcd/backend/api/sell/add_task',
       callType: ApiCallType.POST,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'type': type,
         'title': title,
@@ -539,9 +1121,13 @@ class TaskAddCall {
         'day_month': dayMonth,
         'day_year': dayYear,
         'num_pack': numPack,
+        'token': token,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -550,22 +1136,58 @@ class TaskReservedPackCall {
   static Future<ApiCallResponse> call({
     String? taskId = '',
     int? countReserve,
+    String? token = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'task reserved pack',
       apiUrl:
           'https://www.mekaapp.com/bcd/backend/api/tasks/reserve_pack?packId=61',
       callType: ApiCallType.POST,
-      headers: {
-        'Authorization':
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21la2FhcHAuY29tL2JjZC9iYWNrZW5kL2FwaS9sb2dpbiIsImlhdCI6MTY1ODM2NTA3MywiZXhwIjoxNjYwOTU3MDczLCJuYmYiOjE2NTgzNjUwNzMsImp0aSI6ImZVMk5GTGZKTWFRcFdWV2kiLCJzdWIiOjEwODk4NzAsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.gP-Gyw2_H7rLNfFc0KXLuJVoqL_4ndhcDc0i2P0jl0o',
-      },
+      headers: {},
       params: {
         'taskId': taskId,
         'countReserve': countReserve,
+        'token': token,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
+  }
+}
+
+class ApiPagingParams {
+  int nextPageNumber = 0;
+  int numItems = 0;
+  dynamic lastResponse;
+
+  ApiPagingParams({
+    required this.nextPageNumber,
+    required this.numItems,
+    required this.lastResponse,
+  });
+
+  @override
+  String toString() =>
+      'PagingParams(nextPageNumber: $nextPageNumber, numItems: $numItems, lastResponse: $lastResponse,)';
+}
+
+String _serializeList(List? list) {
+  list ??= <String>[];
+  try {
+    return json.encode(list);
+  } catch (_) {
+    return '[]';
+  }
+}
+
+String _serializeJson(dynamic jsonVar) {
+  jsonVar ??= {};
+  try {
+    return json.encode(jsonVar);
+  } catch (_) {
+    return '{}';
   }
 }

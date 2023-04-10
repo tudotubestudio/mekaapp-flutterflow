@@ -27,6 +27,8 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
 
   String? get token;
 
+  bool? get admin;
+
   @BuiltValueField(wireName: kDocumentReferenceField)
   DocumentReference? get ffRef;
   DocumentReference get reference => ffRef!;
@@ -37,7 +39,8 @@ abstract class UsersRecord implements Built<UsersRecord, UsersRecordBuilder> {
     ..photoUrl = ''
     ..uid = ''
     ..phoneNumber = ''
-    ..token = '';
+    ..token = ''
+    ..admin = false;
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('users');
@@ -68,6 +71,7 @@ Map<String, dynamic> createUsersRecordData({
   DateTime? createdTime,
   String? phoneNumber,
   String? token,
+  bool? admin,
 }) {
   final firestoreData = serializers.toFirestore(
     UsersRecord.serializer,
@@ -79,7 +83,8 @@ Map<String, dynamic> createUsersRecordData({
         ..uid = uid
         ..createdTime = createdTime
         ..phoneNumber = phoneNumber
-        ..token = token,
+        ..token = token
+        ..admin = admin,
     ),
   );
 

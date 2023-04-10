@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>MekAapp</string>
+	<string>Mekaapp</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>MekAapp</string>
+	<string>Mekaapp</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 
@@ -33,7 +33,19 @@
             </array>
         </dict>
 
+        <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLName</key>
+        <string>mekaapp.com</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+        <string>mekaapp</string>
+        </array>
+        </dict>
     </array>
+    <key>FlutterDeepLinkingEnabled</key>
+    <true/>
 
     <key>FacebookAppID</key>
     <string>11111</string>
@@ -45,8 +57,15 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
-
-
+	<key>NSCameraUsageDescription</key>
+    <string>In order to scan for barcodes and QR codes, this app requires permission to access the camera.</string>
+	<key>PermissionGroupNotification</key>
+    <string>Confirm that permission Notifications</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+    </array>
 
     <key>LSApplicationQueriesSchemes</key>
     <array>

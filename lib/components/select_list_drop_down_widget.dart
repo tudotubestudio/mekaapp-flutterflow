@@ -1,8 +1,11 @@
-import '../backend/api_requests/api_calls.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'select_list_drop_down_model.dart';
+export 'select_list_drop_down_model.dart';
 
 class SelectListDropDownWidget extends StatefulWidget {
   const SelectListDropDownWidget({Key? key}) : super(key: key);
@@ -13,10 +16,35 @@ class SelectListDropDownWidget extends StatefulWidget {
 }
 
 class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
+  late SelectListDropDownModel _model;
+
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+    _model.onUpdate();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => SelectListDropDownModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.maybeDispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
       child: FutureBuilder<ApiCallResponse>(
         future: TaskGetListsCall.call(),
         builder: (context, snapshot) {
@@ -24,10 +52,10 @@ class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
           if (!snapshot.hasData) {
             return Center(
               child: SizedBox(
-                width: 50,
-                height: 50,
+                width: 50.0,
+                height: 50.0,
                 child: CircularProgressIndicator(
-                  color: FlutterFlowTheme.of(context).primaryColor,
+                  color: FlutterFlowTheme.of(context).primary,
                 ),
               ),
             );
@@ -46,39 +74,45 @@ class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
                 itemBuilder: (context, listIndex) {
                   final listItem = list[listIndex];
                   return Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(20, 20, 20, 0),
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 0.0),
                     child: InkWell(
                       onTap: () async {
-                        setState(() =>
-                            FFAppState().taskDropDownListId = getJsonField(
-                              listItem,
-                              r'''$.id''',
-                            ));
-                        setState(() =>
-                            FFAppState().taskDropDownListName = getJsonField(
-                              listItem,
-                              r'''$.name''',
-                            ).toString());
+                        logFirebaseEvent(
+                            'SELECT_LIST_DROP_DOWN_contentView_0_ON_T');
+                        logFirebaseEvent('contentView_0_update_app_state');
+                        FFAppState().update(() {
+                          FFAppState().taskDropDownListId = getJsonField(
+                            listItem,
+                            r'''$.id''',
+                          );
+                          FFAppState().taskDropDownListName = getJsonField(
+                            listItem,
+                            r'''$.name''',
+                          ).toString();
+                        });
+                        logFirebaseEvent('contentView_0_bottom_sheet');
                         Navigator.pop(context);
                       },
                       child: Container(
                         width: double.infinity,
-                        height: 60,
+                        height: 60.0,
                         decoration: BoxDecoration(
                           color:
                               FlutterFlowTheme.of(context).secondaryBackground,
                           boxShadow: [
                             BoxShadow(
-                              blurRadius: 5,
+                              blurRadius: 5.0,
                               color: Color(0x3416202A),
-                              offset: Offset(0, 2),
+                              offset: Offset(0.0, 2.0),
                             )
                           ],
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.0),
                           shape: BoxShape.rectangle,
                         ),
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              8.0, 8.0, 8.0, 8.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -88,26 +122,26 @@ class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 0, 0, 0),
+                                        12.0, 0.0, 0.0, 0.0),
                                     child: Text(
                                       getJsonField(
                                         listItem,
                                         r'''$.name''',
                                       ).toString(),
                                       style: FlutterFlowTheme.of(context)
-                                          .bodyText2,
+                                          .bodySmall,
                                     ),
                                   ),
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 0, 0, 0),
+                                        12.0, 0.0, 0.0, 0.0),
                                     child: Text(
                                       getJsonField(
                                         listItem,
                                         r'''$.created_at''',
                                       ).toString(),
                                       style: FlutterFlowTheme.of(context)
-                                          .bodyText2
+                                          .bodySmall
                                           .override(
                                             fontFamily: 'Poppins',
                                             fontWeight: FontWeight.normal,
@@ -118,12 +152,12 @@ class _SelectListDropDownWidgetState extends State<SelectListDropDownWidget> {
                               ),
                               Expanded(
                                 child: Align(
-                                  alignment: AlignmentDirectional(0.9, 0),
+                                  alignment: AlignmentDirectional(0.9, 0.0),
                                   child: Icon(
                                     Icons.arrow_forward_ios,
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryText,
-                                    size: 18,
+                                    size: 18.0,
                                   ),
                                 ),
                               ),

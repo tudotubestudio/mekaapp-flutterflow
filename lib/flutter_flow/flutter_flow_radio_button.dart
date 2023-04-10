@@ -25,13 +25,14 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import 'form_field_controller.dart';
 import 'package:flutter/material.dart';
 
 class FlutterFlowRadioButton extends StatefulWidget {
   const FlutterFlowRadioButton({
     required this.options,
     required this.onChanged,
-    this.initialValue = '',
+    required this.controller,
     required this.optionHeight,
     required this.textStyle,
     this.selectedTextStyle,
@@ -46,8 +47,8 @@ class FlutterFlowRadioButton extends StatefulWidget {
   });
 
   final List<String> options;
-  final Function(String?) onChanged;
-  final String initialValue;
+  final Function(String?)? onChanged;
+  final FormFieldController<String> controller;
   final double optionHeight;
   final TextStyle textStyle;
   final TextStyle? selectedTextStyle;
@@ -65,15 +66,28 @@ class FlutterFlowRadioButton extends StatefulWidget {
 }
 
 class _FlutterFlowRadioButtonState extends State<FlutterFlowRadioButton> {
-  late String? groupValue;
-  List<String> get effectiveOptions =>
-      widget.options.isEmpty ? ['[Option]'] : widget.options;
+  void Function()? get listener => widget.onChanged != null
+      ? () => widget.onChanged!(widget.controller.value)
+      : null;
 
   @override
   void initState() {
-    groupValue = widget.initialValue;
+    if (listener != null) {
+      widget.controller.addListener(listener!);
+    }
     super.initState();
   }
+
+  @override
+  void dispose() {
+    if (listener != null) {
+      widget.controller.removeListener(listener!);
+    }
+    super.dispose();
+  }
+
+  List<String> get effectiveOptions =>
+      widget.options.isEmpty ? ['[Option]'] : widget.options;
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +96,8 @@ class _FlutterFlowRadioButtonState extends State<FlutterFlowRadioButton> {
           .copyWith(unselectedWidgetColor: widget.inactiveRadioButtonColor),
       child: RadioGroup<String>.builder(
         direction: widget.direction,
-        groupValue: groupValue,
-        onChanged: (value) {
-          widget.onChanged(value);
-          setState(() {
-            groupValue = value;
-          });
-        },
+        groupValue: widget.controller.value,
+        onChanged: (value) => widget.controller.value = value,
         activeColor: widget.radioButtonColor,
         toggleable: widget.toggleable,
         textStyle: widget.textStyle,

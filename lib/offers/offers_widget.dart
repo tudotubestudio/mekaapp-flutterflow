@@ -1,16 +1,18 @@
-import '../add_offre/add_offre_widget.dart';
-import '../flutter_flow/flutter_flow_choice_chips.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../orders_offer/orders_offer_widget.dart';
+import '/flutter_flow/flutter_flow_choice_chips.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/form_field_controller.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
+import 'offers_model.dart';
+export 'offers_model.dart';
 
 class OffersWidget extends StatefulWidget {
   const OffersWidget({Key? key}) : super(key: key);
@@ -20,52 +22,71 @@ class OffersWidget extends StatefulWidget {
 }
 
 class _OffersWidgetState extends State<OffersWidget> {
-  String? choiceChipsValue;
+  late OffersModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => OffersModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'Offers'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    _unfocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Offres',
-          style: FlutterFlowTheme.of(context).title2.override(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontSize: 22,
-              ),
-        ),
-        actions: [
-          FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30,
-            borderWidth: 1,
-            buttonSize: 60,
-            icon: Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddOffreWidget(),
+    context.watch<FFAppState>();
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: FlutterFlowTheme.of(context).primary,
+        appBar: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Offres',
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                  fontSize: 22.0,
                 ),
-              );
-            },
           ),
-        ],
-        centerTitle: false,
-        elevation: 0,
-      ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Column(
+          actions: [
+            FlutterFlowIconButton(
+              borderColor: Colors.transparent,
+              borderRadius: 30.0,
+              borderWidth: 1.0,
+              buttonSize: 60.0,
+              icon: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 30.0,
+              ),
+              onPressed: () async {
+                logFirebaseEvent('OFFERS_PAGE_add_ICN_ON_TAP');
+                logFirebaseEvent('IconButton_navigate_to');
+
+                context.pushNamed('AddOffre');
+              },
+            ),
+          ],
+          centerTitle: false,
+          elevation: 0.0,
+        ),
+        body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
@@ -77,9 +98,9 @@ class _OffersWidgetState extends State<OffersWidget> {
                     TabBar(
                       labelColor: FlutterFlowTheme.of(context).primaryBtnText,
                       unselectedLabelColor: Color(0xB3FFFFFF),
-                      labelStyle: FlutterFlowTheme.of(context).subtitle1,
-                      indicatorColor: FlutterFlowTheme.of(context).primaryColor,
-                      indicatorWeight: 3,
+                      labelStyle: FlutterFlowTheme.of(context).titleMedium,
+                      indicatorColor: FlutterFlowTheme.of(context).primary,
+                      indicatorWeight: 3.0,
                       tabs: [
                         Tab(
                           text: 'Day',
@@ -103,7 +124,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 8),
+                                        0.0, 0.0, 0.0, 8.0),
                                     child: ListView(
                                       padding: EdgeInsets.zero,
                                       shrinkWrap: true,
@@ -112,7 +133,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                         Padding(
                                           padding:
                                               EdgeInsetsDirectional.fromSTEB(
-                                                  16, 8, 16, 0),
+                                                  16.0, 8.0, 16.0, 0.0),
                                           child: Container(
                                             width: double.infinity,
                                             decoration: BoxDecoration(
@@ -121,17 +142,17 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                       .secondaryBackground,
                                               boxShadow: [
                                                 BoxShadow(
-                                                  blurRadius: 3,
+                                                  blurRadius: 3.0,
                                                   color: Color(0x20000000),
-                                                  offset: Offset(0, 1),
+                                                  offset: Offset(0.0, 1.0),
                                                 )
                                               ],
                                               borderRadius:
-                                                  BorderRadius.circular(12),
+                                                  BorderRadius.circular(12.0),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(8, 8, 8, 8),
+                                                  .fromSTEB(8.0, 8.0, 8.0, 8.0),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.max,
                                                 crossAxisAlignment:
@@ -140,8 +161,8 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 0, 0, 8),
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 8.0),
                                                     child: Row(
                                                       mainAxisSize:
                                                           MainAxisSize.max,
@@ -153,7 +174,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                           'Labo',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
-                                                              .title3
+                                                              .headlineSmall
                                                               .override(
                                                                 fontFamily:
                                                                     'Poppins',
@@ -166,15 +187,15 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                             padding:
                                                                 EdgeInsetsDirectional
                                                                     .fromSTEB(
-                                                                        8,
-                                                                        0,
-                                                                        0,
-                                                                        0),
+                                                                        8.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
                                                             child: Text(
                                                               'created by meriem ',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .subtitle2,
+                                                                  .titleSmall,
                                                             ),
                                                           ),
                                                         ),
@@ -182,7 +203,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                           'En cours',
                                                           style: FlutterFlowTheme
                                                                   .of(context)
-                                                              .bodyText1
+                                                              .bodyMedium
                                                               .override(
                                                                 fontFamily:
                                                                     'Poppins',
@@ -196,8 +217,8 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                   Padding(
                                                     padding:
                                                         EdgeInsetsDirectional
-                                                            .fromSTEB(
-                                                                0, 0, 0, 8),
+                                                            .fromSTEB(0.0, 0.0,
+                                                                0.0, 8.0),
                                                     child: Container(
                                                       width: double.infinity,
                                                       decoration: BoxDecoration(
@@ -217,7 +238,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                               'List bcd 12/15/2022',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .title1
+                                                                  .displaySmall
                                                                   .override(
                                                                     fontFamily:
                                                                         'Poppins',
@@ -227,11 +248,11 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                             ),
                                                             collapsed:
                                                                 Container(
-                                                              width:
-                                                                  MediaQuery.of(
+                                                              width: MediaQuery.of(
                                                                           context)
                                                                       .size
-                                                                      .width,
+                                                                      .width *
+                                                                  1.0,
                                                               decoration:
                                                                   BoxDecoration(
                                                                 color: Color(
@@ -239,23 +260,18 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                            8),
+                                                                            8.0),
                                                               ),
                                                               child: Padding(
                                                                 padding:
                                                                     EdgeInsetsDirectional
                                                                         .fromSTEB(
-                                                                            8,
-                                                                            8,
-                                                                            8,
-                                                                            8),
+                                                                            8.0,
+                                                                            8.0,
+                                                                            8.0,
+                                                                            8.0),
                                                                 child:
                                                                     FlutterFlowChoiceChips(
-                                                                  initiallySelected: [
-                                                                    if (choiceChipsValue !=
-                                                                        null)
-                                                                      choiceChipsValue!
-                                                                  ],
                                                                   options: [
                                                                     ChipData(
                                                                         'Prods Oblg'),
@@ -268,7 +284,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                   ],
                                                                   onChanged: (val) =>
                                                                       setState(() =>
-                                                                          choiceChipsValue =
+                                                                          _model.choiceChipsValue =
                                                                               val?.first),
                                                                   selectedChipStyle:
                                                                       ChipStyle(
@@ -277,7 +293,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                             0xFF323B45),
                                                                     textStyle: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .bodyText1
+                                                                        .bodyMedium
                                                                         .override(
                                                                           fontFamily:
                                                                               'Poppins',
@@ -288,9 +304,9 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                         Colors
                                                                             .white,
                                                                     iconSize:
-                                                                        18,
+                                                                        18.0,
                                                                     elevation:
-                                                                        4,
+                                                                        4.0,
                                                                   ),
                                                                   unselectedChipStyle:
                                                                       ChipStyle(
@@ -299,7 +315,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                             .white,
                                                                     textStyle: FlutterFlowTheme.of(
                                                                             context)
-                                                                        .bodyText2
+                                                                        .bodySmall
                                                                         .override(
                                                                           fontFamily:
                                                                               'Poppins',
@@ -310,17 +326,24 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                         Color(
                                                                             0xFF323B45),
                                                                     iconSize:
-                                                                        18,
+                                                                        18.0,
                                                                     elevation:
-                                                                        4,
+                                                                        4.0,
                                                                   ),
                                                                   chipSpacing:
-                                                                      10,
+                                                                      10.0,
                                                                   multiselect:
                                                                       false,
                                                                   alignment:
                                                                       WrapAlignment
                                                                           .start,
+                                                                  controller: _model
+                                                                          .choiceChipsController ??=
+                                                                      FormFieldController<
+                                                                          List<
+                                                                              String>>(
+                                                                    [],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
@@ -332,10 +355,10 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                 Padding(
                                                                   padding: EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          0,
-                                                                          4,
-                                                                          0,
-                                                                          4),
+                                                                          0.0,
+                                                                          4.0,
+                                                                          0.0,
+                                                                          4.0),
                                                                   child: Row(
                                                                     mainAxisSize:
                                                                         MainAxisSize
@@ -344,7 +367,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                       Text(
                                                                         'Objectife: 100000 DA',
                                                                         style: FlutterFlowTheme.of(context)
-                                                                            .title1
+                                                                            .displaySmall
                                                                             .override(
                                                                               fontFamily: 'Poppins',
                                                                               color: Color(0xFF2ECC71),
@@ -356,10 +379,10 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                 Padding(
                                                                   padding: EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          0,
-                                                                          0,
-                                                                          0,
-                                                                          8),
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          8.0),
                                                                   child: Column(
                                                                     mainAxisSize:
                                                                         MainAxisSize
@@ -370,19 +393,19 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                     children: [
                                                                       Padding(
                                                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0,
-                                                                            8,
-                                                                            0,
-                                                                            8),
+                                                                            0.0,
+                                                                            8.0,
+                                                                            0.0,
+                                                                            8.0),
                                                                         child:
                                                                             Text(
                                                                           'list products oblg',
                                                                           style: FlutterFlowTheme.of(context)
-                                                                              .bodyText2
+                                                                              .bodySmall
                                                                               .override(
                                                                                 fontFamily: 'Lexend Deca',
                                                                                 color: FlutterFlowTheme.of(context).customColor3,
-                                                                                fontSize: 14,
+                                                                                fontSize: 14.0,
                                                                                 fontWeight: FontWeight.normal,
                                                                               ),
                                                                         ),
@@ -403,14 +426,14 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                             width:
                                                                                 double.infinity,
                                                                             height:
-                                                                                50,
+                                                                                50.0,
                                                                             decoration:
                                                                                 BoxDecoration(
                                                                               color: Color(0xFFEEEEEE),
-                                                                              borderRadius: BorderRadius.circular(8),
+                                                                              borderRadius: BorderRadius.circular(8.0),
                                                                               border: Border.all(
                                                                                 color: FlutterFlowTheme.of(context).customColor3,
-                                                                                width: 1,
+                                                                                width: 1.0,
                                                                               ),
                                                                             ),
                                                                             child:
@@ -418,12 +441,12 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                               mainAxisSize: MainAxisSize.max,
                                                                               children: [
                                                                                 Container(
-                                                                                  width: 50,
+                                                                                  width: 50.0,
                                                                                   decoration: BoxDecoration(),
                                                                                   child: Text(
                                                                                     '10',
                                                                                     textAlign: TextAlign.center,
-                                                                                    style: FlutterFlowTheme.of(context).title1.override(
+                                                                                    style: FlutterFlowTheme.of(context).displaySmall.override(
                                                                                           fontFamily: 'Poppins',
                                                                                           color: FlutterFlowTheme.of(context).customColor3,
                                                                                         ),
@@ -432,7 +455,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                                 Expanded(
                                                                                   child: AutoSizeText(
                                                                                     'Product one test',
-                                                                                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                           fontFamily: 'Poppins',
                                                                                           color: FlutterFlowTheme.of(context).customColor3,
                                                                                         ),
@@ -449,10 +472,10 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                 Padding(
                                                                   padding: EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          0,
-                                                                          0,
-                                                                          0,
-                                                                          8),
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          8.0),
                                                                   child: Column(
                                                                     mainAxisSize:
                                                                         MainAxisSize
@@ -463,19 +486,19 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                     children: [
                                                                       Padding(
                                                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0,
-                                                                            8,
-                                                                            0,
-                                                                            8),
+                                                                            0.0,
+                                                                            8.0,
+                                                                            0.0,
+                                                                            8.0),
                                                                         child:
                                                                             Text(
                                                                           'list products gifts',
                                                                           style: FlutterFlowTheme.of(context)
-                                                                              .bodyText2
+                                                                              .bodySmall
                                                                               .override(
                                                                                 fontFamily: 'Lexend Deca',
                                                                                 color: Color(0xFF2ECC71),
-                                                                                fontSize: 14,
+                                                                                fontSize: 14.0,
                                                                                 fontWeight: FontWeight.normal,
                                                                               ),
                                                                         ),
@@ -496,14 +519,14 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                             width:
                                                                                 double.infinity,
                                                                             height:
-                                                                                50,
+                                                                                50.0,
                                                                             decoration:
                                                                                 BoxDecoration(
                                                                               color: Color(0xFFEEEEEE),
-                                                                              borderRadius: BorderRadius.circular(8),
+                                                                              borderRadius: BorderRadius.circular(8.0),
                                                                               border: Border.all(
                                                                                 color: Color(0xFF2ECC71),
-                                                                                width: 1,
+                                                                                width: 1.0,
                                                                               ),
                                                                             ),
                                                                             child:
@@ -511,12 +534,12 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                               mainAxisSize: MainAxisSize.max,
                                                                               children: [
                                                                                 Container(
-                                                                                  width: 50,
+                                                                                  width: 50.0,
                                                                                   decoration: BoxDecoration(),
                                                                                   child: Text(
                                                                                     '10',
                                                                                     textAlign: TextAlign.center,
-                                                                                    style: FlutterFlowTheme.of(context).title1.override(
+                                                                                    style: FlutterFlowTheme.of(context).displaySmall.override(
                                                                                           fontFamily: 'Poppins',
                                                                                           color: Color(0xFF2ECC71),
                                                                                         ),
@@ -525,7 +548,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                                 Expanded(
                                                                                   child: AutoSizeText(
                                                                                     'Product one test',
-                                                                                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                                                                                    style: FlutterFlowTheme.of(context).bodyMedium.override(
                                                                                           fontFamily: 'Poppins',
                                                                                           color: Color(0xFF2ECC71),
                                                                                         ),
@@ -570,12 +593,15 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                         padding:
                                                             EdgeInsetsDirectional
                                                                 .fromSTEB(
-                                                                    0, 0, 8, 0),
+                                                                    0.0,
+                                                                    0.0,
+                                                                    8.0,
+                                                                    0.0),
                                                         child:
                                                             CircularPercentIndicator(
                                                           percent: 0.8,
-                                                          radius: 45,
-                                                          lineWidth: 12,
+                                                          radius: 45.0,
+                                                          lineWidth: 12.0,
                                                           animation: true,
                                                           progressColor:
                                                               Color(0xFFE67E22),
@@ -585,7 +611,7 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                             '5/20',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodyText1
+                                                                .bodyMedium
                                                                 .override(
                                                                   fontFamily:
                                                                       'Poppins',
@@ -603,13 +629,13 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                             '3 Temine',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodyText1,
+                                                                .bodyMedium,
                                                           ),
                                                           Text(
                                                             '2 Reserve',
                                                             style: FlutterFlowTheme
                                                                     .of(context)
-                                                                .bodyText1,
+                                                                .bodyMedium,
                                                           ),
                                                         ],
                                                       ),
@@ -620,27 +646,25 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                           FlutterFlowIconButton(
                                                             borderColor: Colors
                                                                 .transparent,
-                                                            borderRadius: 30,
-                                                            borderWidth: 1,
-                                                            buttonSize: 60,
+                                                            borderRadius: 30.0,
+                                                            borderWidth: 1.0,
+                                                            buttonSize: 60.0,
                                                             icon: FaIcon(
                                                               FontAwesomeIcons
                                                                   .solidEye,
                                                               color: Color(
                                                                   0xFFBDC3C7),
-                                                              size: 30,
+                                                              size: 30.0,
                                                             ),
                                                             onPressed:
                                                                 () async {
-                                                              await Navigator
-                                                                  .push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          OrdersOfferWidget(),
-                                                                ),
-                                                              );
+                                                              logFirebaseEvent(
+                                                                  'OFFERS_PAGE_solidEye_ICN_ON_TAP');
+                                                              logFirebaseEvent(
+                                                                  'IconButton_navigate_to');
+
+                                                              context.pushNamed(
+                                                                  'OrdersOffer');
                                                             },
                                                           ),
                                                           FFButtonWidget(
@@ -651,30 +675,45 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                             text: 'Reserve',
                                                             options:
                                                                 FFButtonOptions(
-                                                              width: 130,
-                                                              height: 40,
+                                                              width: 130.0,
+                                                              height: 40.0,
+                                                              padding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
+                                                              iconPadding:
+                                                                  EdgeInsetsDirectional
+                                                                      .fromSTEB(
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0,
+                                                                          0.0),
                                                               color:
                                                                   Colors.white,
                                                               textStyle:
                                                                   FlutterFlowTheme.of(
                                                                           context)
-                                                                      .subtitle2
+                                                                      .titleSmall
                                                                       .override(
                                                                         fontFamily:
                                                                             'Poppins',
                                                                         color: Color(
                                                                             0xFF3498DB),
                                                                       ),
+                                                              elevation: 2.0,
                                                               borderSide:
                                                                   BorderSide(
                                                                 color: Color(
                                                                     0xFF3498DB),
-                                                                width: 1,
+                                                                width: 1.0,
                                                               ),
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          8),
+                                                                          8.0),
                                                             ),
                                                           ),
                                                         ],
@@ -694,8 +733,8 @@ class _OffersWidgetState extends State<OffersWidget> {
                             ),
                           ),
                           Container(
-                            width: 100,
-                            height: 100,
+                            width: 100.0,
+                            height: 100.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,

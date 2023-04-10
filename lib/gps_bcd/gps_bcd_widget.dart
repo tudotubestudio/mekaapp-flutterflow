@@ -1,10 +1,13 @@
-import '../backend/api_requests/api_calls.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'gps_bcd_model.dart';
+export 'gps_bcd_model.dart';
 
 class GpsBcdWidget extends StatefulWidget {
   const GpsBcdWidget({Key? key}) : super(key: key);
@@ -14,47 +17,68 @@ class GpsBcdWidget extends StatefulWidget {
 }
 
 class _GpsBcdWidgetState extends State<GpsBcdWidget> {
-  Completer<ApiCallResponse>? _apiRequestCompleter;
+  late GpsBcdModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => GpsBcdModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'GpsBcd'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    _unfocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Inspectors',
-          style: FlutterFlowTheme.of(context).title2.override(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontSize: 22,
-              ),
-        ),
-        actions: [
-          FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30,
-            borderWidth: 1,
-            buttonSize: 60,
-            icon: Icon(
-              Icons.search_sharp,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () {
-              print('IconButton pressed ...');
-            },
+    context.watch<FFAppState>();
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: FlutterFlowTheme.of(context).primary,
+        appBar: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Inspectors',
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                  fontSize: 22.0,
+                ),
           ),
-        ],
-        centerTitle: false,
-        elevation: 0,
-      ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Column(
+          actions: [
+            FlutterFlowIconButton(
+              borderColor: Colors.transparent,
+              borderRadius: 30.0,
+              borderWidth: 1.0,
+              buttonSize: 60.0,
+              icon: Icon(
+                Icons.search_sharp,
+                color: Colors.white,
+                size: 30.0,
+              ),
+              onPressed: () {
+                print('IconButton pressed ...');
+              },
+            ),
+          ],
+          centerTitle: false,
+          elevation: 0.0,
+        ),
+        body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             Expanded(
@@ -66,9 +90,9 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                     TabBar(
                       labelColor: FlutterFlowTheme.of(context).primaryBtnText,
                       unselectedLabelColor: Color(0xB3FFFFFF),
-                      labelStyle: FlutterFlowTheme.of(context).subtitle1,
-                      indicatorColor: FlutterFlowTheme.of(context).primaryColor,
-                      indicatorWeight: 3,
+                      labelStyle: FlutterFlowTheme.of(context).titleMedium,
+                      indicatorColor: FlutterFlowTheme.of(context).primary,
+                      indicatorWeight: 3.0,
                       tabs: [
                         Tab(
                           text: 'All',
@@ -85,14 +109,14 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                       child: TabBarView(
                         children: [
                           Container(
-                            width: 100,
-                            height: 100,
+                            width: 100.0,
+                            height: 100.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,
                             ),
                             child: FutureBuilder<ApiCallResponse>(
-                              future: (_apiRequestCompleter ??=
+                              future: (_model.apiRequestCompleter ??=
                                       Completer<ApiCallResponse>()
                                         ..complete(ObjectsCall.call()))
                                   .future,
@@ -101,11 +125,11 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                 if (!snapshot.hasData) {
                                   return Center(
                                     child: SizedBox(
-                                      width: 50,
-                                      height: 50,
+                                      width: 50.0,
+                                      height: 50.0,
                                       child: CircularProgressIndicator(
                                         color: FlutterFlowTheme.of(context)
-                                            .primaryColor,
+                                            .primary,
                                       ),
                                     ),
                                   );
@@ -119,9 +143,14 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                     ).toList();
                                     return RefreshIndicator(
                                       onRefresh: () async {
-                                        setState(
-                                            () => _apiRequestCompleter = null);
-                                        await waitForApiRequestCompleter();
+                                        logFirebaseEvent(
+                                            'GPS_BCD_ListView_vf4jqkbu_ON_PULL_TO_REF');
+                                        logFirebaseEvent(
+                                            'ListView_refresh_database_request');
+                                        setState(() =>
+                                            _model.apiRequestCompleter = null);
+                                        await _model
+                                            .waitForApiRequestCompleted();
                                       },
                                       child: ListView.builder(
                                         padding: EdgeInsets.zero,
@@ -133,7 +162,7 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                           return Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    16, 8, 16, 0),
+                                                    16.0, 8.0, 16.0, 0.0),
                                             child: Container(
                                               width: double.infinity,
                                               decoration: BoxDecoration(
@@ -142,17 +171,18 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                                         .secondaryBackground,
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    blurRadius: 3,
+                                                    blurRadius: 3.0,
                                                     color: Color(0x20000000),
-                                                    offset: Offset(0, 1),
+                                                    offset: Offset(0.0, 1.0),
                                                   )
                                                 ],
                                                 borderRadius:
-                                                    BorderRadius.circular(12),
+                                                    BorderRadius.circular(12.0),
                                               ),
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(8, 8, 12, 8),
+                                                    .fromSTEB(
+                                                        8.0, 8.0, 12.0, 8.0),
                                                 child: Row(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -162,11 +192,11 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                                     ClipRRect(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              8),
+                                                              8.0),
                                                       child: Image.network(
                                                         'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2669&q=80',
-                                                        width: 70,
-                                                        height: 70,
+                                                        width: 70.0,
+                                                        height: 70.0,
                                                         fit: BoxFit.cover,
                                                       ),
                                                     ),
@@ -182,10 +212,10 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                                             padding:
                                                                 EdgeInsetsDirectional
                                                                     .fromSTEB(
-                                                                        16,
-                                                                        0,
-                                                                        0,
-                                                                        0),
+                                                                        16.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
                                                             child: Text(
                                                               getJsonField(
                                                                 listObjsItem,
@@ -193,22 +223,22 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                                               ).toString(),
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .subtitle1,
+                                                                  .titleMedium,
                                                             ),
                                                           ),
                                                           Padding(
                                                             padding:
                                                                 EdgeInsetsDirectional
                                                                     .fromSTEB(
-                                                                        16,
-                                                                        4,
-                                                                        0,
-                                                                        0),
+                                                                        16.0,
+                                                                        4.0,
+                                                                        0.0,
+                                                                        0.0),
                                                             child: Text(
                                                               'Title',
                                                               style: FlutterFlowTheme
                                                                       .of(context)
-                                                                  .bodyText2,
+                                                                  .bodySmall,
                                                             ),
                                                           ),
                                                         ],
@@ -220,8 +250,8 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                                       color:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .primaryColor,
-                                                      size: 24,
+                                                              .primary,
+                                                      size: 24.0,
                                                     ),
                                                   ],
                                                 ),
@@ -237,8 +267,8 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                             ),
                           ),
                           Container(
-                            width: 100,
-                            height: 100,
+                            width: 100.0,
+                            height: 100.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,
@@ -249,7 +279,7 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
+                                      16.0, 8.0, 16.0, 0.0),
                                   child: Container(
                                     width: double.infinity,
                                     decoration: BoxDecoration(
@@ -257,16 +287,16 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                           .secondaryBackground,
                                       boxShadow: [
                                         BoxShadow(
-                                          blurRadius: 3,
+                                          blurRadius: 3.0,
                                           color: Color(0x20000000),
-                                          offset: Offset(0, 1),
+                                          offset: Offset(0.0, 1.0),
                                         )
                                       ],
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 12, 8),
+                                          8.0, 8.0, 12.0, 8.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
@@ -274,11 +304,11 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                         children: [
                                           ClipRRect(
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                                BorderRadius.circular(8.0),
                                             child: Image.network(
                                               'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2669&q=80',
-                                              width: 70,
-                                              height: 70,
+                                              width: 70.0,
+                                              height: 70.0,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -290,22 +320,24 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 0, 0, 0),
+                                                      .fromSTEB(
+                                                          16.0, 0.0, 0.0, 0.0),
                                                   child: Text(
                                                     'Inspector Name',
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .subtitle1,
+                                                        .titleMedium,
                                                   ),
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 4, 0, 0),
+                                                      .fromSTEB(
+                                                          16.0, 4.0, 0.0, 0.0),
                                                   child: Text(
                                                     'Title',
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .bodyText2,
+                                                        .bodySmall,
                                                   ),
                                                 ),
                                               ],
@@ -314,8 +346,8 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                           Icon(
                                             Icons.radio_button_checked,
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryColor,
-                                            size: 24,
+                                                .primary,
+                                            size: 24.0,
                                           ),
                                         ],
                                       ),
@@ -326,8 +358,8 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                             ),
                           ),
                           Container(
-                            width: 100,
-                            height: 100,
+                            width: 100.0,
+                            height: 100.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,
@@ -338,7 +370,7 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
+                                      16.0, 8.0, 16.0, 0.0),
                                   child: Container(
                                     width: double.infinity,
                                     decoration: BoxDecoration(
@@ -346,16 +378,16 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                           .secondaryBackground,
                                       boxShadow: [
                                         BoxShadow(
-                                          blurRadius: 3,
+                                          blurRadius: 3.0,
                                           color: Color(0x20000000),
-                                          offset: Offset(0, 1),
+                                          offset: Offset(0.0, 1.0),
                                         )
                                       ],
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(12.0),
                                     ),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 12, 8),
+                                          8.0, 8.0, 12.0, 8.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
@@ -363,11 +395,11 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                         children: [
                                           ClipRRect(
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                                BorderRadius.circular(8.0),
                                             child: Image.network(
                                               'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2669&q=80',
-                                              width: 70,
-                                              height: 70,
+                                              width: 70.0,
+                                              height: 70.0,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -379,22 +411,24 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 0, 0, 0),
+                                                      .fromSTEB(
+                                                          16.0, 0.0, 0.0, 0.0),
                                                   child: Text(
                                                     'Inspector Name',
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .subtitle1,
+                                                        .titleMedium,
                                                   ),
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 4, 0, 0),
+                                                      .fromSTEB(
+                                                          16.0, 4.0, 0.0, 0.0),
                                                   child: Text(
                                                     'Title',
                                                     style: FlutterFlowTheme.of(
                                                             context)
-                                                        .bodyText2,
+                                                        .bodySmall,
                                                   ),
                                                 ),
                                               ],
@@ -403,8 +437,8 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                           Icon(
                                             Icons.radio_button_checked,
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryColor,
-                                            size: 24,
+                                                .primary,
+                                            size: 24.0,
                                           ),
                                         ],
                                       ),
@@ -425,20 +459,5 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
         ),
       ),
     );
-  }
-
-  Future waitForApiRequestCompleter({
-    double minWait = 0,
-    double maxWait = double.infinity,
-  }) async {
-    final stopwatch = Stopwatch()..start();
-    while (true) {
-      await Future.delayed(Duration(milliseconds: 50));
-      final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = _apiRequestCompleter?.isCompleted ?? false;
-      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
-        break;
-      }
-    }
   }
 }

@@ -1,16 +1,15 @@
-import '../auth/auth_util.dart';
-import '../backend/api_requests/api_calls.dart';
-import '../backend/backend.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../main.dart';
-import '../sign_up/sign_up_widget.dart';
+import '/auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'sign_in_model.dart';
+export 'sign_in_model.dart';
 
 class SignInWidget extends StatefulWidget {
   const SignInWidget({Key? key}) : super(key: key);
@@ -20,455 +19,402 @@ class SignInWidget extends StatefulWidget {
 }
 
 class _SignInWidgetState extends State<SignInWidget> {
-  ApiCallResponse? me;
-  ApiCallResponse? token;
-  TextEditingController? emailAddressController;
-  TextEditingController? passwordController;
-  late bool passwordVisibility;
+  late SignInModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    emailAddressController = TextEditingController();
-    passwordController = TextEditingController();
-    passwordVisibility = false;
+    _model = createModel(context, () => SignInModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'SignIn'});
+    _model.emailAddressController ??= TextEditingController();
+    _model.passwordController ??= TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFFF1F4F8),
       body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(24, 24, 24, 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Image.asset(
-                        'assets/images/logoTranslation@3x.png',
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 32, 0, 0),
-                    child: Row(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 24.0, 24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Container(
-                          width: 140,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF1F4F8),
-                          ),
-                          alignment: AlignmentDirectional(-1, 0),
-                          child: Text(
-                            'Sign In',
-                            style: FlutterFlowTheme.of(context).title2.override(
-                                  fontFamily: 'Lexend Deca',
-                                  color: Color(0xFF090F13),
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                          child: Image.asset(
+                            'assets/images/download.ico',
+                            width: 50.0,
+                            height: 50.0,
+                            fit: BoxFit.fitWidth,
                           ),
                         ),
-                        InkWell(
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.fade,
-                                duration: Duration(milliseconds: 200),
-                                reverseDuration: Duration(milliseconds: 200),
-                                child: SignUpWidget(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: 140,
-                            height: 50,
+                      ],
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 0.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Container(
+                            width: 140.0,
+                            height: 50.0,
                             decoration: BoxDecoration(
                               color: Color(0xFFF1F4F8),
                             ),
-                            alignment: AlignmentDirectional(-1, 0),
+                            alignment: AlignmentDirectional(-1.0, 0.0),
                             child: Text(
-                              'Sign Up',
-                              style:
-                                  FlutterFlowTheme.of(context).title2.override(
-                                        fontFamily: 'Lexend Deca',
-                                        color: Color(0xFF95A1AC),
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                              'Sign In',
+                              style: FlutterFlowTheme.of(context)
+                                  .headlineMedium
+                                  .override(
+                                    fontFamily: 'Lexend Deca',
+                                    color: Color(0xFF090F13),
+                                    fontSize: 28.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
-                        ),
-                      ],
+                          InkWell(
+                            onTap: () async {
+                              logFirebaseEvent(
+                                  'SIGN_IN_PAGE_Container_zcnme7wj_ON_TAP');
+                              logFirebaseEvent('Container_navigate_to');
+
+                              context.pushNamed(
+                                'SignUp',
+                                extra: <String, dynamic>{
+                                  kTransitionInfoKey: TransitionInfo(
+                                    hasTransition: true,
+                                    transitionType: PageTransitionType.fade,
+                                    duration: Duration(milliseconds: 200),
+                                  ),
+                                },
+                              );
+                            },
+                            child: Container(
+                              width: 140.0,
+                              height: 50.0,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF1F4F8),
+                              ),
+                              alignment: AlignmentDirectional(-1.0, 0.0),
+                              child: Text(
+                                'Sign Up',
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineMedium
+                                    .override(
+                                      fontFamily: 'Lexend Deca',
+                                      color: Color(0xFF95A1AC),
+                                      fontSize: 28.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 24),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Text(
-                          'Get started by creating an account below.',
-                          style:
-                              FlutterFlowTheme.of(context).bodyText2.override(
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 24.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Text(
+                            'Get started by creating an account below.',
+                            style:
+                                FlutterFlowTheme.of(context).bodySmall.override(
+                                      fontFamily: 'Lexend Deca',
+                                      color: Color(0xFF57636C),
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 12.0),
+                      child: TextFormField(
+                        controller: _model.emailAddressController,
+                        obscureText: false,
+                        decoration: InputDecoration(
+                          labelText: 'Email...',
+                          labelStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'Lexend Deca',
                                     color: Color(0xFF57636C),
-                                    fontSize: 14,
+                                    fontSize: 14.0,
                                     fontWeight: FontWeight.normal,
                                   ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 12),
-                    child: TextFormField(
-                      controller: emailAddressController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        labelStyle:
-                            FlutterFlowTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Lexend Deca',
-                                  color: Color(0xFF57636C),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                        hintStyle:
-                            FlutterFlowTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Lexend Deca',
-                                  color: Color(0xFF57636C),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFDBE2E7),
-                            width: 2,
+                          hintStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Lexend Deca',
+                                    color: Color(0xFF57636C),
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFFDBE2E7),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFDBE2E7),
-                            width: 2,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: EdgeInsetsDirectional.fromSTEB(
+                              24.0, 24.0, 20.0, 24.0),
                         ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding:
-                            EdgeInsetsDirectional.fromSTEB(24, 24, 20, 24),
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Lexend Deca',
+                              color: Color(0xFF1D2429),
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.normal,
+                            ),
+                        keyboardType: TextInputType.emailAddress,
+                        validator: _model.emailAddressControllerValidator
+                            .asValidator(context),
                       ),
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Lexend Deca',
-                            color: Color(0xFF1D2429),
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                      keyboardType: TextInputType.emailAddress,
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 12),
-                    child: TextFormField(
-                      controller: passwordController,
-                      obscureText: !passwordVisibility,
-                      decoration: InputDecoration(
-                        labelStyle:
-                            FlutterFlowTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Lexend Deca',
-                                  color: Color(0xFF57636C),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                        hintStyle:
-                            FlutterFlowTheme.of(context).bodyText1.override(
-                                  fontFamily: 'Lexend Deca',
-                                  color: Color(0xFF57636C),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFDBE2E7),
-                            width: 2,
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 12.0),
+                      child: TextFormField(
+                        controller: _model.passwordController,
+                        obscureText: !_model.passwordVisibility,
+                        decoration: InputDecoration(
+                          labelText: 'Password...',
+                          labelStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Lexend Deca',
+                                    color: Color(0xFF57636C),
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                          hintStyle:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Lexend Deca',
+                                    color: Color(0xFF57636C),
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFFDBE2E7),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: EdgeInsetsDirectional.fromSTEB(
+                              24.0, 24.0, 20.0, 24.0),
+                          suffixIcon: InkWell(
+                            onTap: () => setState(
+                              () => _model.passwordVisibility =
+                                  !_model.passwordVisibility,
+                            ),
+                            focusNode: FocusNode(skipTraversal: true),
+                            child: Icon(
+                              _model.passwordVisibility
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                              color: Color(0xFF95A1AC),
+                              size: 22.0,
+                            ),
+                          ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFFDBE2E7),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding:
-                            EdgeInsetsDirectional.fromSTEB(24, 24, 20, 24),
-                        suffixIcon: InkWell(
-                          onTap: () => setState(
-                            () => passwordVisibility = !passwordVisibility,
-                          ),
-                          focusNode: FocusNode(skipTraversal: true),
-                          child: Icon(
-                            passwordVisibility
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
-                            color: Color(0xFF95A1AC),
-                            size: 22,
-                          ),
-                        ),
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Lexend Deca',
+                              color: Color(0xFF1D2429),
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.normal,
+                            ),
+                        validator: _model.passwordControllerValidator
+                            .asValidator(context),
                       ),
-                      style: FlutterFlowTheme.of(context).bodyText1.override(
-                            fontFamily: 'Lexend Deca',
-                            color: Color(0xFF1D2429),
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FFButtonWidget(
-                    onPressed: () async {
-                      Future Function() _navigate = () async {};
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FFButtonWidget(
+                      onPressed: () async {
+                        logFirebaseEvent('SIGN_IN_PAGE_LOGIN_BTN_ON_TAP');
+                        Function() _navigate = () {};
+                        logFirebaseEvent('Button_backend_call');
+                        _model.token = await AuthGroup.loginCall.call(
+                          email: _model.emailAddressController.text,
+                          password: _model.passwordController.text,
+                        );
+                        if ((_model.token?.succeeded ?? true)) {
+                          logFirebaseEvent('Button_auth');
+                          GoRouter.of(context).prepareAuthEvent();
 
-                      final user = await signInWithEmail(
-                        context,
-                        emailAddressController!.text,
-                        passwordController!.text,
-                      );
-                      if (user == null) {
-                        return;
-                      }
-
-                      _navigate = () => Navigator.pushAndRemoveUntil(
+                          final user = await signInWithEmail(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  NavBarPage(initialPage: 'Main'),
-                            ),
-                            (r) => false,
+                            _model.emailAddressController.text,
+                            _model.passwordController.text,
                           );
-                      token = await LoginCall.call(
-                        email: emailAddressController!.text,
-                        password: passwordController!.text,
-                      );
-                      if ((token?.succeeded ?? true)) {
-                        final usersUpdateData = createUsersRecordData(
-                          token: getJsonField(
-                            (token?.jsonBody ?? ''),
-                            r'''$.access_token''',
-                          ).toString(),
-                          displayName: getJsonField(
-                            (token?.jsonBody ?? ''),
-                            r'''$.user''',
-                          ).toString(),
-                        );
-                        await currentUserReference!.update(usersUpdateData);
-                        setState(() => FFAppState().apitoken = getJsonField(
-                              (token?.jsonBody ?? ''),
+                          if (user == null) {
+                            return;
+                          }
+
+                          _navigate =
+                              () => context.goNamedAuth('Main', mounted);
+                          logFirebaseEvent('Button_backend_call');
+
+                          final usersUpdateData = createUsersRecordData(
+                            token: getJsonField(
+                              (_model.token?.jsonBody ?? ''),
                               r'''$.access_token''',
-                            ).toString());
-                        me = await MeCall.call();
-                        setState(() => FFAppState().me = (me?.jsonBody ?? ''));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              getJsonField(
-                                (token?.jsonBody ?? ''),
-                                r'''$.error''',
-                              ).toString(),
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
+                            ).toString(),
+                            displayName: getJsonField(
+                              (_model.token?.jsonBody ?? ''),
+                              r'''$.user''',
+                            ).toString(),
+                          );
+                          await currentUserReference!.update(usersUpdateData);
+                          logFirebaseEvent('Button_update_app_state');
+                          FFAppState().update(() {
+                            FFAppState().apitoken = getJsonField(
+                              (_model.token?.jsonBody ?? ''),
+                              r'''$.access_token''',
+                            ).toString();
+                          });
+                          logFirebaseEvent('Button_backend_call');
+                          _model.me = await AuthGroup.meCall.call();
+                          logFirebaseEvent('Button_update_app_state');
+                          FFAppState().update(() {
+                            FFAppState().me = (_model.me?.jsonBody ?? '');
+                          });
+                        } else {
+                          logFirebaseEvent('Button_show_snack_bar');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                getJsonField(
+                                  (_model.token?.jsonBody ?? ''),
+                                  r'''$.error''',
+                                ).toString(),
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
                               ),
+                              duration: Duration(milliseconds: 4000),
+                              backgroundColor: Color(0x00000000),
                             ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor: Color(0x00000000),
-                          ),
-                        );
-                      }
+                          );
+                        }
 
-                      await _navigate();
+                        _navigate();
 
-                      setState(() {});
-                    },
-                    text: 'Login',
-                    options: FFButtonOptions(
-                      width: 150,
-                      height: 50,
-                      color: Color(0xFF090F13),
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Lexend Deca',
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                      elevation: 3,
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
+                        setState(() {});
+                      },
+                      text: 'Login',
+                      options: FFButtonOptions(
+                        width: 150.0,
+                        height: 50.0,
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        iconPadding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        color: Color(0xFF090F13),
+                        textStyle:
+                            FlutterFlowTheme.of(context).titleSmall.override(
+                                  fontFamily: 'Lexend Deca',
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                        elevation: 3.0,
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(40.0),
                       ),
-                      borderRadius: BorderRadius.circular(40),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FFButtonWidget(
-                    onPressed: () async {
-                      final user = await signInAnonymously(context);
-                      if (user == null) {
-                        return;
-                      }
-                      await Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NavBarPage(initialPage: 'Main'),
-                        ),
-                        (r) => false,
-                      );
-                    },
-                    text: 'Continue as Guest',
-                    options: FFButtonOptions(
-                      width: 230,
-                      height: 50,
-                      color: Colors.white,
-                      textStyle:
-                          FlutterFlowTheme.of(context).subtitle2.override(
-                                fontFamily: 'Lexend Deca',
-                                color: Color(0xFF090F13),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                      elevation: 1,
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(24, 24, 24, 24),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        FlutterFlowIconButton(
-                          borderColor: Colors.transparent,
-                          borderRadius: 30,
-                          borderWidth: 1,
-                          buttonSize: 50,
-                          fillColor: Color(0xFFDBE2E7),
-                          icon: FaIcon(
-                            FontAwesomeIcons.google,
-                            color: Color(0xFF57636C),
-                            size: 20,
-                          ),
-                          onPressed: () async {
-                            final user = await signInWithGoogle(context);
-                            if (user == null) {
-                              return;
-                            }
-                            await Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    NavBarPage(initialPage: 'Main'),
-                              ),
-                              (r) => false,
-                            );
-                          },
-                        ),
-                        FlutterFlowIconButton(
-                          borderColor: Colors.transparent,
-                          borderRadius: 30,
-                          borderWidth: 1,
-                          buttonSize: 50,
-                          fillColor: Color(0xFFDBE2E7),
-                          icon: FaIcon(
-                            FontAwesomeIcons.apple,
-                            color: Color(0xFF57636C),
-                            size: 20,
-                          ),
-                          onPressed: () async {
-                            final user = await signInWithApple(context);
-                            if (user == null) {
-                              return;
-                            }
-                            await Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    NavBarPage(initialPage: 'Main'),
-                              ),
-                              (r) => false,
-                            );
-                          },
-                        ),
-                        FlutterFlowIconButton(
-                          borderColor: Colors.transparent,
-                          borderRadius: 30,
-                          borderWidth: 1,
-                          buttonSize: 50,
-                          fillColor: Color(0xFFDBE2E7),
-                          icon: FaIcon(
-                            FontAwesomeIcons.facebookF,
-                            color: Color(0xFF57636C),
-                            size: 20,
-                          ),
-                          onPressed: () async {
-                            final user = await signInWithFacebook(context);
-                            if (user == null) {
-                              return;
-                            }
-                            await Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    NavBarPage(initialPage: 'Main'),
-                              ),
-                              (r) => false,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

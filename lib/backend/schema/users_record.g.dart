@@ -68,6 +68,13 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
+    value = object.admin;
+    if (value != null) {
+      result
+        ..add('admin')
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
     value = object.ffRef;
     if (value != null) {
       result
@@ -118,6 +125,10 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
           result.token = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
+        case 'admin':
+          result.admin = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool?;
+          break;
         case 'Document__Reference__Field':
           result.ffRef = serializers.deserialize(value,
               specifiedType: const FullType(DocumentReference, const [
@@ -147,6 +158,8 @@ class _$UsersRecord extends UsersRecord {
   @override
   final String? token;
   @override
+  final bool? admin;
+  @override
   final DocumentReference<Object?>? ffRef;
 
   factory _$UsersRecord([void Function(UsersRecordBuilder)? updates]) =>
@@ -160,6 +173,7 @@ class _$UsersRecord extends UsersRecord {
       this.createdTime,
       this.phoneNumber,
       this.token,
+      this.admin,
       this.ffRef})
       : super._();
 
@@ -181,23 +195,24 @@ class _$UsersRecord extends UsersRecord {
         createdTime == other.createdTime &&
         phoneNumber == other.phoneNumber &&
         token == other.token &&
+        admin == other.admin &&
         ffRef == other.ffRef;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc($jc($jc(0, email.hashCode), displayName.hashCode),
-                            photoUrl.hashCode),
-                        uid.hashCode),
-                    createdTime.hashCode),
-                phoneNumber.hashCode),
-            token.hashCode),
-        ffRef.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, email.hashCode);
+    _$hash = $jc(_$hash, displayName.hashCode);
+    _$hash = $jc(_$hash, photoUrl.hashCode);
+    _$hash = $jc(_$hash, uid.hashCode);
+    _$hash = $jc(_$hash, createdTime.hashCode);
+    _$hash = $jc(_$hash, phoneNumber.hashCode);
+    _$hash = $jc(_$hash, token.hashCode);
+    _$hash = $jc(_$hash, admin.hashCode);
+    _$hash = $jc(_$hash, ffRef.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
@@ -210,6 +225,7 @@ class _$UsersRecord extends UsersRecord {
           ..add('createdTime', createdTime)
           ..add('phoneNumber', phoneNumber)
           ..add('token', token)
+          ..add('admin', admin)
           ..add('ffRef', ffRef))
         .toString();
   }
@@ -246,6 +262,10 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
   String? get token => _$this._token;
   set token(String? token) => _$this._token = token;
 
+  bool? _admin;
+  bool? get admin => _$this._admin;
+  set admin(bool? admin) => _$this._admin = admin;
+
   DocumentReference<Object?>? _ffRef;
   DocumentReference<Object?>? get ffRef => _$this._ffRef;
   set ffRef(DocumentReference<Object?>? ffRef) => _$this._ffRef = ffRef;
@@ -264,6 +284,7 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
       _createdTime = $v.createdTime;
       _phoneNumber = $v.phoneNumber;
       _token = $v.token;
+      _admin = $v.admin;
       _ffRef = $v.ffRef;
       _$v = null;
     }
@@ -294,10 +315,11 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
             createdTime: createdTime,
             phoneNumber: phoneNumber,
             token: token,
+            admin: admin,
             ffRef: ffRef);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,no_leading_underscores_for_local_identifiers,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,unnecessary_lambdas
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

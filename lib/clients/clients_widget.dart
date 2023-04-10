@@ -1,8 +1,17 @@
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import 'package:easy_debounce/easy_debounce.dart';
+import '/auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/components/client_task_widget.dart';
+import '/flutter_flow/flutter_flow_choice_chips.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/form_field_controller.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'clients_model.dart';
+export 'clients_model.dart';
 
 class ClientsWidget extends StatefulWidget {
   const ClientsWidget({Key? key}) : super(key: key);
@@ -12,510 +21,380 @@ class ClientsWidget extends StatefulWidget {
 }
 
 class _ClientsWidgetState extends State<ClientsWidget> {
-  TextEditingController? textController;
+  late ClientsModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    _model = createModel(context, () => ClientsModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'Clients'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    _unfocusNode.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        title: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(),
-          child: TextFormField(
-            controller: textController,
-            onChanged: (_) => EasyDebounce.debounce(
-              'textController',
-              Duration(milliseconds: 2000),
-              () => setState(() {}),
+    context.watch<FFAppState>();
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
+        appBar: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          automaticallyImplyLeading: false,
+          leading: FlutterFlowIconButton(
+            borderColor: Colors.transparent,
+            borderRadius: 30.0,
+            borderWidth: 1.0,
+            buttonSize: 60.0,
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.white,
+              size: 30.0,
             ),
-            autofocus: true,
-            obscureText: false,
-            decoration: InputDecoration(
-              labelText: 'Search client ...',
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0x00000000),
-                  width: 1,
-                ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(4.0),
-                  topRight: Radius.circular(4.0),
-                ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0x00000000),
-                  width: 1,
-                ),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(4.0),
-                  topRight: Radius.circular(4.0),
-                ),
-              ),
-              filled: true,
-              suffixIcon: Icon(
-                Icons.search,
-                color: FlutterFlowTheme.of(context).primaryBtnText,
-                size: 22,
-              ),
-            ),
-            style: FlutterFlowTheme.of(context).bodyText1.override(
+            onPressed: () async {
+              logFirebaseEvent('CLIENTS_arrow_back_rounded_ICN_ON_TAP');
+              logFirebaseEvent('IconButton_navigate_back');
+              context.safePop();
+            },
+          ),
+          title: Text(
+            'Clients',
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Poppins',
-                  color: FlutterFlowTheme.of(context).primaryBtnText,
-                  fontSize: 18,
+                  color: Colors.white,
+                  fontSize: 22.0,
                 ),
           ),
+          actions: [],
+          centerTitle: true,
+          elevation: 2.0,
         ),
-        actions: [],
-        centerTitle: false,
-        elevation: 0,
-      ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Column(
+        body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Expanded(
-              child: DefaultTabController(
-                length: 3,
-                initialIndex: 0,
-                child: Column(
-                  children: [
-                    TabBar(
-                      labelColor: FlutterFlowTheme.of(context).primaryBtnText,
-                      unselectedLabelColor: Color(0xB3FFFFFF),
-                      labelStyle: FlutterFlowTheme.of(context).subtitle1,
-                      indicatorColor: FlutterFlowTheme.of(context).primaryColor,
-                      indicatorWeight: 3,
-                      tabs: [
-                        Tab(
-                          text: 'All',
-                        ),
-                        Tab(
-                          text: 'Block',
-                        ),
-                        Tab(
-                          text: 'Stop',
-                        ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
+                    child: FlutterFlowChoiceChips(
+                      options: [
+                        ChipData('A', Icons.train_outlined),
+                        ChipData('B'),
+                        ChipData('C'),
+                        ChipData('Stop'),
+                        ChipData('Watch'),
+                        ChipData('not work three months')
                       ],
+                      onChanged: (val) =>
+                          setState(() => _model.choiceChipsValue = val?.first),
+                      selectedChipStyle: ChipStyle(
+                        backgroundColor: Color(0xFFE3E7ED),
+                        textStyle:
+                            FlutterFlowTheme.of(context).bodyMedium.override(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                ),
+                        iconColor: Colors.white,
+                        iconSize: 18.0,
+                        elevation: 4.0,
+                      ),
+                      unselectedChipStyle: ChipStyle(
+                        backgroundColor: Colors.white,
+                        textStyle:
+                            FlutterFlowTheme.of(context).bodySmall.override(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFFE3E7ED),
+                                ),
+                        iconColor: Color(0xFFE3E7ED),
+                        iconSize: 18.0,
+                        elevation: 4.0,
+                      ),
+                      chipSpacing: 20.0,
+                      multiselect: false,
+                      alignment: WrapAlignment.start,
+                      controller: _model.choiceChipsController ??=
+                          FormFieldController<List<String>>(
+                        [],
+                      ),
                     ),
-                    Expanded(
-                      child: TabBarView(
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: AuthUserStreamWidget(
+                builder: (context) => FutureBuilder<ApiCallResponse>(
+                  future: (_model
+                          .apiRequestCompleter ??= Completer<ApiCallResponse>()
+                        ..complete(ClientsGroup.listClientsByOpCall.call(
+                          token: valueOrDefault(currentUserDocument?.token, ''),
+                        )))
+                      .future,
+                  builder: (context, snapshot) {
+                    // Customize what your widget looks like when it's loading.
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: CircularProgressIndicator(
+                            color: FlutterFlowTheme.of(context).primary,
+                          ),
+                        ),
+                      );
+                    }
+                    final tabBarListClientsByOpResponse = snapshot.data!;
+                    return DefaultTabController(
+                      length: 4,
+                      initialIndex: 0,
+                      child: Column(
                         children: [
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                            ),
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 3,
-                                          color: Color(0x20000000),
-                                          offset: Offset(0, 1),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 12, 8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.network(
-                                              'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2669&q=80',
-                                              width: 70,
-                                              height: 70,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 0, 0, 0),
-                                                  child: Text(
-                                                    'Inspector Name',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .subtitle1,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 4, 0, 0),
-                                                  child: Text(
-                                                    'Title',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText2,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 3,
-                                          color: Color(0x20000000),
-                                          offset: Offset(0, 1),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 12, 8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.network(
-                                              'https://images.unsplash.com/photo-1554774853-719586f82d77?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTJ8fHNlcnZpY2UlMjB3b3JrZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-                                              width: 70,
-                                              height: 70,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 0, 0, 0),
-                                                  child: Text(
-                                                    'Inspector Name',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .subtitle1,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 4, 0, 0),
-                                                  child: Text(
-                                                    'Title',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText2,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 3,
-                                          color: Color(0x20000000),
-                                          offset: Offset(0, 1),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 12, 8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.network(
-                                              'https://images.unsplash.com/photo-1529701870190-9ae4010fd124?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTZ8fHNlcnZpY2UlMjB3b3JrZXJ8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-                                              width: 70,
-                                              height: 70,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 0, 0, 0),
-                                                  child: Text(
-                                                    'Inspector Name',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .subtitle1,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 4, 0, 0),
-                                                  child: Text(
-                                                    'Title',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText2,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          TabBar(
+                            labelColor: FlutterFlowTheme.of(context).primary,
+                            unselectedLabelColor:
+                                FlutterFlowTheme.of(context).gray600,
+                            labelStyle:
+                                FlutterFlowTheme.of(context).titleMedium,
+                            indicatorColor:
+                                FlutterFlowTheme.of(context).primary,
+                            indicatorWeight: 3.0,
+                            tabs: [
+                              Tab(
+                                text: 'All',
+                              ),
+                              Tab(
+                                text: 'Stop',
+                              ),
+                              Tab(
+                                text: 'Watch',
+                              ),
+                              Tab(
+                                text: 'Rate',
+                              ),
+                            ],
                           ),
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                            ),
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.vertical,
+                          Expanded(
+                            child: TabBarView(
                               children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 3,
-                                          color: Color(0x20000000),
-                                          offset: Offset(0, 1),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 12, 8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.network(
-                                              'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2669&q=80',
-                                              width: 70,
-                                              height: 70,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 0, 0, 0),
-                                                  child: Text(
-                                                    'Inspector Name',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .subtitle1,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 4, 0, 0),
-                                                  child: Text(
-                                                    'Title',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText2,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Icon(
-                                            Icons.radio_button_checked,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryColor,
-                                            size: 24,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                  ),
+                                  child: Builder(
+                                    builder: (context) {
+                                      final client =
+                                          ClientsGroup.listClientsByOpCall
+                                                  .data(
+                                                    tabBarListClientsByOpResponse
+                                                        .jsonBody,
+                                                  )
+                                                  ?.toList() ??
+                                              [];
+                                      if (client.isEmpty) {
+                                        return Image.asset(
+                                          'assets/images/7486744.png',
+                                        );
+                                      }
+                                      return RefreshIndicator(
+                                        onRefresh: () async {
+                                          logFirebaseEvent(
+                                              'CLIENTS_ListView_d44wrs5q_ON_PULL_TO_REF');
+                                          logFirebaseEvent(
+                                              'ListView_refresh_database_request');
+                                          setState(() => _model
+                                              .apiRequestCompleter = null);
+                                          await _model
+                                              .waitForApiRequestCompleted();
+                                        },
+                                        child: ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: client.length,
+                                          itemBuilder: (context, clientIndex) {
+                                            final clientItem =
+                                                client[clientIndex];
+                                            return ClientTaskWidget(
+                                              key: Key(
+                                                  'Key12d_${clientIndex}_of_${client.length}'),
+                                              client: clientItem,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                            ),
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16, 8, 16, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 3,
-                                          color: Color(0x20000000),
-                                          offset: Offset(0, 1),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 12, 8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.network(
-                                              'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2669&q=80',
-                                              width: 70,
-                                              height: 70,
-                                              fit: BoxFit.cover,
+                                Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                  ),
+                                  child: Builder(
+                                    builder: (context) {
+                                      final client =
+                                          ClientsGroup.listClientsByOpCall
+                                                  .clientsStop(
+                                                    tabBarListClientsByOpResponse
+                                                        .jsonBody,
+                                                  )
+                                                  ?.toList() ??
+                                              [];
+                                      return RefreshIndicator(
+                                        onRefresh: () async {
+                                          logFirebaseEvent(
+                                              'CLIENTS_ListView_0nexhi7l_ON_PULL_TO_REF');
+                                          logFirebaseEvent(
+                                              'ListView_refresh_database_request');
+                                          setState(() => _model
+                                              .apiRequestCompleter = null);
+                                          await _model
+                                              .waitForApiRequestCompleted();
+                                        },
+                                        child: ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: client.length,
+                                          itemBuilder: (context, clientIndex) {
+                                            final clientItem =
+                                                client[clientIndex];
+                                            return ClientTaskWidget(
+                                              key: Key(
+                                                  'Keyr2x_${clientIndex}_of_${client.length}'),
+                                              client: clientItem,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  width: 100.0,
+                                  height: 100.0,
+                                  decoration: BoxDecoration(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                  ),
+                                  child: Builder(
+                                    builder: (context) {
+                                      final client =
+                                          ClientsGroup.listClientsByOpCall
+                                                  .clientsWatch(
+                                                    tabBarListClientsByOpResponse
+                                                        .jsonBody,
+                                                  )
+                                                  ?.toList() ??
+                                              [];
+                                      return RefreshIndicator(
+                                        onRefresh: () async {
+                                          logFirebaseEvent(
+                                              'CLIENTS_ListView_j6yzlgyz_ON_PULL_TO_REF');
+                                          logFirebaseEvent(
+                                              'ListView_refresh_database_request');
+                                          setState(() => _model
+                                              .apiRequestCompleter = null);
+                                          await _model
+                                              .waitForApiRequestCompleted();
+                                        },
+                                        child: ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount: client.length,
+                                          itemBuilder: (context, clientIndex) {
+                                            final clientItem =
+                                                client[clientIndex];
+                                            return ClientTaskWidget(
+                                              key: Key(
+                                                  'Keyesv_${clientIndex}_of_${client.length}'),
+                                              client: clientItem,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      height: 500.0,
+                                      decoration: BoxDecoration(
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryBackground,
+                                      ),
+                                      child: Builder(
+                                        builder: (context) {
+                                          final client =
+                                              ClientsGroup.listClientsByOpCall
+                                                      .rateAPlus(
+                                                        tabBarListClientsByOpResponse
+                                                            .jsonBody,
+                                                      )
+                                                      ?.toList() ??
+                                                  [];
+                                          return RefreshIndicator(
+                                            onRefresh: () async {
+                                              logFirebaseEvent(
+                                                  'CLIENTS_ListView_p5g10th1_ON_PULL_TO_REF');
+                                              logFirebaseEvent(
+                                                  'ListView_refresh_database_request');
+                                              setState(() => _model
+                                                  .apiRequestCompleter = null);
+                                              await _model
+                                                  .waitForApiRequestCompleted();
+                                            },
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.zero,
+                                              primary: false,
+                                              scrollDirection: Axis.vertical,
+                                              itemCount: client.length,
+                                              itemBuilder:
+                                                  (context, clientIndex) {
+                                                final clientItem =
+                                                    client[clientIndex];
+                                                return ClientTaskWidget(
+                                                  key: Key(
+                                                      'Keyron_${clientIndex}_of_${client.length}'),
+                                                  client: clientItem,
+                                                );
+                                              },
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 0, 0, 0),
-                                                  child: Text(
-                                                    'Inspector Name',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .subtitle1,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(16, 4, 0, 0),
-                                                  child: Text(
-                                                    'Title',
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyText2,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Icon(
-                                            Icons.radio_button_checked,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryColor,
-                                            size: 24,
-                                          ),
-                                        ],
+                                          );
+                                        },
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),

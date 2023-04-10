@@ -1,12 +1,16 @@
-import '../backend/api_requests/api_calls.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/custom_functions.dart' as functions;
+import '/auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'search_prods_gift_model.dart';
+export 'search_prods_gift_model.dart';
 
 class SearchProdsGiftWidget extends StatefulWidget {
   const SearchProdsGiftWidget({Key? key}) : super(key: key);
@@ -16,271 +20,257 @@ class SearchProdsGiftWidget extends StatefulWidget {
 }
 
 class _SearchProdsGiftWidgetState extends State<SearchProdsGiftWidget> {
-  Completer<ApiCallResponse>? _apiRequestCompleter;
-  TextEditingController? keySearchController;
-  TextEditingController? qProdGift1Controller;
-  final formKey = GlobalKey<FormState>();
+  late SearchProdsGiftModel _model;
+
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+    _model.onUpdate();
+  }
 
   @override
   void initState() {
     super.initState();
-    keySearchController = TextEditingController();
-    qProdGift1Controller = TextEditingController(text: '1');
+    _model = createModel(context, () => SearchProdsGiftModel());
+
+    _model.keySearchController ??= TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.maybeDispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
         Form(
-          key: formKey,
+          key: _model.formKey,
           autovalidateMode: AutovalidateMode.disabled,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Expanded(
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 0.0, 16.0),
                   child: TextFormField(
-                    controller: keySearchController,
+                    controller: _model.keySearchController,
                     onFieldSubmitted: (_) async {
-                      setState(() => _apiRequestCompleter = null);
-                      await waitForApiRequestCompleter(minWait: 2, maxWait: 10);
+                      logFirebaseEvent(
+                          'SEARCH_PRODS_GIFT_keySearch_ON_TEXTFIELD');
+                      logFirebaseEvent('keySearch_refresh_database_request');
+                      setState(() => _model.apiRequestCompleter = null);
+                      await _model.waitForApiRequestCompleted(
+                          minWait: 2, maxWait: 10);
                     },
                     obscureText: false,
                     decoration: InputDecoration(
                       hintText: 'Enter name prod...',
                       hintStyle:
-                          FlutterFlowTheme.of(context).bodyText2.override(
+                          FlutterFlowTheme.of(context).bodySmall.override(
                                 fontFamily: 'Outfit',
                                 color: Color(0xFF57636C),
-                                fontSize: 14,
+                                fontSize: 14.0,
                                 fontWeight: FontWeight.normal,
                               ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0xFFF1F4F8),
-                          width: 2,
+                          width: 2.0,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Color(0xFFF1F4F8),
-                          width: 2,
+                          color: Color(0x00000000),
+                          width: 2.0,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0x00000000),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0x00000000),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                       filled: true,
                       fillColor: FlutterFlowTheme.of(context).lineColor,
-                      contentPadding:
-                          EdgeInsetsDirectional.fromSTEB(20, 32, 20, 12),
+                      contentPadding: EdgeInsetsDirectional.fromSTEB(
+                          20.0, 32.0, 20.0, 12.0),
                     ),
-                    style: FlutterFlowTheme.of(context).bodyText1.override(
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
                           fontFamily: 'Outfit',
                           color: Color(0xFF101213),
-                          fontSize: 14,
+                          fontSize: 14.0,
                           fontWeight: FontWeight.normal,
                         ),
                     textAlign: TextAlign.start,
+                    validator: _model.keySearchControllerValidator
+                        .asValidator(context),
                   ),
                 ),
               ),
               FlutterFlowIconButton(
                 borderColor: Colors.transparent,
-                borderRadius: 24,
-                borderWidth: 1,
-                buttonSize: 60,
+                borderRadius: 24.0,
+                borderWidth: 1.0,
+                buttonSize: 60.0,
                 icon: Icon(
                   Icons.search,
                   color: FlutterFlowTheme.of(context).grayIcon,
-                  size: 24,
+                  size: 24.0,
                 ),
                 onPressed: () async {
-                  setState(() => _apiRequestCompleter = null);
-                  await waitForApiRequestCompleter();
+                  logFirebaseEvent('SEARCH_PRODS_GIFT_COMP_search_ICN_ON_TAP');
+                  logFirebaseEvent('IconButton_refresh_database_request');
+                  setState(() => _model.apiRequestCompleter = null);
+                  await _model.waitForApiRequestCompleted();
                 },
               ),
             ],
           ),
         ),
-        FutureBuilder<ApiCallResponse>(
-          future: (_apiRequestCompleter ??= Completer<ApiCallResponse>()
-                ..complete(GetSearchProductsActivePharmaCall.call(
-                  search: keySearchController!.text,
-                )))
-              .future,
-          builder: (context, snapshot) {
-            // Customize what your widget looks like when it's loading.
-            if (!snapshot.hasData) {
-              return Center(
-                child: SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: CircularProgressIndicator(
-                    color: FlutterFlowTheme.of(context).primaryColor,
-                  ),
-                ),
-              );
-            }
-            final listViewGetSearchProductsActivePharmaResponse =
-                snapshot.data!;
-            return Builder(
-              builder: (context) {
-                final prodsGift = getJsonField(
-                  listViewGetSearchProductsActivePharmaResponse.jsonBody,
-                  r'''$''',
-                ).toList().take(20).toList();
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    setState(() => _apiRequestCompleter = null);
-                    await waitForApiRequestCompleter();
-                  },
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: prodsGift.length,
-                    itemBuilder: (context, prodsGiftIndex) {
-                      final prodsGiftItem = prodsGift[prodsGiftIndex];
-                      return Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 8),
-                        child: Container(
-                          width: double.infinity,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 5,
-                                color: Color(0x3416202A),
-                                offset: Offset(0, 2),
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(12),
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Container(
-                                  width: 50,
-                                  child: TextFormField(
-                                    controller: qProdGift1Controller,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .bodyText2
-                                          .override(
-                                            fontFamily: 'Outfit',
-                                            color: Color(0xFF57636C),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFF1F4F8),
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFF1F4F8),
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .lineColor,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              8, 8, 8, 8),
-                                    ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyText1
-                                        .override(
-                                          fontFamily: 'Outfit',
-                                          color: Color(0xFF101213),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        12, 0, 0, 0),
-                                    child: AutoSizeText(
-                                      getJsonField(
-                                        prodsGiftItem,
-                                        r'''$.name''',
-                                      ).toString(),
-                                      maxLines: 2,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyText2,
-                                    ),
-                                  ),
-                                ),
-                                FlutterFlowIconButton(
-                                  borderColor: Colors.transparent,
-                                  borderRadius: 30,
-                                  borderWidth: 1,
-                                  buttonSize: 60,
-                                  icon: Icon(
-                                    Icons.add,
-                                    color:
-                                        FlutterFlowTheme.of(context).grayIcon,
-                                    size: 30,
-                                  ),
-                                  onPressed: () async {
-                                    setState(() => FFAppState()
-                                        .addTaskProdsGift
-                                        .add(getJsonField(
-                                          functions
-                                              .addQuantityInJsonProdOblgOrGift(
-                                                  prodsGiftItem,
-                                                  double.parse(
-                                                      qProdGift1Controller!
-                                                          .text)),
-                                          r'''$''',
-                                        )));
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+        AuthUserStreamWidget(
+          builder: (context) => FutureBuilder<ApiCallResponse>(
+            future: (_model.apiRequestCompleter ??= Completer<ApiCallResponse>()
+                  ..complete(GetSearchProductsActivePharmaCall.call(
+                    search: _model.keySearchController.text,
+                    token: valueOrDefault(currentUserDocument?.token, ''),
+                  )))
+                .future,
+            builder: (context, snapshot) {
+              // Customize what your widget looks like when it's loading.
+              if (!snapshot.hasData) {
+                return Center(
+                  child: SizedBox(
+                    width: 50.0,
+                    height: 50.0,
+                    child: CircularProgressIndicator(
+                      color: FlutterFlowTheme.of(context).primary,
+                    ),
                   ),
                 );
-              },
-            );
-          },
+              }
+              final listViewGetSearchProductsActivePharmaResponse =
+                  snapshot.data!;
+              return Builder(
+                builder: (context) {
+                  final prodsGift = getJsonField(
+                    listViewGetSearchProductsActivePharmaResponse.jsonBody,
+                    r'''$''',
+                  ).toList().take(20).toList();
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      logFirebaseEvent(
+                          'SEARCH_PRODS_GIFT_ListView_l8k3kw50_ON_P');
+                      logFirebaseEvent('ListView_refresh_database_request');
+                      setState(() => _model.apiRequestCompleter = null);
+                      await _model.waitForApiRequestCompleted();
+                    },
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: prodsGift.length,
+                      itemBuilder: (context, prodsGiftIndex) {
+                        final prodsGiftItem = prodsGift[prodsGiftIndex];
+                        return Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              20.0, 0.0, 20.0, 8.0),
+                          child: Container(
+                            width: double.infinity,
+                            height: 60.0,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 5.0,
+                                  color: Color(0x3416202A),
+                                  offset: Offset(0.0, 2.0),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(12.0),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  8.0, 8.0, 8.0, 8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          12.0, 0.0, 0.0, 0.0),
+                                      child: AutoSizeText(
+                                        getJsonField(
+                                          prodsGiftItem,
+                                          r'''$.name''',
+                                        ).toString(),
+                                        maxLines: 2,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodySmall,
+                                      ),
+                                    ),
+                                  ),
+                                  FlutterFlowIconButton(
+                                    borderColor: Colors.transparent,
+                                    borderRadius: 30.0,
+                                    borderWidth: 1.0,
+                                    buttonSize: 60.0,
+                                    icon: Icon(
+                                      Icons.add,
+                                      color:
+                                          FlutterFlowTheme.of(context).grayIcon,
+                                      size: 30.0,
+                                    ),
+                                    onPressed: () async {
+                                      logFirebaseEvent(
+                                          'SEARCH_PRODS_GIFT_COMP_add_ICN_ON_TAP');
+                                      logFirebaseEvent(
+                                          'IconButton_update_app_state');
+                                      FFAppState().update(() {
+                                        FFAppState()
+                                            .addToAddTaskProdsGift(getJsonField(
+                                          functions
+                                              .addQuantityInJsonProdOblgOrGift(
+                                                  prodsGiftItem, 1.0),
+                                          r'''$''',
+                                        ));
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ],
     );
-  }
-
-  Future waitForApiRequestCompleter({
-    double minWait = 0,
-    double maxWait = double.infinity,
-  }) async {
-    final stopwatch = Stopwatch()..start();
-    while (true) {
-      await Future.delayed(Duration(milliseconds: 50));
-      final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = _apiRequestCompleter?.isCompleted ?? false;
-      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
-        break;
-      }
-    }
   }
 }

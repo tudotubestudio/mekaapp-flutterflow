@@ -1,12 +1,15 @@
-import '../backend/api_requests/api_calls.dart';
-import '../components/git_gift_task_widget.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/custom_functions.dart' as functions;
+import '/auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'show_pack_model.dart';
+export 'show_pack_model.dart';
 
 class ShowPackWidget extends StatefulWidget {
   const ShowPackWidget({
@@ -21,42 +24,62 @@ class ShowPackWidget extends StatefulWidget {
 }
 
 class _ShowPackWidgetState extends State<ShowPackWidget> {
-  ApiCallResponse? rCheckOrderPack;
-  Completer<ApiCallResponse>? _apiRequestCompleter;
+  late ShowPackModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => ShowPackModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'ShowPack'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
+      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
+        backgroundColor: FlutterFlowTheme.of(context).primary,
         automaticallyImplyLeading: false,
         leading: FlutterFlowIconButton(
           borderColor: Colors.transparent,
-          borderRadius: 30,
-          buttonSize: 46,
+          borderRadius: 30.0,
+          buttonSize: 46.0,
           icon: Icon(
             Icons.arrow_back_rounded,
             color: Colors.white,
-            size: 24,
+            size: 24.0,
           ),
           onPressed: () async {
-            Navigator.pop(context);
+            logFirebaseEvent('SHOW_PACK_arrow_back_rounded_ICN_ON_TAP');
+            logFirebaseEvent('IconButton_navigate_back');
+            context.pop();
           },
         ),
         title: Text(
           'Pack',
-          style: FlutterFlowTheme.of(context).subtitle2.override(
+          style: FlutterFlowTheme.of(context).titleSmall.override(
                 fontFamily: 'Poppins',
                 color: Colors.white,
               ),
         ),
         actions: [],
         centerTitle: false,
-        elevation: 0,
+        elevation: 0.0,
       ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -69,45 +92,49 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 140,
+                    width: MediaQuery.of(context).size.width * 1.0,
+                    height: 140.0,
                     decoration: BoxDecoration(
-                      color: FlutterFlowTheme.of(context).primaryColor,
+                      color: FlutterFlowTheme.of(context).primary,
                       boxShadow: [
                         BoxShadow(
-                          blurRadius: 5,
+                          blurRadius: 5.0,
                           color: Color(0x32171717),
-                          offset: Offset(0, 2),
+                          offset: Offset(0.0, 2.0),
                         )
                       ],
                       borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(0),
+                        bottomLeft: Radius.circular(16.0),
+                        bottomRight: Radius.circular(16.0),
+                        topLeft: Radius.circular(0.0),
+                        topRight: Radius.circular(0.0),
                       ),
                     ),
                     child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Expanded(
                                   child: Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 4, 0, 0),
+                                        0.0, 4.0, 0.0, 0.0),
                                     child: Text(
-                                      'Budget Name',
+                                      getJsonField(
+                                        widget.pack,
+                                        r'''$.title''',
+                                      ).toString(),
                                       style: FlutterFlowTheme.of(context)
-                                          .title1
+                                          .displaySmall
                                           .override(
                                             fontFamily: 'Poppins',
                                             color: Colors.white,
@@ -119,15 +146,15 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 12, 0, 0),
+                                      0.0, 12.0, 0.0, 0.0),
                                   child: Text(
                                     formatNumber(
                                       functions.jsonToDouble(getJsonField(
@@ -139,11 +166,11 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                                       currency: 'DA ',
                                     ),
                                     style: FlutterFlowTheme.of(context)
-                                        .title1
+                                        .displaySmall
                                         .override(
                                           fontFamily: 'Poppins',
                                           color: Colors.white,
-                                          fontSize: 36,
+                                          fontSize: 36.0,
                                           fontWeight: FontWeight.normal,
                                         ),
                                   ),
@@ -160,349 +187,352 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
                             child: Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 12.0, 0.0, 0.0),
                               child: Text(
                                 'Orders',
-                                style: FlutterFlowTheme.of(context).bodyText1,
+                                style: FlutterFlowTheme.of(context).bodyMedium,
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    FutureBuilder<ApiCallResponse>(
-                      future:
-                          (_apiRequestCompleter ??= Completer<ApiCallResponse>()
-                                ..complete(TaskOrdersPackByUserCall.call(
-                                  packId: getJsonField(
-                                    widget.pack,
-                                    r'''$.id''',
-                                  ),
-                                )))
-                              .future,
-                      builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: CircularProgressIndicator(
-                                color:
-                                    FlutterFlowTheme.of(context).primaryColor,
+                    AuthUserStreamWidget(
+                      builder: (context) => FutureBuilder<ApiCallResponse>(
+                        future: (_model.apiRequestCompleter ??=
+                                Completer<ApiCallResponse>()
+                                  ..complete(TaskOrdersPackByUserCall.call(
+                                    packId: getJsonField(
+                                      widget.pack,
+                                      r'''$.id''',
+                                    ),
+                                    token: valueOrDefault(
+                                        currentUserDocument?.token, ''),
+                                  )))
+                            .future,
+                        builder: (context, snapshot) {
+                          // Customize what your widget looks like when it's loading.
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: SizedBox(
+                                width: 50.0,
+                                height: 50.0,
+                                child: CircularProgressIndicator(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                ),
                               ),
-                            ),
-                          );
-                        }
-                        final listViewTaskOrdersPackByUserResponse =
-                            snapshot.data!;
-                        return Builder(
-                          builder: (context) {
-                            final order = getJsonField(
-                              listViewTaskOrdersPackByUserResponse.jsonBody,
-                              r'''$''',
-                            ).toList();
-                            return RefreshIndicator(
-                              onRefresh: () async {
-                                setState(() => _apiRequestCompleter = null);
-                                await waitForApiRequestCompleter();
-                              },
-                              child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                primary: false,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: order.length,
-                                itemBuilder: (context, orderIndex) {
-                                  final orderItem = order[orderIndex];
-                                  return Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 0, 0, 8),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.92,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .secondaryBackground,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            blurRadius: 3,
-                                            color: Color(0x35000000),
-                                            offset: Offset(0, 1),
-                                          )
-                                        ],
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
+                            );
+                          }
+                          final listViewTaskOrdersPackByUserResponse =
+                              snapshot.data!;
+                          return Builder(
+                            builder: (context) {
+                              final order = getJsonField(
+                                listViewTaskOrdersPackByUserResponse.jsonBody,
+                                r'''$''',
+                              ).toList();
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  logFirebaseEvent(
+                                      'SHOW_PACK_ListView_iqgb7l0v_ON_PULL_TO_R');
+                                  logFirebaseEvent(
+                                      'ListView_refresh_database_request');
+                                  setState(
+                                      () => _model.apiRequestCompleter = null);
+                                  await _model.waitForApiRequestCompleted();
+                                },
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: order.length,
+                                  itemBuilder: (context, orderIndex) {
+                                    final orderItem = order[orderIndex];
+                                    return Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 0.0, 0.0, 8.0),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.92,
+                                        decoration: BoxDecoration(
                                           color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                          width: 1,
+                                              .secondaryBackground,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              blurRadius: 3.0,
+                                              color: Color(0x35000000),
+                                              offset: Offset(0.0, 1.0),
+                                            )
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          border: Border.all(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryBackground,
+                                            width: 1.0,
+                                          ),
                                         ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            4, 4, 4, 4),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Expanded(
-                                              child: Padding(
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  4.0, 4.0, 4.0, 4.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          12.0, 0.0, 0.0, 0.0),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        getJsonField(
+                                                          orderItem,
+                                                          r'''$.name''',
+                                                        ).toString(),
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(
+                                                                    0.0,
+                                                                    4.0,
+                                                                    0.0,
+                                                                    0.0),
+                                                        child: Text(
+                                                          dateTimeFormat(
+                                                              'relative',
+                                                              functions.jsonToDate(
+                                                                  getJsonField(
+                                                                orderItem,
+                                                                r'''$.created''',
+                                                              ))),
+                                                          style: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .bodyMedium
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Poppins',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(12, 0, 0, 0),
+                                                    .fromSTEB(
+                                                        12.0, 0.0, 12.0, 0.0),
                                                 child: Column(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.end,
                                                   children: [
                                                     Text(
                                                       getJsonField(
                                                         orderItem,
-                                                        r'''$.name''',
+                                                        r'''$.totallines''',
                                                       ).toString(),
+                                                      textAlign: TextAlign.end,
                                                       style:
                                                           FlutterFlowTheme.of(
                                                                   context)
-                                                              .bodyText1,
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0, 4, 0, 0),
-                                                      child: Text(
-                                                        dateTimeFormat(
-                                                            'relative',
-                                                            functions.jsonToDate(
-                                                                getJsonField(
-                                                              orderItem,
-                                                              r'''$.created''',
-                                                            ))),
-                                                        style:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .bodyText1
-                                                                .override(
-                                                                  fontFamily:
-                                                                      'Poppins',
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                ),
-                                                      ),
+                                                              .titleSmall
+                                                              .override(
+                                                                fontFamily:
+                                                                    'Poppins',
+                                                                color: Color(
+                                                                    0xFF090F13),
+                                                              ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(12, 0, 12, 0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Text(
-                                                    getJsonField(
-                                                      orderItem,
-                                                      r'''$.totallines''',
-                                                    ).toString(),
-                                                    textAlign: TextAlign.end,
-                                                    style: FlutterFlowTheme.of(
+                                              if (getJsonField(
+                                                    orderItem,
+                                                    r'''$.target_id_get''',
+                                                  ) ==
+                                                  null)
+                                                FlutterFlowIconButton(
+                                                  borderColor:
+                                                      Colors.transparent,
+                                                  borderRadius: 30.0,
+                                                  borderWidth: 1.0,
+                                                  buttonSize: 60.0,
+                                                  icon: Icon(
+                                                    Icons.cached,
+                                                    color: FlutterFlowTheme.of(
                                                             context)
-                                                        .subtitle2
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          color:
-                                                              Color(0xFF090F13),
-                                                        ),
+                                                        .primaryText,
+                                                    size: 30.0,
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            if (getJsonField(
-                                                  orderItem,
-                                                  r'''$.target_id''',
-                                                ) ==
-                                                null)
-                                              FlutterFlowIconButton(
-                                                borderColor: Colors.transparent,
-                                                borderRadius: 30,
-                                                borderWidth: 1,
-                                                buttonSize: 60,
-                                                icon: Icon(
-                                                  Icons.cached,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                  size: 30,
-                                                ),
-                                                onPressed: () async {
-                                                  rCheckOrderPack =
-                                                      await TaskCheckOrderPackCall
-                                                          .call(
-                                                    orderId:
-                                                        valueOrDefault<String>(
-                                                      getJsonField(
-                                                        orderItem,
-                                                        r'''$.c_order_id''',
-                                                      ).toString(),
-                                                      '0',
-                                                    ),
-                                                    packId:
-                                                        valueOrDefault<String>(
-                                                      getJsonField(
-                                                        widget.pack,
-                                                        r'''$.id''',
-                                                      ).toString(),
-                                                      '0',
-                                                    ),
-                                                  );
-                                                  if ((rCheckOrderPack
-                                                          ?.succeeded ??
-                                                      true)) {
-                                                    await showModalBottomSheet(
-                                                      isScrollControlled: true,
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryBtnText,
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return Padding(
-                                                          padding:
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .viewInsets,
-                                                          child: Container(
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height *
-                                                                0.5,
-                                                            child:
-                                                                GitGiftTaskWidget(
-                                                              task:
-                                                                  getJsonField(
-                                                                widget.pack,
-                                                                r'''$''',
-                                                              ),
-                                                              orderId:
-                                                                  getJsonField(
-                                                                orderItem,
-                                                                r'''$.c_order_id''',
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          getJsonField(
-                                                            (rCheckOrderPack
-                                                                    ?.jsonBody ??
-                                                                ''),
-                                                            r'''$.error''',
-                                                          ).toString(),
-                                                          style: GoogleFonts
-                                                              .getFont(
-                                                            'Roboto',
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .primaryBtnText,
-                                                          ),
-                                                        ),
-                                                        duration: Duration(
-                                                            milliseconds: 4000),
-                                                        backgroundColor:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .customColor3,
+                                                  onPressed: () async {
+                                                    logFirebaseEvent(
+                                                        'SHOW_PACK_PAGE_cached_ICN_ON_TAP');
+                                                    logFirebaseEvent(
+                                                        'IconButton_backend_call');
+                                                    _model.rCheckOrderPack =
+                                                        await TaskCheckOrderPackCall
+                                                            .call(
+                                                      orderId: valueOrDefault<
+                                                          String>(
+                                                        getJsonField(
+                                                          orderItem,
+                                                          r'''$.c_order_id''',
+                                                        ).toString(),
+                                                        '0',
                                                       ),
+                                                      packId: valueOrDefault<
+                                                          String>(
+                                                        getJsonField(
+                                                          widget.pack,
+                                                          r'''$.id''',
+                                                        ).toString(),
+                                                        '0',
+                                                      ),
+                                                      token: valueOrDefault(
+                                                          currentUserDocument
+                                                              ?.token,
+                                                          ''),
                                                     );
-                                                  }
+                                                    if ((_model.rCheckOrderPack
+                                                            ?.succeeded ??
+                                                        true)) {
+                                                      logFirebaseEvent(
+                                                          'IconButton_navigate_to');
 
-                                                  setState(() {});
-                                                },
-                                              ),
-                                            if (getJsonField(
-                                                  orderItem,
-                                                  r'''$.target_id''',
-                                                ) !=
-                                                null)
-                                              FlutterFlowIconButton(
-                                                borderColor: Colors.transparent,
-                                                borderRadius: 30,
-                                                borderWidth: 1,
-                                                buttonSize: 60,
-                                                icon: Icon(
-                                                  Icons.card_giftcard,
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryColor,
-                                                  size: 30,
-                                                ),
-                                                onPressed: () async {
-                                                  await showModalBottomSheet(
-                                                    isScrollControlled: true,
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .primaryBtnText,
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return Padding(
-                                                        padding: MediaQuery.of(
-                                                                context)
-                                                            .viewInsets,
-                                                        child: Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.75,
-                                                          child:
-                                                              GitGiftTaskWidget(
-                                                            task: widget.pack,
-                                                            orderId:
-                                                                getJsonField(
-                                                              orderItem,
-                                                              r'''$.c_order_id''',
+                                                      context.pushNamed(
+                                                        'GetGiftTask',
+                                                        queryParams: {
+                                                          'task':
+                                                              serializeParam(
+                                                            widget.pack,
+                                                            ParamType.JSON,
+                                                          ),
+                                                          'order':
+                                                              serializeParam(
+                                                            orderItem,
+                                                            ParamType.JSON,
+                                                          ),
+                                                        }.withoutNulls,
+                                                      );
+                                                    } else {
+                                                      logFirebaseEvent(
+                                                          'IconButton_show_snack_bar');
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(
+                                                            getJsonField(
+                                                              (_model.rCheckOrderPack
+                                                                      ?.jsonBody ??
+                                                                  ''),
+                                                              r'''$.error''',
+                                                            ).toString(),
+                                                            style: GoogleFonts
+                                                                .getFont(
+                                                              'Roboto',
+                                                              color: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .primaryBtnText,
                                                             ),
                                                           ),
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  4000),
+                                                          backgroundColor:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .customColor3,
                                                         ),
                                                       );
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                          ],
+                                                    }
+
+                                                    setState(() {});
+                                                  },
+                                                ),
+                                              if (getJsonField(
+                                                    orderItem,
+                                                    r'''$.target_id_get''',
+                                                  ) !=
+                                                  null)
+                                                FlutterFlowIconButton(
+                                                  borderColor:
+                                                      Colors.transparent,
+                                                  borderRadius: 30.0,
+                                                  borderWidth: 1.0,
+                                                  buttonSize: 60.0,
+                                                  icon: Icon(
+                                                    Icons.card_giftcard,
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondary,
+                                                    size: 30.0,
+                                                  ),
+                                                  onPressed: () async {
+                                                    logFirebaseEvent(
+                                                        'SHOW_PACK_PAGE_card_giftcard_ICN_ON_TAP');
+                                                    logFirebaseEvent(
+                                                        'IconButton_navigate_to');
+
+                                                    context.pushNamed(
+                                                      'GetGiftTask',
+                                                      queryParams: {
+                                                        'task': serializeParam(
+                                                          widget.pack,
+                                                          ParamType.JSON,
+                                                        ),
+                                                        'order': serializeParam(
+                                                          orderItem,
+                                                          ParamType.JSON,
+                                                        ),
+                                                      }.withoutNulls,
+                                                    );
+                                                  },
+                                                ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -512,20 +542,5 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
         ),
       ),
     );
-  }
-
-  Future waitForApiRequestCompleter({
-    double minWait = 0,
-    double maxWait = double.infinity,
-  }) async {
-    final stopwatch = Stopwatch()..start();
-    while (true) {
-      await Future.delayed(Duration(milliseconds: 50));
-      final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = _apiRequestCompleter?.isCompleted ?? false;
-      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
-        break;
-      }
-    }
   }
 }

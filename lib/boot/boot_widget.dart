@@ -1,14 +1,16 @@
-import '../auth/auth_util.dart';
-import '../backend/api_requests/api_calls.dart';
-import '../backend/backend.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../main.dart';
+import '/auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'boot_model.dart';
+export 'boot_model.dart';
 
 class BootWidget extends StatefulWidget {
   const BootWidget({Key? key}) : super(key: key);
@@ -18,50 +20,65 @@ class BootWidget extends StatefulWidget {
 }
 
 class _BootWidgetState extends State<BootWidget> {
-  TextEditingController? textController;
+  late BootModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
+    _model = createModel(context, () => BootModel());
+
+    logFirebaseEvent('screen_view', parameters: {'screen_name': 'Boot'});
+    _model.textController ??= TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    _unfocusNode.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
-        automaticallyImplyLeading: false,
-        title: InkWell(
-          onTap: () async {
-            await signOut();
-            await Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NavBarPage(initialPage: 'SignIn'),
-              ),
-              (r) => false,
-            );
-          },
-          child: Text(
-            'Log Out',
-            style: FlutterFlowTheme.of(context).title2.override(
-                  fontFamily: 'Poppins',
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
+    context.watch<FFAppState>();
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        appBar: AppBar(
+          backgroundColor: FlutterFlowTheme.of(context).primary,
+          automaticallyImplyLeading: false,
+          title: InkWell(
+            onTap: () async {
+              logFirebaseEvent('BOOT_PAGE_Text_qspg1hhm_ON_TAP');
+              logFirebaseEvent('Text_auth');
+              GoRouter.of(context).prepareAuthEvent();
+              await signOut();
+              GoRouter.of(context).clearRedirectLocation();
+
+              context.goNamedAuth('SignIn', mounted);
+            },
+            child: Text(
+              'Log Out',
+              style: FlutterFlowTheme.of(context).headlineMedium.override(
+                    fontFamily: 'Poppins',
+                    color: Colors.white,
+                    fontSize: 22.0,
+                  ),
+            ),
           ),
+          actions: [],
+          centerTitle: false,
+          elevation: 2.0,
         ),
-        actions: [],
-        centerTitle: false,
-        elevation: 2,
-      ),
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+        body: SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -76,10 +93,10 @@ class _BootWidgetState extends State<BootWidget> {
                     if (!snapshot.hasData) {
                       return Center(
                         child: SizedBox(
-                          width: 50,
-                          height: 50,
+                          width: 50.0,
+                          height: 50.0,
                           child: CircularProgressIndicator(
-                            color: FlutterFlowTheme.of(context).primaryColor,
+                            color: FlutterFlowTheme.of(context).primary,
                           ),
                         ),
                       );
@@ -95,7 +112,8 @@ class _BootWidgetState extends State<BootWidget> {
                         final listViewConversationsRecord =
                             listViewConversationsRecordList[listViewIndex];
                         return Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(10, 10, 0, 0),
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              10.0, 10.0, 0.0, 0.0),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -114,12 +132,12 @@ class _BootWidgetState extends State<BootWidget> {
                                         if (!snapshot.hasData) {
                                           return Center(
                                             child: SizedBox(
-                                              width: 50,
-                                              height: 50,
+                                              width: 50.0,
+                                              height: 50.0,
                                               child: CircularProgressIndicator(
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .primaryColor,
+                                                        .primary,
                                               ),
                                             ),
                                           );
@@ -127,8 +145,8 @@ class _BootWidgetState extends State<BootWidget> {
                                         final circleImageUsersRecord =
                                             snapshot.data!;
                                         return Container(
-                                          width: 70,
-                                          height: 70,
+                                          width: 70.0,
+                                          height: 70.0,
                                           clipBehavior: Clip.antiAlias,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
@@ -145,7 +163,7 @@ class _BootWidgetState extends State<BootWidget> {
                                   Expanded(
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 0, 8, 0),
+                                          8.0, 0.0, 8.0, 0.0),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
@@ -154,14 +172,16 @@ class _BootWidgetState extends State<BootWidget> {
                                               'perc_ops')
                                             Padding(
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(8, 0, 8, 0),
+                                                  .fromSTEB(8.0, 0.0, 8.0, 0.0),
                                               child: Container(
                                                 width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
+                                                        .size
+                                                        .width *
+                                                    1.0,
                                                 decoration: BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.circular(0),
+                                                      BorderRadius.circular(
+                                                          0.0),
                                                 ),
                                                 child: Column(
                                                   mainAxisSize:
@@ -173,13 +193,16 @@ class _BootWidgetState extends State<BootWidget> {
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .fromSTEB(
-                                                                  0, 0, 0, 8),
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0,
+                                                                  8.0),
                                                       child: Text(
                                                         'Perc operatrices',
                                                         style:
                                                             FlutterFlowTheme.of(
                                                                     context)
-                                                                .subtitle2,
+                                                                .titleSmall,
                                                       ),
                                                     ),
                                                     Row(
@@ -197,22 +220,22 @@ class _BootWidgetState extends State<BootWidget> {
                                                                   0xFFEEEEEE),
                                                               border:
                                                                   Border.all(
-                                                                width: 1,
+                                                                width: 1.0,
                                                               ),
                                                             ),
                                                             child: Padding(
                                                               padding:
                                                                   EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          4,
-                                                                          4,
-                                                                          4,
-                                                                          4),
+                                                                          4.0,
+                                                                          4.0,
+                                                                          4.0,
+                                                                          4.0),
                                                               child: Text(
                                                                 'Name',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .bodyText1,
+                                                                    .bodyMedium,
                                                               ),
                                                             ),
                                                           ),
@@ -225,22 +248,22 @@ class _BootWidgetState extends State<BootWidget> {
                                                                   0xFFEEEEEE),
                                                               border:
                                                                   Border.all(
-                                                                width: 1,
+                                                                width: 1.0,
                                                               ),
                                                             ),
                                                             child: Padding(
                                                               padding:
                                                                   EdgeInsetsDirectional
                                                                       .fromSTEB(
-                                                                          4,
-                                                                          4,
-                                                                          4,
-                                                                          4),
+                                                                          4.0,
+                                                                          4.0,
+                                                                          4.0,
+                                                                          4.0),
                                                               child: Text(
                                                                 'Total perc',
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .bodyText1,
+                                                                    .bodyMedium,
                                                               ),
                                                             ),
                                                           ),
@@ -256,13 +279,13 @@ class _BootWidgetState extends State<BootWidget> {
                                                         if (!snapshot.hasData) {
                                                           return Center(
                                                             child: SizedBox(
-                                                              width: 50,
-                                                              height: 50,
+                                                              width: 50.0,
+                                                              height: 50.0,
                                                               child:
                                                                   CircularProgressIndicator(
                                                                 color: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .primaryColor,
+                                                                    .primary,
                                                               ),
                                                             ),
                                                           );
@@ -311,16 +334,16 @@ class _BootWidgetState extends State<BootWidget> {
                                                                           border:
                                                                               Border.all(
                                                                             width:
-                                                                                1,
+                                                                                1.0,
                                                                           ),
                                                                         ),
                                                                         child:
                                                                             Padding(
                                                                           padding: EdgeInsetsDirectional.fromSTEB(
-                                                                              4,
-                                                                              4,
-                                                                              4,
-                                                                              4),
+                                                                              4.0,
+                                                                              4.0,
+                                                                              4.0,
+                                                                              4.0),
                                                                           child:
                                                                               Text(
                                                                             getJsonField(
@@ -328,7 +351,7 @@ class _BootWidgetState extends State<BootWidget> {
                                                                               r'''$.name''',
                                                                             ).toString(),
                                                                             style:
-                                                                                FlutterFlowTheme.of(context).bodyText1,
+                                                                                FlutterFlowTheme.of(context).bodyMedium,
                                                                           ),
                                                                         ),
                                                                       ),
@@ -343,16 +366,16 @@ class _BootWidgetState extends State<BootWidget> {
                                                                           border:
                                                                               Border.all(
                                                                             width:
-                                                                                1,
+                                                                                1.0,
                                                                           ),
                                                                         ),
                                                                         child:
                                                                             Padding(
                                                                           padding: EdgeInsetsDirectional.fromSTEB(
-                                                                              4,
-                                                                              4,
-                                                                              4,
-                                                                              4),
+                                                                              4.0,
+                                                                              4.0,
+                                                                              4.0,
+                                                                              4.0),
                                                                           child:
                                                                               Text(
                                                                             getJsonField(
@@ -360,7 +383,7 @@ class _BootWidgetState extends State<BootWidget> {
                                                                               r'''$.total''',
                                                                             ).toString(),
                                                                             style:
-                                                                                FlutterFlowTheme.of(context).bodyText1,
+                                                                                FlutterFlowTheme.of(context).bodyMedium,
                                                                           ),
                                                                         ),
                                                                       ),
@@ -392,12 +415,12 @@ class _BootWidgetState extends State<BootWidget> {
                                         if (!snapshot.hasData) {
                                           return Center(
                                             child: SizedBox(
-                                              width: 50,
-                                              height: 50,
+                                              width: 50.0,
+                                              height: 50.0,
                                               child: CircularProgressIndicator(
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .primaryColor,
+                                                        .primary,
                                               ),
                                             ),
                                           );
@@ -405,8 +428,8 @@ class _BootWidgetState extends State<BootWidget> {
                                         final circleImageUsersRecord =
                                             snapshot.data!;
                                         return Container(
-                                          width: 70,
-                                          height: 70,
+                                          width: 70.0,
+                                          height: 70.0,
                                           clipBehavior: Clip.antiAlias,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
@@ -431,8 +454,8 @@ class _BootWidgetState extends State<BootWidget> {
                 ),
               ),
               Container(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
+                width: MediaQuery.of(context).size.width * 1.0,
+                height: 50.0,
                 decoration: BoxDecoration(
                   color: Color(0xFFEEEEEE),
                 ),
@@ -443,10 +466,10 @@ class _BootWidgetState extends State<BootWidget> {
                     if (!snapshot.hasData) {
                       return Center(
                         child: SizedBox(
-                          width: 50,
-                          height: 50,
+                          width: 50.0,
+                          height: 50.0,
                           child: CircularProgressIndicator(
-                            color: FlutterFlowTheme.of(context).primaryColor,
+                            color: FlutterFlowTheme.of(context).primary,
                           ),
                         ),
                       );
@@ -462,9 +485,13 @@ class _BootWidgetState extends State<BootWidget> {
                         final listViewActionsRecord =
                             listViewActionsRecordList[listViewIndex];
                         return Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(4, 4, 4, 4),
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              4.0, 4.0, 4.0, 4.0),
                           child: FFButtonWidget(
                             onPressed: () async {
+                              logFirebaseEvent('BOOT_PAGE_BUTTON_BTN_ON_TAP');
+                              logFirebaseEvent('Button_backend_call');
+
                               final conversationsCreateData =
                                   createConversationsRecordData(
                                 type: listViewActionsRecord.result,
@@ -477,20 +504,25 @@ class _BootWidgetState extends State<BootWidget> {
                             },
                             text: listViewActionsRecord.name!,
                             options: FFButtonOptions(
-                              width: 130,
-                              height: 40,
-                              color: FlutterFlowTheme.of(context).primaryColor,
+                              width: 130.0,
+                              height: 40.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: FlutterFlowTheme.of(context).primary,
                               textStyle: FlutterFlowTheme.of(context)
-                                  .subtitle2
+                                  .titleSmall
                                   .override(
                                     fontFamily: 'Poppins',
                                     color: Colors.white,
                                   ),
+                              elevation: 2.0,
                               borderSide: BorderSide(
                                 color: Colors.transparent,
-                                width: 1,
+                                width: 1.0,
                               ),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
                           ),
                         );
@@ -500,11 +532,11 @@ class _BootWidgetState extends State<BootWidget> {
                 ),
               ),
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 4.0, 0.0),
                 child: TextFormField(
-                  controller: textController,
+                  controller: _model.textController,
                   onChanged: (_) => EasyDebounce.debounce(
-                    'textController',
+                    '_model.textController',
                     Duration(milliseconds: 2000),
                     () => setState(() {}),
                   ),
@@ -515,7 +547,7 @@ class _BootWidgetState extends State<BootWidget> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Color(0xFF100D0D),
-                        width: 1,
+                        width: 1.0,
                       ),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(4.0),
@@ -524,8 +556,28 @@ class _BootWidgetState extends State<BootWidget> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: Color(0xFF100D0D),
-                        width: 1,
+                        color: Color(0x00000000),
+                        width: 1.0,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1.0,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1.0,
                       ),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(4.0),
@@ -533,7 +585,9 @@ class _BootWidgetState extends State<BootWidget> {
                       ),
                     ),
                   ),
-                  style: FlutterFlowTheme.of(context).bodyText1,
+                  style: FlutterFlowTheme.of(context).bodyMedium,
+                  validator:
+                      _model.textControllerValidator.asValidator(context),
                 ),
               ),
             ],

@@ -1,16 +1,21 @@
-import '../backend/api_requests/api_calls.dart';
-import '../flutter_flow/flutter_flow_drop_down.dart';
-import '../flutter_flow/flutter_flow_icon_button.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../custom_code/actions/index.dart' as actions;
-import '../flutter_flow/custom_functions.dart' as functions;
+import '/auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
+import '/flutter_flow/flutter_flow_drop_down.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/form_field_controller.dart';
+import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'create_list_prods_model.dart';
+export 'create_list_prods_model.dart';
 
 class CreateListProdsWidget extends StatefulWidget {
   const CreateListProdsWidget({Key? key}) : super(key: key);
@@ -20,110 +25,133 @@ class CreateListProdsWidget extends StatefulWidget {
 }
 
 class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
-  ApiCallResponse? rAddList;
-  String? listProdsSelectString;
-  ApiCallResponse? resProds;
-  String? dropDownLabosValue;
-  TextEditingController? nameListController;
-  Completer<ApiCallResponse>? _apiRequestCompleter;
-  TextEditingController? keySearchListController;
-  final formKey = GlobalKey<FormState>();
+  late CreateListProdsModel _model;
+
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+    _model.onUpdate();
+  }
 
   @override
   void initState() {
     super.initState();
-    keySearchListController = TextEditingController();
-    nameListController = TextEditingController();
+    _model = createModel(context, () => CreateListProdsModel());
+
+    _model.nameListController ??= TextEditingController();
+    _model.keySearchListController ??= TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.maybeDispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
         Form(
-          key: formKey,
+          key: _model.formKey,
           autovalidateMode: AutovalidateMode.disabled,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Expanded(
                       flex: 4,
-                      child: FutureBuilder<ApiCallResponse>(
-                        future: GetAllLabosActiveCall.call(),
-                        builder: (context, snapshot) {
-                          // Customize what your widget looks like when it's loading.
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: CircularProgressIndicator(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryColor,
+                      child: AuthUserStreamWidget(
+                        builder: (context) => FutureBuilder<ApiCallResponse>(
+                          future: GetAllLabosActiveCall.call(
+                            token:
+                                valueOrDefault(currentUserDocument?.token, ''),
+                          ),
+                          builder: (context, snapshot) {
+                            // Customize what your widget looks like when it's loading.
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: SizedBox(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  child: CircularProgressIndicator(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
-                              ),
+                              );
+                            }
+                            final dropDownLabosGetAllLabosActiveResponse =
+                                snapshot.data!;
+                            return FlutterFlowDropDown<String>(
+                              controller: _model.dropDownLabosController ??=
+                                  FormFieldController<String>(null),
+                              options: (GetAllLabosActiveCall.listNames(
+                                dropDownLabosGetAllLabosActiveResponse.jsonBody,
+                              ) as List)
+                                  .map<String>((s) => s.toString())
+                                  .toList()!
+                                  .toList(),
+                              onChanged: (val) => setState(
+                                  () => _model.dropDownLabosValue = val),
+                              width: 180.0,
+                              height: 50.0,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                              hintText: 'Please select list...',
+                              fillColor: FlutterFlowTheme.of(context).lineColor,
+                              elevation: 2.0,
+                              borderColor: Colors.transparent,
+                              borderWidth: 0.0,
+                              borderRadius: 0.0,
+                              margin: EdgeInsetsDirectional.fromSTEB(
+                                  12.0, 4.0, 12.0, 4.0),
+                              hidesUnderline: true,
+                              isSearchable: false,
                             );
-                          }
-                          final dropDownLabosGetAllLabosActiveResponse =
-                              snapshot.data!;
-                          return FlutterFlowDropDown(
-                            options: (GetAllLabosActiveCall.listNames(
-                              dropDownLabosGetAllLabosActiveResponse.jsonBody,
-                            ) as List)
-                                .map<String>((s) => s.toString())
-                                .toList()
-                                .toList(),
-                            onChanged: (val) =>
-                                setState(() => dropDownLabosValue = val),
-                            width: 180,
-                            height: 50,
-                            textStyle:
-                                FlutterFlowTheme.of(context).bodyText1.override(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                            hintText: 'Please select list...',
-                            fillColor: FlutterFlowTheme.of(context).lineColor,
-                            elevation: 2,
-                            borderColor: Colors.transparent,
-                            borderWidth: 0,
-                            borderRadius: 0,
-                            margin:
-                                EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
-                            hidesUnderline: true,
-                          );
-                        },
+                          },
+                        ),
                       ),
                     ),
                     FlutterFlowIconButton(
                       borderColor: Colors.transparent,
-                      borderRadius: 30,
-                      borderWidth: 1,
-                      buttonSize: 60,
+                      borderRadius: 30.0,
+                      borderWidth: 1.0,
+                      buttonSize: 60.0,
                       icon: Icon(
                         Icons.add,
                         color: FlutterFlowTheme.of(context).grayIcon,
-                        size: 30,
+                        size: 30.0,
                       ),
                       onPressed: () async {
-                        resProds = await GetSearchProductsActivePharmaCall.call(
-                          labo: dropDownLabosValue,
+                        logFirebaseEvent(
+                            'CREATE_LIST_PRODS_COMP_add_ICN_ON_TAP');
+                        logFirebaseEvent('IconButton_backend_call');
+                        _model.resProds =
+                            await GetSearchProductsActivePharmaCall.call(
+                          labo: _model.dropDownLabosValue,
+                          token: valueOrDefault(currentUserDocument?.token, ''),
                         );
-                        setState(() => FFAppState().addTaskListProdsSelect =
-                            functions
-                                .jsonToListJson(
-                                    (resProds?.jsonBody ?? ''),
-                                    FFAppState()
-                                        .addTaskListProdsSelect
-                                        .toList())
-                                .toList());
+                        logFirebaseEvent('IconButton_update_app_state');
+                        FFAppState().update(() {
+                          FFAppState().addTaskListProdsSelect = functions
+                              .jsonToListJson((_model.resProds?.jsonBody ?? ''),
+                                  FFAppState().addTaskListProdsSelect.toList())
+                              .toList();
+                        });
 
                         setState(() {});
                       },
@@ -135,137 +163,174 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
           ),
         ),
         Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+          padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
           child: TextFormField(
-            controller: nameListController,
+            controller: _model.nameListController,
             onChanged: (_) => EasyDebounce.debounce(
-              'nameListController',
+              '_model.nameListController',
               Duration(milliseconds: 1000),
               () => setState(() {}),
             ),
             obscureText: false,
             decoration: InputDecoration(
               hintText: 'Enter name list...',
-              hintStyle: FlutterFlowTheme.of(context).bodyText2.override(
+              hintStyle: FlutterFlowTheme.of(context).bodySmall.override(
                     fontFamily: 'Outfit',
                     color: Color(0xFF57636C),
-                    fontSize: 14,
+                    fontSize: 14.0,
                     fontWeight: FontWeight.normal,
                   ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Color(0xFFF1F4F8),
-                  width: 2,
+                  width: 2.0,
                 ),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.0),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFFF1F4F8),
-                  width: 2,
+                  color: Color(0x00000000),
+                  width: 2.0,
                 ),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0x00000000),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0x00000000),
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(8.0),
               ),
               filled: true,
               fillColor: FlutterFlowTheme.of(context).lineColor,
-              contentPadding: EdgeInsetsDirectional.fromSTEB(20, 32, 20, 12),
-              suffixIcon: nameListController!.text.isNotEmpty
+              contentPadding:
+                  EdgeInsetsDirectional.fromSTEB(20.0, 32.0, 20.0, 12.0),
+              suffixIcon: _model.nameListController!.text.isNotEmpty
                   ? InkWell(
-                      onTap: () => setState(
-                        () => nameListController?.clear(),
-                      ),
+                      onTap: () async {
+                        _model.nameListController?.clear();
+                        setState(() {});
+                      },
                       child: Icon(
                         Icons.clear,
                         color: Color(0xFF757575),
-                        size: 22,
+                        size: 22.0,
                       ),
                     )
                   : null,
             ),
-            style: FlutterFlowTheme.of(context).bodyText1.override(
+            style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: 'Outfit',
                   color: Color(0xFF101213),
-                  fontSize: 14,
+                  fontSize: 14.0,
                   fontWeight: FontWeight.normal,
                 ),
             textAlign: TextAlign.start,
+            validator: _model.nameListControllerValidator.asValidator(context),
           ),
         ),
         Stack(
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+              padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
               child: TextFormField(
-                controller: keySearchListController,
+                controller: _model.keySearchListController,
                 onChanged: (_) => EasyDebounce.debounce(
-                  'keySearchListController',
+                  '_model.keySearchListController',
                   Duration(milliseconds: 1000),
                   () => setState(() {}),
                 ),
                 onFieldSubmitted: (_) async {
-                  setState(() => _apiRequestCompleter = null);
-                  await waitForApiRequestCompleter(minWait: 2, maxWait: 10);
+                  logFirebaseEvent('CREATE_LIST_PRODS_keySearchList_ON_TEXTF');
+                  logFirebaseEvent('keySearchList_refresh_database_request');
+                  setState(() => _model.apiRequestCompleter = null);
+                  await _model.waitForApiRequestCompleted(
+                      minWait: 2, maxWait: 10);
                 },
                 obscureText: false,
                 decoration: InputDecoration(
                   hintText: 'Enter name prod...',
-                  hintStyle: FlutterFlowTheme.of(context).bodyText2.override(
+                  hintStyle: FlutterFlowTheme.of(context).bodySmall.override(
                         fontFamily: 'Outfit',
                         color: Color(0xFF57636C),
-                        fontSize: 14,
+                        fontSize: 14.0,
                         fontWeight: FontWeight.normal,
                       ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Color(0xFFF1F4F8),
-                      width: 2,
+                      width: 2.0,
                     ),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Color(0xFFF1F4F8),
-                      width: 2,
+                      color: Color(0x00000000),
+                      width: 2.0,
                     ),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0x00000000),
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0x00000000),
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                   filled: true,
                   fillColor: FlutterFlowTheme.of(context).lineColor,
                   contentPadding:
-                      EdgeInsetsDirectional.fromSTEB(20, 32, 20, 12),
-                  suffixIcon: keySearchListController!.text.isNotEmpty
+                      EdgeInsetsDirectional.fromSTEB(20.0, 32.0, 20.0, 12.0),
+                  suffixIcon: _model.keySearchListController!.text.isNotEmpty
                       ? InkWell(
-                          onTap: () => setState(
-                            () => keySearchListController?.clear(),
-                          ),
+                          onTap: () async {
+                            _model.keySearchListController?.clear();
+                            setState(() {});
+                          },
                           child: Icon(
                             Icons.clear,
                             color: Color(0xFF757575),
-                            size: 22,
+                            size: 22.0,
                           ),
                         )
                       : null,
                 ),
-                style: FlutterFlowTheme.of(context).bodyText1.override(
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Outfit',
                       color: Color(0xFF101213),
-                      fontSize: 14,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.normal,
                     ),
                 textAlign: TextAlign.start,
                 keyboardType: TextInputType.number,
+                validator: _model.keySearchListControllerValidator
+                    .asValidator(context),
               ),
             ),
-            if (keySearchListController!.text != null &&
-                keySearchListController!.text != '')
+            if (_model.keySearchListController.text != null &&
+                _model.keySearchListController.text != '')
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 70, 16, 16),
+                padding: EdgeInsetsDirectional.fromSTEB(16.0, 70.0, 16.0, 16.0),
                 child: Container(
                   width: double.infinity,
-                  height: 200,
+                  height: 200.0,
                   decoration: BoxDecoration(
                     color: Color(0xFFEEEEEE),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(
                       color: FlutterFlowTheme.of(context).lineColor,
                     ),
@@ -276,138 +341,167 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                          child: FutureBuilder<ApiCallResponse>(
-                            future: (_apiRequestCompleter ??= Completer<
-                                    ApiCallResponse>()
-                                  ..complete(
-                                      GetSearchProductsActivePharmaCall.call(
-                                    search: keySearchListController!.text,
-                                  )))
-                                .future,
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: SizedBox(
-                                    width: 50,
-                                    height: 50,
-                                    child: CircularProgressIndicator(
-                                      color: FlutterFlowTheme.of(context)
-                                          .primaryColor,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 16.0, 0.0, 0.0),
+                          child: AuthUserStreamWidget(
+                            builder: (context) =>
+                                FutureBuilder<ApiCallResponse>(
+                              future: (_model.apiRequestCompleter ??= Completer<
+                                      ApiCallResponse>()
+                                    ..complete(
+                                        GetSearchProductsActivePharmaCall.call(
+                                      search:
+                                          _model.keySearchListController.text,
+                                      token: valueOrDefault(
+                                          currentUserDocument?.token, ''),
+                                    )))
+                                  .future,
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: CircularProgressIndicator(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }
-                              final listViewGetSearchProductsActivePharmaResponse =
-                                  snapshot.data!;
-                              return Builder(
-                                builder: (context) {
-                                  final prodsSerach = getJsonField(
-                                    listViewGetSearchProductsActivePharmaResponse
-                                        .jsonBody,
-                                    r'''$''',
-                                  ).toList().take(20).toList();
-                                  return RefreshIndicator(
-                                    onRefresh: () async {
-                                      setState(
-                                          () => _apiRequestCompleter = null);
-                                      await waitForApiRequestCompleter();
-                                    },
-                                    child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: prodsSerach.length,
-                                      itemBuilder: (context, prodsSerachIndex) {
-                                        final prodsSerachItem =
-                                            prodsSerach[prodsSerachIndex];
-                                        return Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  12, 0, 12, 8),
-                                          child: InkWell(
-                                            onTap: () async {
-                                              setState(() => FFAppState()
-                                                  .addTaskProdsGift
-                                                  .add(prodsSerachItem));
-                                            },
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    blurRadius: 5,
-                                                    color: Color(0x3416202A),
-                                                    offset: Offset(0, 2),
-                                                  )
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                shape: BoxShape.rectangle,
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(8, 8, 8, 8),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Expanded(
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(12, 0,
-                                                                    0, 0),
-                                                        child: AutoSizeText(
-                                                          getJsonField(
-                                                            prodsSerachItem,
-                                                            r'''$.name''',
-                                                          ).toString(),
-                                                          maxLines: 2,
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyText2,
+                                  );
+                                }
+                                final listViewGetSearchProductsActivePharmaResponse =
+                                    snapshot.data!;
+                                return Builder(
+                                  builder: (context) {
+                                    final prodsSerach = getJsonField(
+                                      listViewGetSearchProductsActivePharmaResponse
+                                          .jsonBody,
+                                      r'''$''',
+                                    ).toList().take(20).toList();
+                                    return RefreshIndicator(
+                                      onRefresh: () async {
+                                        logFirebaseEvent(
+                                            'CREATE_LIST_PRODS_ListView_l699hrga_ON_P');
+                                        logFirebaseEvent(
+                                            'ListView_refresh_database_request');
+                                        setState(() =>
+                                            _model.apiRequestCompleter = null);
+                                        await _model
+                                            .waitForApiRequestCompleted();
+                                      },
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.vertical,
+                                        itemCount: prodsSerach.length,
+                                        itemBuilder:
+                                            (context, prodsSerachIndex) {
+                                          final prodsSerachItem =
+                                              prodsSerach[prodsSerachIndex];
+                                          return Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    12.0, 0.0, 12.0, 8.0),
+                                            child: InkWell(
+                                              onTap: () async {
+                                                logFirebaseEvent(
+                                                    'CREATE_LIST_PRODS_contentView_0_ON_TAP');
+                                                logFirebaseEvent(
+                                                    'contentView_0_update_app_state');
+                                                FFAppState().update(() {
+                                                  FFAppState()
+                                                      .addToAddTaskProdsGift(
+                                                          prodsSerachItem);
+                                                });
+                                              },
+                                              child: Container(
+                                                width: double.infinity,
+                                                height: 50.0,
+                                                decoration: BoxDecoration(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      blurRadius: 5.0,
+                                                      color: Color(0x3416202A),
+                                                      offset: Offset(0.0, 2.0),
+                                                    )
+                                                  ],
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                  shape: BoxShape.rectangle,
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          8.0, 8.0, 8.0, 8.0),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsetsDirectional
+                                                                  .fromSTEB(
+                                                                      12.0,
+                                                                      0.0,
+                                                                      0.0,
+                                                                      0.0),
+                                                          child: AutoSizeText(
+                                                            getJsonField(
+                                                              prodsSerachItem,
+                                                              r'''$.name''',
+                                                            ).toString(),
+                                                            maxLines: 2,
+                                                            style: FlutterFlowTheme
+                                                                    .of(context)
+                                                                .bodySmall,
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    FlutterFlowIconButton(
-                                                      borderColor:
-                                                          Colors.transparent,
-                                                      borderRadius: 24,
-                                                      borderWidth: 1,
-                                                      buttonSize: 60,
-                                                      icon: Icon(
-                                                        Icons.add,
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                        size: 24,
+                                                      FlutterFlowIconButton(
+                                                        borderColor:
+                                                            Colors.transparent,
+                                                        borderRadius: 24.0,
+                                                        borderWidth: 1.0,
+                                                        buttonSize: 60.0,
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                          size: 24.0,
+                                                        ),
+                                                        onPressed: () async {
+                                                          logFirebaseEvent(
+                                                              'CREATE_LIST_PRODS_COMP_add_ICN_ON_TAP');
+                                                          logFirebaseEvent(
+                                                              'IconButton_update_app_state');
+                                                          FFAppState()
+                                                              .update(() {
+                                                            FFAppState()
+                                                                .addToAddTaskListProdsSelect(
+                                                                    prodsSerachItem);
+                                                          });
+                                                        },
                                                       ),
-                                                      onPressed: () async {
-                                                        setState(() => FFAppState()
-                                                            .addTaskListProdsSelect
-                                                            .add(
-                                                                prodsSerachItem));
-                                                      },
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
@@ -418,13 +512,13 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
           ],
         ),
         Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(16, 16, 16, 8),
+          padding: EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 8.0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
                 'List prods',
-                style: FlutterFlowTheme.of(context).subtitle1.override(
+                style: FlutterFlowTheme.of(context).titleMedium.override(
                       fontFamily: 'Poppins',
                       color: FlutterFlowTheme.of(context).grayIcon,
                       fontWeight: FontWeight.normal,
@@ -445,37 +539,43 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                 itemBuilder: (context, prodsListIndex) {
                   final prodsListItem = prodsList[prodsListIndex];
                   return Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(20, 0, 20, 8),
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 8.0),
                     child: InkWell(
                       onTap: () async {
-                        setState(() =>
-                            FFAppState().addTaskProdsGift.add(prodsListItem));
+                        logFirebaseEvent(
+                            'CREATE_LIST_PRODS_contentView_0_ON_TAP');
+                        logFirebaseEvent('contentView_0_update_app_state');
+                        FFAppState().update(() {
+                          FFAppState().addToAddTaskProdsGift(prodsListItem);
+                        });
                       },
                       child: Container(
                         width: double.infinity,
-                        height: 60,
+                        height: 60.0,
                         decoration: BoxDecoration(
                           color:
                               FlutterFlowTheme.of(context).secondaryBackground,
                           boxShadow: [
                             BoxShadow(
-                              blurRadius: 5,
+                              blurRadius: 5.0,
                               color: Color(0x3416202A),
-                              offset: Offset(0, 2),
+                              offset: Offset(0.0, 2.0),
                             )
                           ],
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12.0),
                           shape: BoxShape.rectangle,
                         ),
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              8.0, 8.0, 8.0, 8.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      12, 0, 0, 0),
+                                      12.0, 0.0, 0.0, 0.0),
                                   child: AutoSizeText(
                                     getJsonField(
                                       prodsListItem,
@@ -483,25 +583,31 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                                     ).toString(),
                                     maxLines: 2,
                                     style:
-                                        FlutterFlowTheme.of(context).bodyText2,
+                                        FlutterFlowTheme.of(context).bodySmall,
                                   ),
                                 ),
                               ),
                               FlutterFlowIconButton(
                                 borderColor: Colors.transparent,
-                                borderRadius: 30,
-                                borderWidth: 1,
-                                buttonSize: 60,
+                                borderRadius: 30.0,
+                                borderWidth: 1.0,
+                                buttonSize: 60.0,
                                 icon: Icon(
                                   Icons.close,
                                   color:
                                       FlutterFlowTheme.of(context).customColor3,
-                                  size: 20,
+                                  size: 20.0,
                                 ),
                                 onPressed: () async {
-                                  setState(() => FFAppState()
-                                      .addTaskListProdsSelect
-                                      .remove(prodsListItem));
+                                  logFirebaseEvent(
+                                      'CREATE_LIST_PRODS_COMP_close_ICN_ON_TAP');
+                                  logFirebaseEvent(
+                                      'IconButton_update_app_state');
+                                  FFAppState().update(() {
+                                    FFAppState()
+                                        .removeFromAddTaskListProdsSelect(
+                                            prodsListItem);
+                                  });
                                 },
                               ),
                             ],
@@ -522,21 +628,32 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
           children: [
             Expanded(
               child: Align(
-                alignment: AlignmentDirectional(0, 1),
+                alignment: AlignmentDirectional(0.0, 1.0),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(24, 24, 24, 24),
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 24.0, 24.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      listProdsSelectString = await actions.listJsonToString(
+                      logFirebaseEvent(
+                          'CREATE_LIST_PRODS_CREATE_LIST_BTN_ON_TAP');
+                      logFirebaseEvent('Button_custom_action');
+                      _model.listProdsSelectString =
+                          await actions.listJsonToString(
                         FFAppState().addTaskListProdsSelect.toList(),
                       );
-                      rAddList = await TaskAddListCall.call(
-                        name: nameListController!.text,
-                        products: listProdsSelectString,
+                      logFirebaseEvent('Button_backend_call');
+                      _model.rAddList = await TaskAddListCall.call(
+                        name: _model.nameListController.text,
+                        products: _model.listProdsSelectString,
+                        token: valueOrDefault(currentUserDocument?.token, ''),
                       );
-                      if ((rAddList?.succeeded ?? true)) {
+                      if ((_model.rAddList?.succeeded ?? true)) {
+                        logFirebaseEvent('Button_bottom_sheet');
                         Navigator.pop(context);
                       } else {
+                        logFirebaseEvent('Button_bottom_sheet');
+                        Navigator.pop(context);
+                        logFirebaseEvent('Button_alert_dialog');
                         await showDialog(
                           context: context,
                           builder: (alertDialogContext) {
@@ -559,20 +676,24 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                     },
                     text: 'Create List',
                     options: FFButtonOptions(
-                      width: 270,
-                      height: 50,
-                      color: FlutterFlowTheme.of(context).primaryColor,
+                      width: 270.0,
+                      height: 50.0,
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      color: FlutterFlowTheme.of(context).primary,
                       textStyle:
-                          FlutterFlowTheme.of(context).subtitle1.override(
+                          FlutterFlowTheme.of(context).titleMedium.override(
                                 fontFamily: 'Outfit',
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 18.0,
                                 fontWeight: FontWeight.w500,
                               ),
-                      elevation: 3,
+                      elevation: 3.0,
                       borderSide: BorderSide(
                         color: Colors.transparent,
-                        width: 1,
+                        width: 1.0,
                       ),
                     ),
                   ),
@@ -583,20 +704,5 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
         ),
       ],
     );
-  }
-
-  Future waitForApiRequestCompleter({
-    double minWait = 0,
-    double maxWait = double.infinity,
-  }) async {
-    final stopwatch = Stopwatch()..start();
-    while (true) {
-      await Future.delayed(Duration(milliseconds: 50));
-      final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = _apiRequestCompleter?.isCompleted ?? false;
-      if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
-        break;
-      }
-    }
   }
 }

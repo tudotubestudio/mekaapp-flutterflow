@@ -1,24 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'data_type_test_struct.dart';
+part of 'call_log_struct.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<DataTypeTestStruct> _$dataTypeTestStructSerializer =
-    new _$DataTypeTestStructSerializer();
+Serializer<CallLogStruct> _$callLogStructSerializer =
+    new _$CallLogStructSerializer();
 
-class _$DataTypeTestStructSerializer
-    implements StructuredSerializer<DataTypeTestStruct> {
+class _$CallLogStructSerializer implements StructuredSerializer<CallLogStruct> {
   @override
-  final Iterable<Type> types = const [DataTypeTestStruct, _$DataTypeTestStruct];
+  final Iterable<Type> types = const [CallLogStruct, _$CallLogStruct];
   @override
-  final String wireName = 'DataTypeTestStruct';
+  final String wireName = 'CallLogStruct';
 
   @override
-  Iterable<Object?> serialize(
-      Serializers serializers, DataTypeTestStruct object,
+  Iterable<Object?> serialize(Serializers serializers, CallLogStruct object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
       'firestoreUtilData',
@@ -33,20 +31,21 @@ class _$DataTypeTestStructSerializer
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
-    value = object.id;
+    value = object.number;
     if (value != null) {
       result
-        ..add('id')
-        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+        ..add('number')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
     }
     return result;
   }
 
   @override
-  DataTypeTestStruct deserialize(
+  CallLogStruct deserialize(
       Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new DataTypeTestStructBuilder();
+    final result = new CallLogStructBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -58,9 +57,9 @@ class _$DataTypeTestStructSerializer
           result.name = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String?;
           break;
-        case 'id':
-          result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int?;
+        case 'number':
+          result.number = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'firestoreUtilData':
           result.firestoreUtilData = serializers.deserialize(value,
@@ -74,84 +73,85 @@ class _$DataTypeTestStructSerializer
   }
 }
 
-class _$DataTypeTestStruct extends DataTypeTestStruct {
+class _$CallLogStruct extends CallLogStruct {
   @override
   final String? name;
   @override
-  final int? id;
+  final String? number;
   @override
   final FirestoreUtilData firestoreUtilData;
 
-  factory _$DataTypeTestStruct(
-          [void Function(DataTypeTestStructBuilder)? updates]) =>
-      (new DataTypeTestStructBuilder()..update(updates))._build();
+  factory _$CallLogStruct([void Function(CallLogStructBuilder)? updates]) =>
+      (new CallLogStructBuilder()..update(updates))._build();
 
-  _$DataTypeTestStruct._({this.name, this.id, required this.firestoreUtilData})
+  _$CallLogStruct._({this.name, this.number, required this.firestoreUtilData})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        firestoreUtilData, r'DataTypeTestStruct', 'firestoreUtilData');
+        firestoreUtilData, r'CallLogStruct', 'firestoreUtilData');
   }
 
   @override
-  DataTypeTestStruct rebuild(
-          void Function(DataTypeTestStructBuilder) updates) =>
+  CallLogStruct rebuild(void Function(CallLogStructBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  DataTypeTestStructBuilder toBuilder() =>
-      new DataTypeTestStructBuilder()..replace(this);
+  CallLogStructBuilder toBuilder() => new CallLogStructBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is DataTypeTestStruct &&
+    return other is CallLogStruct &&
         name == other.name &&
-        id == other.id &&
+        number == other.number &&
         firestoreUtilData == other.firestoreUtilData;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc(0, name.hashCode), id.hashCode), firestoreUtilData.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, number.hashCode);
+    _$hash = $jc(_$hash, firestoreUtilData.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper(r'DataTypeTestStruct')
+    return (newBuiltValueToStringHelper(r'CallLogStruct')
           ..add('name', name)
-          ..add('id', id)
+          ..add('number', number)
           ..add('firestoreUtilData', firestoreUtilData))
         .toString();
   }
 }
 
-class DataTypeTestStructBuilder
-    implements Builder<DataTypeTestStruct, DataTypeTestStructBuilder> {
-  _$DataTypeTestStruct? _$v;
+class CallLogStructBuilder
+    implements Builder<CallLogStruct, CallLogStructBuilder> {
+  _$CallLogStruct? _$v;
 
   String? _name;
   String? get name => _$this._name;
   set name(String? name) => _$this._name = name;
 
-  int? _id;
-  int? get id => _$this._id;
-  set id(int? id) => _$this._id = id;
+  String? _number;
+  String? get number => _$this._number;
+  set number(String? number) => _$this._number = number;
 
   FirestoreUtilData? _firestoreUtilData;
   FirestoreUtilData? get firestoreUtilData => _$this._firestoreUtilData;
   set firestoreUtilData(FirestoreUtilData? firestoreUtilData) =>
       _$this._firestoreUtilData = firestoreUtilData;
 
-  DataTypeTestStructBuilder() {
-    DataTypeTestStruct._initializeBuilder(this);
+  CallLogStructBuilder() {
+    CallLogStruct._initializeBuilder(this);
   }
 
-  DataTypeTestStructBuilder get _$this {
+  CallLogStructBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
       _name = $v.name;
-      _id = $v.id;
+      _number = $v.number;
       _firestoreUtilData = $v.firestoreUtilData;
       _$v = null;
     }
@@ -159,29 +159,29 @@ class DataTypeTestStructBuilder
   }
 
   @override
-  void replace(DataTypeTestStruct other) {
+  void replace(CallLogStruct other) {
     ArgumentError.checkNotNull(other, 'other');
-    _$v = other as _$DataTypeTestStruct;
+    _$v = other as _$CallLogStruct;
   }
 
   @override
-  void update(void Function(DataTypeTestStructBuilder)? updates) {
+  void update(void Function(CallLogStructBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  DataTypeTestStruct build() => _build();
+  CallLogStruct build() => _build();
 
-  _$DataTypeTestStruct _build() {
+  _$CallLogStruct _build() {
     final _$result = _$v ??
-        new _$DataTypeTestStruct._(
+        new _$CallLogStruct._(
             name: name,
-            id: id,
+            number: number,
             firestoreUtilData: BuiltValueNullFieldError.checkNotNull(
-                firestoreUtilData, r'DataTypeTestStruct', 'firestoreUtilData'));
+                firestoreUtilData, r'CallLogStruct', 'firestoreUtilData'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,no_leading_underscores_for_local_identifiers,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new,unnecessary_lambdas
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

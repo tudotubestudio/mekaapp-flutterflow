@@ -1,4 +1,4 @@
-# MekAapp
+# Mekaapp
 
 A new Flutter project.
 
