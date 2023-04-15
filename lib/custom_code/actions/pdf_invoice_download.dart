@@ -14,7 +14,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-import '../../auth/auth_util.dart';
+import '../../auth/firebase_auth/auth_util.dart';
 //import '../../backend/firebase_storage/storage.dart';
 
 Future pdfInvoiceDownload(
@@ -103,10 +103,10 @@ Future pdfInvoiceDownload(
   final fileName = '$formattedDateTime.pdf';
 
 // Set the directory where you want to store the file (e.g., a folder named 'pdfs' in your storage)
-  String directoryPath = '/users/' + currentUserUid + '/pdfs';
+  ////String directoryPath = '/users/' + currentUserUid + '/pdfs';
 
 // Combine the directory path and file name to create the full storage path
-  final storagePath = '$directoryPath/$fileName';
+  ////final storagePath = '$directoryPath/$fileName';
 
   // SAVE IT TO FIREBASE STORE
   //final downloadUrl = await uploadData(storagePath, pdfSaved);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'flutter_flow/request_manager.dart';
 import 'backend/backend.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -239,6 +240,21 @@ class FFAppState extends ChangeNotifier {
   set dataString(String _value) {
     _dataString = _value;
   }
+
+  final _clientsAppManager = FutureRequestManager<ApiCallResponse>();
+  Future<ApiCallResponse> clientsApp({
+    String? uniqueQueryKey,
+    bool? overrideCache,
+    required Future<ApiCallResponse> Function() requestFn,
+  }) =>
+      _clientsAppManager.performRequest(
+        uniqueQueryKey: uniqueQueryKey,
+        overrideCache: overrideCache,
+        requestFn: requestFn,
+      );
+  void clearClientsAppCache() => _clientsAppManager.clear();
+  void clearClientsAppCacheKey(String? uniqueKey) =>
+      _clientsAppManager.clearRequest(uniqueKey);
 }
 
 LatLng? _latLngFromString(String? val) {

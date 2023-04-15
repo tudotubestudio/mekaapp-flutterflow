@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import 'index.dart'; // Imports other custom actions
+
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -26,6 +28,7 @@ Future pdfOrdreMissionDownloadMultiPages(
     String dateCreated,
     String createdBy,
     String bareCode,
+    bool suiviClientsBloque,
     List<dynamic> dataClients) async {
   // Add your function code here!
 
@@ -370,141 +373,143 @@ Future pdfOrdreMissionDownloadMultiPages(
         //pw.Container(width: 200, height: 600),
 
         //two page
-        pw.Container(
-          width: 554,
-          height: 801,
-          child: pw.Column(
-            mainAxisSize: pw.MainAxisSize.max,
-            children: [
-              pw.Row(
-                mainAxisSize: pw.MainAxisSize.max,
-                children: [],
-              ),
-              pw.Container(
+        suiviClientsBloque
+            ? pw.Container(
                 width: 554,
-                height: 60,
-                decoration: pw.BoxDecoration(
-                  //color: FlutterFlowTheme.of(context).lineColor,
-                  border: pw.Border.all(
-                    width: 1,
-                  ),
-                ),
-                child: pw.Row(
+                height: 801,
+                child: pw.Column(
                   mainAxisSize: pw.MainAxisSize.max,
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
                   children: [
-                    pw.Text(
-                      'Client',
-                      // style: FlutterFlowTheme.of(context).bodyMedium,
+                    pw.Row(
+                      mainAxisSize: pw.MainAxisSize.max,
+                      children: [],
                     ),
-                    pw.Text(
-                      'H.E',
-                      // style: FlutterFlowTheme.of(context).bodyMedium,
+                    pw.Container(
+                      width: 554,
+                      height: 60,
+                      decoration: pw.BoxDecoration(
+                        //color: FlutterFlowTheme.of(context).lineColor,
+                        border: pw.Border.all(
+                          width: 1,
+                        ),
+                      ),
+                      child: pw.Row(
+                        mainAxisSize: pw.MainAxisSize.max,
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                        children: [
+                          pw.Text(
+                            'Client',
+                            // style: FlutterFlowTheme.of(context).bodyMedium,
+                          ),
+                          pw.Text(
+                            'H.E',
+                            // style: FlutterFlowTheme.of(context).bodyMedium,
+                          ),
+                          pw.Text(
+                            'BareCode',
+                            // style: FlutterFlowTheme.of(context).bodyMedium,
+                          ),
+                          pw.Text(
+                            'Accusé client',
+                            // style: FlutterFlowTheme.of(context).bodyMedium,
+                          ),
+                        ],
+                      ),
                     ),
-                    pw.Text(
-                      'BareCode',
-                      // style: FlutterFlowTheme.of(context).bodyMedium,
-                    ),
-                    pw.Text(
-                      'Accusé client',
-                      // style: FlutterFlowTheme.of(context).bodyMedium,
+                    pw.Expanded(
+                      child: pw.Padding(
+                        padding: pw.EdgeInsets.fromLTRB(0, 8, 0, 0),
+                        child: pw.Builder(
+                          builder: (context) {
+                            final client = dataClients ?? [];
+                            return pw.ListView.builder(
+                              padding: pw.EdgeInsets.zero,
+                              // shrinkWrap: true,
+                              // scrollDirection: Axis.vertical,
+                              itemCount: client.length,
+                              itemBuilder: (context, clientIndex) {
+                                final clientItem = client[clientIndex];
+                                return pw.Container(
+                                  width: 554,
+                                  height: 110,
+                                  decoration: pw.BoxDecoration(),
+                                  child: pw.Column(
+                                    mainAxisSize: pw.MainAxisSize.max,
+                                    children: [
+                                      pw.Row(
+                                        mainAxisSize: pw.MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            pw.MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          pw.Text(
+                                            clientItem['name'],
+                                            // style:
+                                            //     FlutterFlowTheme.of(context)
+                                            //         .bodyMedium,
+                                          ),
+                                          pw.SizedBox(
+                                            height: 30,
+                                            child: pw.VerticalDivider(
+                                              thickness: 1,
+                                              // color:
+                                              //     FlutterFlowTheme.of(context)
+                                              //         .accent4,
+                                            ),
+                                          ),
+                                          pw.Text(
+                                            clientItem['tot_echue_non_couvert'],
+                                            // style: FlutterFlowTheme.of(context)tot_echue_non_couvert
+                                            //     .bodyMedium,
+                                          ),
+                                          pw.SizedBox(
+                                            height: 30,
+                                            child: pw.VerticalDivider(
+                                              thickness: 1,
+                                              // color: FlutterFlowTheme.of(context)
+                                              //     .accent4,
+                                            ),
+                                          ),
+                                          pw.BarcodeWidget(
+                                            data: clientItem['c_bpartner_id'],
+                                            barcode: pw.Barcode.code128(),
+                                            width: 80,
+                                            height: 50,
+                                            //color: Colors.black,
+                                            //backgroundColor: Colors.transparent,
+                                            drawText: true,
+                                          ),
+                                          pw.Container(
+                                            width: 100,
+                                            height: 100,
+                                            decoration: pw.BoxDecoration(
+                                              // color: FlutterFlowTheme.of(context)
+                                              //     .secondaryBackground,
+                                              borderRadius:
+                                                  pw.BorderRadius.circular(2),
+                                              border: pw.Border.all(
+                                                width: 1,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      pw.Divider(
+                                        thickness: 1,
+                                        // color: FlutterFlowTheme.of(context).accent4,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              pw.Expanded(
-                child: pw.Padding(
-                  padding: pw.EdgeInsets.fromLTRB(0, 8, 0, 0),
-                  child: pw.Builder(
-                    builder: (context) {
-                      final client = dataClients ?? [];
-                      return pw.ListView.builder(
-                        padding: pw.EdgeInsets.zero,
-                        // shrinkWrap: true,
-                        // scrollDirection: Axis.vertical,
-                        itemCount: client.length,
-                        itemBuilder: (context, clientIndex) {
-                          final clientItem = client[clientIndex];
-                          return pw.Container(
-                            width: 554,
-                            height: 110,
-                            decoration: pw.BoxDecoration(),
-                            child: pw.Column(
-                              mainAxisSize: pw.MainAxisSize.max,
-                              children: [
-                                pw.Row(
-                                  mainAxisSize: pw.MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      pw.MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    pw.Text(
-                                      clientItem['name'],
-                                      // style:
-                                      //     FlutterFlowTheme.of(context)
-                                      //         .bodyMedium,
-                                    ),
-                                    pw.SizedBox(
-                                      height: 30,
-                                      child: pw.VerticalDivider(
-                                        thickness: 1,
-                                        // color:
-                                        //     FlutterFlowTheme.of(context)
-                                        //         .accent4,
-                                      ),
-                                    ),
-                                    pw.Text(
-                                      clientItem['tot_echue_non_couvert'],
-                                      // style: FlutterFlowTheme.of(context)tot_echue_non_couvert
-                                      //     .bodyMedium,
-                                    ),
-                                    pw.SizedBox(
-                                      height: 30,
-                                      child: pw.VerticalDivider(
-                                        thickness: 1,
-                                        // color: FlutterFlowTheme.of(context)
-                                        //     .accent4,
-                                      ),
-                                    ),
-                                    pw.BarcodeWidget(
-                                      data: clientItem['c_bpartner_id'],
-                                      barcode: pw.Barcode.code128(),
-                                      width: 80,
-                                      height: 50,
-                                      //color: Colors.black,
-                                      //backgroundColor: Colors.transparent,
-                                      drawText: true,
-                                    ),
-                                    pw.Container(
-                                      width: 100,
-                                      height: 100,
-                                      decoration: pw.BoxDecoration(
-                                        // color: FlutterFlowTheme.of(context)
-                                        //     .secondaryBackground,
-                                        borderRadius:
-                                            pw.BorderRadius.circular(2),
-                                        border: pw.Border.all(
-                                          width: 1,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                pw.Divider(
-                                  thickness: 1,
-                                  // color: FlutterFlowTheme.of(context).accent4,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+              )
+            : pw.Text(''),
       ], //here goes the widgets list
     ),
   );

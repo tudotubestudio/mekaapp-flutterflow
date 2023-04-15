@@ -9,7 +9,7 @@ import 'lat_lng.dart';
 import 'place.dart';
 import '../backend/backend.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../auth/auth_util.dart';
+import '../../auth/firebase_auth/auth_util.dart';
 
 double sumSubTotal(dynamic jsonitem) {
   return jsonitem['data']
@@ -154,6 +154,17 @@ double jsonToDouble(dynamic item) {
   return double.parse(item);
 }
 
+double percTwoNumMax1(
+  double? value,
+  double? res,
+) {
+  if ((value! / res!) <= 1) {
+    return value! / res!;
+  } else {
+    return 1;
+  }
+}
+
 double jsonToDoublePercMax1(dynamic item) {
   if (double.parse(item) > 1) {
     return 1;
@@ -181,13 +192,13 @@ DateTime? stringToDate(String date) {
 
 List<double>? getChiffreJson(dynamic data) {
   List<double> listProds = [];
-  listProds.add(double.parse(data['ch_6']));
-  listProds.add(double.parse(data['ch_5']));
-  listProds.add(double.parse(data['ch_4']));
-  listProds.add(double.parse(data['ch_3']));
-  listProds.add(double.parse(data['ch_2']));
-  listProds.add(double.parse(data['ch_1']));
   listProds.add(double.parse(data['ch_0']));
+  listProds.add(double.parse(data['ch_1']));
+  listProds.add(double.parse(data['ch_2']));
+  listProds.add(double.parse(data['ch_3']));
+  listProds.add(double.parse(data['ch_4']));
+  listProds.add(double.parse(data['ch_5']));
+  listProds.add(double.parse(data['ch_6']));
   return listProds;
 }
 
@@ -195,4 +206,25 @@ String convertListJsonToString(List<dynamic> data) {
   // json encode
   String jsonString = jsonEncode(data);
   return jsonString;
+}
+
+int getIdFromListJson(
+  List<dynamic> data,
+  String name,
+  String namefieldid,
+) {
+  // get id from list json
+  for (var i = 0; i < data.length; i++) {
+    if (data[i]['name'] == name) {
+      return int.parse(data[i][namefieldid]);
+    }
+  }
+  return 0;
+}
+
+DateTime getDateTomorrow() {
+  // get Date Tomorrow
+  var now = new DateTime.now();
+  var tomorrow = new DateTime(now.year, now.month, now.day + 1);
+  return tomorrow;
 }

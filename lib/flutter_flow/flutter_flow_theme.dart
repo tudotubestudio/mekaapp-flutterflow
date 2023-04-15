@@ -73,6 +73,15 @@ abstract class FlutterFlowTheme {
   late Color platinum;
   late Color ashGray;
   late Color darkSeaGreen;
+  late Color primary600;
+  late Color secondary600;
+  late Color tertiary600;
+  late Color darkBGstatic;
+  late Color secondary30;
+  late Color overlay0;
+  late Color overlay;
+  late Color primary30;
+  late Color customColor1;
 
   @Deprecated('Use displaySmallFamily instead')
   String get title1Family => displaySmallFamily;
@@ -181,6 +190,15 @@ class LightModeTheme extends FlutterFlowTheme {
   late Color platinum = Color(0xFFEBEBEB);
   late Color ashGray = Color(0xFFCAD2C5);
   late Color darkSeaGreen = Color(0xFF84A98C);
+  late Color primary600 = Color(0xFF336A4A);
+  late Color secondary600 = Color(0xFF6D604A);
+  late Color tertiary600 = Color(0xFF0C2533);
+  late Color darkBGstatic = Color(0xFF0D1E23);
+  late Color secondary30 = Color(0x4D928163);
+  late Color overlay0 = Color(0x00FFFFFF);
+  late Color overlay = Color(0xB2FFFFFF);
+  late Color primary30 = Color(0x4D4B986C);
+  late Color customColor1 = Color(0xFF2FB73C);
 }
 
 abstract class Typography {
@@ -369,6 +387,15 @@ class DarkModeTheme extends FlutterFlowTheme {
   late Color platinum = Color(0xFFEBEBEB);
   late Color ashGray = Color(0xFFCAD2C5);
   late Color darkSeaGreen = Color(0xFF84A98C);
+  late Color primary600 = Color(0xFF336A4A);
+  late Color secondary600 = Color(0xFF6D604A);
+  late Color tertiary600 = Color(0xFF0C2533);
+  late Color darkBGstatic = Color(0xFF0D1E23);
+  late Color secondary30 = Color(0x4D928163);
+  late Color overlay0 = Color(0x000B191E);
+  late Color overlay = Color(0xB20B191E);
+  late Color primary30 = Color(0x4D4B986C);
+  late Color customColor1 = Color(0xFF452FB7);
 }
 
 extension TextStyleHelper on TextStyle {

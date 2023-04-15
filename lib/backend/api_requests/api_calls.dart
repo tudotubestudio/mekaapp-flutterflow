@@ -18,6 +18,8 @@ class ClientsGroup {
   static DebloqeClientCall debloqeClientCall = DebloqeClientCall();
   static TasksDebloqeClientsCall tasksDebloqeClientsCall =
       TasksDebloqeClientsCall();
+  static TasksDebloqeClientsEnCoursCall tasksDebloqeClientsEnCoursCall =
+      TasksDebloqeClientsEnCoursCall();
   static UpdateTaskClientCall updateTaskClientCall = UpdateTaskClientCall();
   static RefuserBlockCall refuserBlockCall = RefuserBlockCall();
   static TasksNoValidTodayCall tasksNoValidTodayCall = TasksNoValidTodayCall();
@@ -25,6 +27,10 @@ class ClientsGroup {
   static RapportRouteByMonthsCall rapportRouteByMonthsCall =
       RapportRouteByMonthsCall();
   static LogCallCall logCallCall = LogCallCall();
+  static PaymentsClientAfterTaskCall paymentsClientAfterTaskCall =
+      PaymentsClientAfterTaskCall();
+  static PaymentCheckCall paymentCheckCall = PaymentCheckCall();
+  static ListTasksNoPayCall listTasksNoPayCall = ListTasksNoPayCall();
 }
 
 class ListClientsByOpCall {
@@ -52,16 +58,6 @@ class ListClientsByOpCall {
     );
   }
 
-  dynamic clientsStop(dynamic response) => getJsonField(
-        response,
-        r'''$.data[?(@.socreditstatus=='S'),?(@.socreditstatus=='H')]''',
-        true,
-      );
-  dynamic clientsWatch(dynamic response) => getJsonField(
-        response,
-        r'''$.data[?(@.socreditstatus=='W')]''',
-        true,
-      );
   dynamic data(dynamic response) => getJsonField(
         response,
         r'''$.data''',
@@ -69,7 +65,37 @@ class ListClientsByOpCall {
       );
   dynamic rateAPlus(dynamic response) => getJsonField(
         response,
-        r'''$.data[?(@.rate=='B')]''',
+        r'''$.data[?(@.mm_rate=='A+')]''',
+        true,
+      );
+  dynamic rateA(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.mm_rate=='A')]''',
+        true,
+      );
+  dynamic rateB(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.mm_rate=='B')]''',
+        true,
+      );
+  dynamic rateC(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.mm_rate=='C')]''',
+        true,
+      );
+  dynamic rateD(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.mm_rate=='D')]''',
+        true,
+      );
+  dynamic rateE(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.mm_rate=='E')]''',
+        true,
+      );
+  dynamic rateF(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.mm_rate=='F')]''',
         true,
       );
 }
@@ -113,8 +139,8 @@ class TasksDebloqeClientsCall {
   Future<ApiCallResponse> call({
     String? token = '',
     int? page,
-    int? sizePage,
-    String? cBpartnerId = '',
+    int? sizePage = 30,
+    int? cBpartnerId,
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'Tasks Debloqe clients',
@@ -160,6 +186,55 @@ class TasksDebloqeClientsCall {
       );
 }
 
+class TasksDebloqeClientsEnCoursCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? page,
+    int? sizePage,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Tasks Debloqe clients En cours',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks/list_en_cours',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'order': "desc",
+        'col': "created_at",
+        'sizePage': sizePage,
+        'page': page,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+  dynamic tasksEncoure(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.status=='0')]''',
+        true,
+      );
+  dynamic tasksTerminer(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.status=='1')]''',
+        true,
+      );
+  dynamic tasksRefus(dynamic response) => getJsonField(
+        response,
+        r'''$.data[?(@.status=='2')]''',
+        true,
+      );
+}
+
 class UpdateTaskClientCall {
   Future<ApiCallResponse> call({
     int? type,
@@ -168,6 +243,7 @@ class UpdateTaskClientCall {
     double? soCreditlimit,
     int? charkTasksId,
     String? token = '',
+    String? replySuper = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'Update Task Client',
@@ -183,6 +259,7 @@ class UpdateTaskClientCall {
         'so_creditlimit': soCreditlimit,
         'chark_tasks_id': charkTasksId,
         'token': token,
+        'reply_super': replySuper,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
@@ -197,6 +274,7 @@ class RefuserBlockCall {
   Future<ApiCallResponse> call({
     int? taskId,
     String? token = '',
+    String? replySuper = '',
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'Refuser Block',
@@ -208,6 +286,7 @@ class RefuserBlockCall {
       params: {
         'taskId': taskId,
         'token': token,
+        'reply_super': replySuper,
       },
       returnBody: true,
       encodeBodyUtf8: false,
@@ -336,6 +415,83 @@ class LogCallCall {
   }
 }
 
+class PaymentsClientAfterTaskCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? cBpartnerId,
+    String? createdAt = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'paymentsClientAfterTask',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks/payments_client_after_task',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'c_bpartner_id': cBpartnerId,
+        'created_at': createdAt,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class PaymentCheckCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? charkTasksId,
+    int? payment,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'paymentCheck',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks/payment_check',
+      callType: ApiCallType.POST,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'chark_tasks_id': charkTasksId,
+        'payment': payment,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class ListTasksNoPayCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? cBpartnerId,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'ListTasksNoPay',
+      apiUrl: '${ClientsGroup.baseUrl}/tasks/list_tasks_no_pay',
+      callType: ApiCallType.GET,
+      headers: {
+        ...ClientsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'c_bpartner_id': cBpartnerId,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
 /// End Clients Group Code
 
 /// Start Order Mission Group Code
@@ -384,7 +540,7 @@ class AddOrdreMissionCall {
     int? cBpartnerId,
     int? cSalesregionId,
     String? destination = '',
-    String? truck = '',
+    int? ddVehicleId,
     String? dateStart = '',
     String? dateEnd = '',
     String? barecode = '',
@@ -401,7 +557,7 @@ class AddOrdreMissionCall {
         'c_bpartner_id': cBpartnerId,
         'c_salesregion_id': cSalesregionId,
         'destination': destination,
-        'truck': truck,
+        'dd_vehicle_id': ddVehicleId,
         'date_start': dateStart,
         'date_end': dateEnd,
         'barecode': barecode,
@@ -503,7 +659,7 @@ class AddPaymentCall {
 /// Start Auth Group Code
 
 class AuthGroup {
-  static String baseUrl = 'https://mekaapp.com/bcd/backend/api';
+  static String baseUrl = 'https://mekaapp.com/backend/api';
   static Map<String, String> headers = {};
   static LoginCall loginCall = LoginCall();
   static MeCall meCall = MeCall();
@@ -580,6 +736,161 @@ class UsersCall {
 }
 
 /// End Auth Group Code
+
+/// Start Payments Group Code
+
+class PaymentsGroup {
+  static String baseUrl = 'https://mekaapp.com/backend/api';
+  static Map<String, String> headers = {};
+  static PaymentBookLinesByIdCall paymentBookLinesByIdCall =
+      PaymentBookLinesByIdCall();
+  static ListLivreursCall listLivreursCall = ListLivreursCall();
+  static ListVehiclesCall listVehiclesCall = ListVehiclesCall();
+  static ListClientsCall listClientsCall = ListClientsCall();
+  static UpdateBookLineLivreurCall updateBookLineLivreurCall =
+      UpdateBookLineLivreurCall();
+}
+
+class PaymentBookLinesByIdCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    String? xxPaymentbookId = '',
+    int? documentno,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'paymentBookLinesById',
+      apiUrl: '${PaymentsGroup.baseUrl}/payments/payment_book_lines',
+      callType: ApiCallType.GET,
+      headers: {
+        ...PaymentsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'xx_paymentbook_id': xxPaymentbookId,
+        'documentno': documentno,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class ListLivreursCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'ListLivreurs',
+      apiUrl: '${PaymentsGroup.baseUrl}/payments/list_livreurs',
+      callType: ApiCallType.GET,
+      headers: {
+        ...PaymentsGroup.headers,
+      },
+      params: {
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic names(dynamic response) => getJsonField(
+        response,
+        r'''$..name''',
+        true,
+      );
+}
+
+class ListVehiclesCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'ListVehicles',
+      apiUrl: '${PaymentsGroup.baseUrl}/payments/list_vehicles',
+      callType: ApiCallType.GET,
+      headers: {
+        ...PaymentsGroup.headers,
+      },
+      params: {
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic names(dynamic response) => getJsonField(
+        response,
+        r'''$..name''',
+        true,
+      );
+}
+
+class ListClientsCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'ListClients',
+      apiUrl: '${PaymentsGroup.baseUrl}/payments/list_clients',
+      callType: ApiCallType.GET,
+      headers: {
+        ...PaymentsGroup.headers,
+      },
+      params: {
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic names(dynamic response) => getJsonField(
+        response,
+        r'''$..name''',
+        true,
+      );
+}
+
+class UpdateBookLineLivreurCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? xxPaymentbooklineId,
+    int? cBpartnerId,
+    double? payamt,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'updateBookLineLivreur',
+      apiUrl: '${PaymentsGroup.baseUrl}/payments/update_book_line_livreur',
+      callType: ApiCallType.POST,
+      headers: {
+        ...PaymentsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'xx_paymentbookline_id': xxPaymentbooklineId,
+        'c_bpartner_id': cBpartnerId,
+        'payamt': payamt,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+/// End Payments Group Code
 
 class ProductsQuotasCall {
   static Future<ApiCallResponse> call({

@@ -152,7 +152,21 @@ final parametersBuilderMap =
   'PDFEtatRegionLivreurOrdreMissionCopyCopy': (data) async => ParameterData(
         allParams: {},
       ),
-  'TasksAdmin': ParameterData.none(),
+  'MainCopy': ParameterData.none(),
+  'ClientsAdminEnCours': ParameterData.none(),
+  'ScanBonPour': ParameterData.none(),
+  'ListPaymentBookLinesRest': (data) async => ParameterData(
+        allParams: {
+          'xxPaymentbookId': getParameter<String>(data, 'xxPaymentbookId'),
+          'documentNo': getParameter<int>(data, 'documentNo'),
+        },
+      ),
+  'CreatePaymentBonPour': (data) async => ParameterData(
+        allParams: {
+          'documentno': getParameter<int>(data, 'documentno'),
+          'xxPaymentBookLineId': getParameter<int>(data, 'xxPaymentBookLineId'),
+        },
+      ),
 };
 
 Map<String, dynamic> getInitialParameterData(Map<String, dynamic> data) {

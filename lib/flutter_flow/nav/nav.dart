@@ -6,7 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import '../flutter_flow_theme.dart';
 import '../../backend/backend.dart';
 
-import '../../auth/firebase_user_provider.dart';
+import '../../auth/base_auth_user_provider.dart';
 import '../../backend/push_notifications/push_notifications_handler.dart'
     show PushNotificationsHandler;
 
@@ -22,8 +22,8 @@ export 'serialization_util.dart';
 const kTransitionInfoKey = '__transition_info__';
 
 class AppStateNotifier extends ChangeNotifier {
-  MekaappFirebaseUser? initialUser;
-  MekaappFirebaseUser? user;
+  BaseAuthUser? initialUser;
+  BaseAuthUser? user;
   bool showSplashImage = true;
   String? _redirectLocation;
 
@@ -48,7 +48,7 @@ class AppStateNotifier extends ChangeNotifier {
   /// to perform subsequent actions (such as navigation) afterwards.
   void updateNotifyOnAuthChange(bool notify) => notifyOnAuthChange = notify;
 
-  void update(MekaappFirebaseUser newUser) {
+  void update(BaseAuthUser newUser) {
     initialUser ??= newUser;
     user = newUser;
     // Refresh the app on auth change unless explicitly marked otherwise.
@@ -292,10 +292,44 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
-          name: 'TasksAdmin',
-          path: '/tasksAdmin',
+          name: 'MainCopy',
+          path: '/mainCopy',
           requireAuth: true,
-          builder: (context, params) => TasksAdminWidget(),
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'MainCopy')
+              : MainCopyWidget(),
+        ),
+        FFRoute(
+          name: 'ClientsAdminEnCours',
+          path: '/clientsAdminEnCours',
+          requireAuth: true,
+          builder: (context, params) => ClientsAdminEnCoursWidget(),
+        ),
+        FFRoute(
+          name: 'ScanBonPour',
+          path: '/scanBonPour',
+          requireAuth: true,
+          builder: (context, params) => ScanBonPourWidget(),
+        ),
+        FFRoute(
+          name: 'ListPaymentBookLinesRest',
+          path: '/listPaymentBookLinesRest',
+          requireAuth: true,
+          builder: (context, params) => ListPaymentBookLinesRestWidget(
+            xxPaymentbookId:
+                params.getParam('xxPaymentbookId', ParamType.String),
+            documentNo: params.getParam('documentNo', ParamType.int),
+          ),
+        ),
+        FFRoute(
+          name: 'CreatePaymentBonPour',
+          path: '/createPaymentBonPour',
+          requireAuth: true,
+          builder: (context, params) => CreatePaymentBonPourWidget(
+            documentno: params.getParam('documentno', ParamType.int),
+            xxPaymentBookLineId:
+                params.getParam('xxPaymentBookLineId', ParamType.int),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
       urlPathStrategy: UrlPathStrategy.path,
