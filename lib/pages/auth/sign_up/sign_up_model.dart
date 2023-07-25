@@ -2,6 +2,7 @@ import '/auth/firebase_auth/auth_util.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/pages/auth/logo/logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,8 @@ import 'package:provider/provider.dart';
 class SignUpModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
+  // Model for LOGO component.
+  late LogoModel logoModel;
   // State field(s) for name widget.
   TextEditingController? nameController;
   String? Function(BuildContext, String?)? nameControllerValidator;
@@ -27,17 +30,20 @@ class SignUpModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {
+    logoModel = createModel(context, () => LogoModel());
     passwordVisibility = false;
     confirmPasswordVisibility = false;
   }
 
   void dispose() {
+    logoModel.dispose();
     nameController?.dispose();
     emailAddressController?.dispose();
     passwordController?.dispose();
     confirmPasswordController?.dispose();
   }
 
-  /// Additional helper methods are added here.
+  /// Action blocks are added here.
 
+  /// Additional helper methods are added here.
 }

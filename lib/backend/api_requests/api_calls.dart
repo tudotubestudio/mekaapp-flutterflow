@@ -497,7 +497,7 @@ class ListTasksNoPayCall {
 /// Start Order Mission Group Code
 
 class OrderMissionGroup {
-  static String baseUrl = 'https://mekaapp.com/backend/api';
+  static String baseUrl = 'https://mekaapp.com/bcd/backend/api';
   static Map<String, String> headers = {};
   static ListRegionCall listRegionCall = ListRegionCall();
   static AddOrdreMissionCall addOrdreMissionCall = AddOrdreMissionCall();
@@ -545,6 +545,7 @@ class AddOrdreMissionCall {
     String? dateEnd = '',
     String? barecode = '',
     String? token = '',
+    int? withCBpartnerId,
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'addOrdreMission',
@@ -562,6 +563,7 @@ class AddOrdreMissionCall {
         'date_end': dateEnd,
         'barecode': barecode,
         'token': token,
+        'with_c_bpartner_id': withCBpartnerId,
       },
       bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
       returnBody: true,
@@ -575,6 +577,9 @@ class AddOrdreMissionCall {
 class OrdreMissionsCall {
   Future<ApiCallResponse> call({
     String? token = '',
+    String? searchKey = '',
+    int? sizePage,
+    int? page,
   }) {
     return ApiManager.instance.makeApiCall(
       callName: 'Ordre Missions',
@@ -585,6 +590,9 @@ class OrdreMissionsCall {
       },
       params: {
         'token': token,
+        'search_key': searchKey,
+        'sizePage': sizePage,
+        'page': page,
       },
       returnBody: true,
       encodeBodyUtf8: false,
@@ -659,7 +667,7 @@ class AddPaymentCall {
 /// Start Auth Group Code
 
 class AuthGroup {
-  static String baseUrl = 'https://mekaapp.com/backend/api';
+  static String baseUrl = 'https://mekaapp.com/bcd/backend/api';
   static Map<String, String> headers = {};
   static LoginCall loginCall = LoginCall();
   static MeCall meCall = MeCall();
@@ -740,10 +748,11 @@ class UsersCall {
 /// Start Payments Group Code
 
 class PaymentsGroup {
-  static String baseUrl = 'https://mekaapp.com/backend/api';
+  static String baseUrl = 'https://mekaapp.com/bcd/backend/api';
   static Map<String, String> headers = {};
   static PaymentBookLinesByIdCall paymentBookLinesByIdCall =
       PaymentBookLinesByIdCall();
+  static PaymentBooksCall paymentBooksCall = PaymentBooksCall();
   static ListLivreursCall listLivreursCall = ListLivreursCall();
   static ListVehiclesCall listVehiclesCall = ListVehiclesCall();
   static ListClientsCall listClientsCall = ListClientsCall();
@@ -775,6 +784,37 @@ class PaymentBookLinesByIdCall {
       cache: false,
     );
   }
+}
+
+class PaymentBooksCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? pageSize,
+    int? page,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'paymentBooks',
+      apiUrl: '${PaymentsGroup.baseUrl}/payments/payment_books',
+      callType: ApiCallType.GET,
+      headers: {
+        ...PaymentsGroup.headers,
+      },
+      params: {
+        'token': token,
+        'pageSize': pageSize,
+        'page': page,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+      );
 }
 
 class ListLivreursCall {
@@ -891,6 +931,360 @@ class UpdateBookLineLivreurCall {
 }
 
 /// End Payments Group Code
+
+/// Start Invoices Group Code
+
+class InvoicesGroup {
+  static String baseUrl = 'https://mekaapp.com/bcd/backend/api/invoices';
+  static Map<String, String> headers = {};
+  static ListInvoicesNoArchivedCall listInvoicesNoArchivedCall =
+      ListInvoicesNoArchivedCall();
+  static ListInvoicesNoArchivedMonthsCall listInvoicesNoArchivedMonthsCall =
+      ListInvoicesNoArchivedMonthsCall();
+  static UpdateArchivedInvoiceCall updateArchivedInvoiceCall =
+      UpdateArchivedInvoiceCall();
+}
+
+class ListInvoicesNoArchivedCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? page,
+    int? sizePage,
+    String? month = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'listInvoicesNoArchived',
+      apiUrl: '${InvoicesGroup.baseUrl}/list_invoices_no_archived',
+      callType: ApiCallType.GET,
+      headers: {
+        ...InvoicesGroup.headers,
+      },
+      params: {
+        'token': token,
+        'page': page,
+        'sizePage': sizePage,
+        'month': month,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$..data''',
+        true,
+      );
+}
+
+class ListInvoicesNoArchivedMonthsCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'listInvoicesNoArchivedMonths',
+      apiUrl: '${InvoicesGroup.baseUrl}/list_invoices_no_archived_months',
+      callType: ApiCallType.GET,
+      headers: {
+        ...InvoicesGroup.headers,
+      },
+      params: {
+        'token': token,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$..data''',
+        true,
+      );
+}
+
+class UpdateArchivedInvoiceCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    String? documentno = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'updateArchivedInvoice',
+      apiUrl: '${InvoicesGroup.baseUrl}/update_archived_invoice',
+      callType: ApiCallType.POST,
+      headers: {
+        ...InvoicesGroup.headers,
+      },
+      params: {
+        'token': token,
+        'documentno': documentno,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+/// End Invoices Group Code
+
+/// Start MekaAi Group Code
+
+class MekaAiGroup {
+  static String baseUrl = 'https://mekaapp.com/bcd/backend/api';
+  static Map<String, String> headers = {};
+  static ChatUsersCall chatUsersCall = ChatUsersCall();
+  static AddMessageCall addMessageCall = AddMessageCall();
+  static AddChatCall addChatCall = AddChatCall();
+  static ChatMessagesSyncCall chatMessagesSyncCall = ChatMessagesSyncCall();
+  static ChatMessagesCall chatMessagesCall = ChatMessagesCall();
+  static ChatsCall chatsCall = ChatsCall();
+  static MekaAiCodesCall mekaAiCodesCall = MekaAiCodesCall();
+}
+
+class ChatUsersCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? pageSize,
+    int? page,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Chat Users',
+      apiUrl: '${MekaAiGroup.baseUrl}/mekaai/chat_users',
+      callType: ApiCallType.GET,
+      headers: {
+        ...MekaAiGroup.headers,
+      },
+      params: {
+        'token': token,
+        'pageSize': pageSize,
+        'page': page,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic cbpgroupid(dynamic response) => getJsonField(
+        response,
+        r'''$.data[:].c_bp_group_id''',
+        true,
+      );
+  dynamic namegroup(dynamic response) => getJsonField(
+        response,
+        r'''$.data[:].name_group''',
+        true,
+      );
+  dynamic email(dynamic response) => getJsonField(
+        response,
+        r'''$.data[:].email''',
+        true,
+      );
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+  dynamic id(dynamic response) => getJsonField(
+        response,
+        r'''$.data[:].id''',
+        true,
+      );
+  dynamic name(dynamic response) => getJsonField(
+        response,
+        r'''$.data[:].name''',
+        true,
+      );
+}
+
+class AddMessageCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? chat,
+    String? text = '',
+    int? type,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Add Message',
+      apiUrl: '${MekaAiGroup.baseUrl}/mekaai/add_message',
+      callType: ApiCallType.POST,
+      headers: {
+        ...MekaAiGroup.headers,
+      },
+      params: {
+        'token': token,
+        'chat': chat,
+        'text': text,
+        'type': type,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class AddChatCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? userB,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Add Chat',
+      apiUrl: '${MekaAiGroup.baseUrl}/mekaai/add_chat',
+      callType: ApiCallType.POST,
+      headers: {
+        ...MekaAiGroup.headers,
+      },
+      params: {
+        'token': token,
+        'user_b': userB,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class ChatMessagesSyncCall {
+  Future<ApiCallResponse> call({
+    int? chat,
+    String? token = '',
+    int? lastId,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Chat Messages Sync',
+      apiUrl: '${MekaAiGroup.baseUrl}/mekaai/chat_messages_sync',
+      callType: ApiCallType.POST,
+      headers: {
+        ...MekaAiGroup.headers,
+      },
+      params: {
+        'chat': chat,
+        'token': token,
+        'lastId': lastId,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class ChatMessagesCall {
+  Future<ApiCallResponse> call({
+    int? chat,
+    String? token = '',
+    int? pageSize,
+    int? page,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Chat Messages',
+      apiUrl: '${MekaAiGroup.baseUrl}/mekaai/chat_messages',
+      callType: ApiCallType.POST,
+      headers: {
+        ...MekaAiGroup.headers,
+      },
+      params: {
+        'chat': chat,
+        'token': token,
+        'pageSize': pageSize,
+        'page': page,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class ChatsCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    int? pageSize,
+    int? page,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'Chats',
+      apiUrl: '${MekaAiGroup.baseUrl}/mekaai/chats',
+      callType: ApiCallType.POST,
+      headers: {
+        ...MekaAiGroup.headers,
+      },
+      params: {
+        'token': token,
+        'pageSize': pageSize,
+        'page': page,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.data''',
+        true,
+      );
+}
+
+class MekaAiCodesCall {
+  Future<ApiCallResponse> call({
+    String? token = '',
+    String? code = '',
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'MekaAi Codes',
+      apiUrl: '${MekaAiGroup.baseUrl}/mekaai/codes',
+      callType: ApiCallType.GET,
+      headers: {
+        ...MekaAiGroup.headers,
+      },
+      params: {
+        'token': token,
+        'code': code,
+      },
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+/// End MekaAi Group Code
 
 class ProductsQuotasCall {
   static Future<ApiCallResponse> call({
@@ -1494,11 +1888,11 @@ String _serializeList(List? list) {
   }
 }
 
-String _serializeJson(dynamic jsonVar) {
-  jsonVar ??= {};
+String _serializeJson(dynamic jsonVar, [bool isList = false]) {
+  jsonVar ??= (isList ? [] : {});
   try {
     return json.encode(jsonVar);
   } catch (_) {
-    return '{}';
+    return isList ? '[]' : '{}';
   }
 }

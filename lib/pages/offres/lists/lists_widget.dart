@@ -87,6 +87,7 @@ class _ListsWidgetState extends State<ListsWidget> {
         elevation: 2.0,
       ),
       body: SafeArea(
+        top: true,
         child: ListView(
           padding: EdgeInsets.zero,
           scrollDirection: Axis.vertical,

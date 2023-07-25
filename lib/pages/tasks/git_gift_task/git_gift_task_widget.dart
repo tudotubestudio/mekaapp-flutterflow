@@ -600,7 +600,7 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
                           EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
                       child: Container(
                         width: 4.0,
-                        height: MediaQuery.of(context).size.height * 0.3,
+                        height: MediaQuery.sizeOf(context).height * 0.3,
                         decoration: BoxDecoration(
                           color: FlutterFlowTheme.of(context).tertiary,
                           borderRadius: BorderRadius.circular(4.0),
@@ -854,7 +854,7 @@ class _GitGiftTaskWidgetState extends State<GitGiftTaskWidget> {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
               child: Container(
-                width: MediaQuery.of(context).size.width * 1.0,
+                width: MediaQuery.sizeOf(context).width * 1.0,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                   boxShadow: [

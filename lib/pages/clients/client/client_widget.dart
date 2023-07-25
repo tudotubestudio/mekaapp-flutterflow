@@ -1,6 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
-import '/backend/push_notifications/push_notifications_util.dart';
 import '/flutter_flow/flutter_flow_charts.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -96,9 +95,10 @@ class _ClientWidgetState extends State<ClientWidget> {
         elevation: 0.0,
       ),
       body: SafeArea(
+        top: true,
         child: Container(
           width: double.infinity,
-          height: MediaQuery.of(context).size.height * 1.0,
+          height: MediaQuery.sizeOf(context).height * 1.0,
           decoration: BoxDecoration(
             color: FlutterFlowTheme.of(context).secondaryBackground,
           ),
@@ -106,7 +106,7 @@ class _ClientWidgetState extends State<ClientWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 1.0,
+                width: MediaQuery.sizeOf(context).width * 1.0,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).primary,
                   boxShadow: [
@@ -295,25 +295,29 @@ class _ClientWidgetState extends State<ClientWidget> {
                   initialIndex: 0,
                   child: Column(
                     children: [
-                      TabBar(
-                        labelColor: FlutterFlowTheme.of(context).primary,
-                        labelStyle: FlutterFlowTheme.of(context).bodyMedium,
-                        indicatorColor: FlutterFlowTheme.of(context).secondary,
-                        tabs: [
-                          Tab(
-                            text: 'Rec',
-                          ),
-                          Tab(
-                            text: 'Info',
-                          ),
-                        ],
+                      Align(
+                        alignment: Alignment(0.0, 0),
+                        child: TabBar(
+                          labelColor: FlutterFlowTheme.of(context).primary,
+                          labelStyle: FlutterFlowTheme.of(context).bodyMedium,
+                          indicatorColor:
+                              FlutterFlowTheme.of(context).secondary,
+                          tabs: [
+                            Tab(
+                              text: 'Rec',
+                            ),
+                            Tab(
+                              text: 'Info',
+                            ),
+                          ],
+                        ),
                       ),
                       Expanded(
                         child: TabBarView(
                           children: [
                             Container(
                               width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 1.0,
+                              height: MediaQuery.sizeOf(context).height * 1.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
                                     .secondaryBackground,
@@ -352,8 +356,7 @@ class _ClientWidgetState extends State<ClientWidget> {
                                             ),
                                             collapsed: Container(),
                                             expanded: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
+                                              width: MediaQuery.sizeOf(context)
                                                       .width *
                                                   1.0,
                                               decoration: BoxDecoration(
@@ -556,6 +559,14 @@ class _ClientWidgetState extends State<ClientWidget> {
                                                                     0.0,
                                                                     0.0),
                                                         child: InkWell(
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          focusColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          highlightColor: Colors
+                                                              .transparent,
                                                           onTap: () async {
                                                             logFirebaseEvent(
                                                                 'CLIENT_PAGE_Container_mojjzyum_ON_TAP');
@@ -839,30 +850,10 @@ class _ClientWidgetState extends State<ClientWidget> {
                                                                     logFirebaseEvent(
                                                                         'Button_refresh_database_request');
                                                                     setState(() => _model
-                                                                        .pagingController
+                                                                        .listViewPagingController
                                                                         ?.refresh());
                                                                     await _model
                                                                         .waitForOnePage();
-                                                                    logFirebaseEvent(
-                                                                        'Button_trigger_push_notification');
-                                                                    triggerPushNotification(
-                                                                      notificationTitle:
-                                                                          'hi2',
-                                                                      notificationText:
-                                                                          'hi test2',
-                                                                      notificationSound:
-                                                                          'default',
-                                                                      userRefs: [
-                                                                        FFAppState()
-                                                                            .adminId!
-                                                                      ],
-                                                                      initialPageName:
-                                                                          'Client',
-                                                                      parameterData: {
-                                                                        'client':
-                                                                            widget.client,
-                                                                      },
-                                                                    );
                                                                   } else {
                                                                     logFirebaseEvent(
                                                                         'Button_show_snack_bar');
@@ -1013,30 +1004,10 @@ class _ClientWidgetState extends State<ClientWidget> {
                                                                     logFirebaseEvent(
                                                                         'Button_refresh_database_request');
                                                                     setState(() => _model
-                                                                        .pagingController
+                                                                        .listViewPagingController
                                                                         ?.refresh());
                                                                     await _model
                                                                         .waitForOnePage();
-                                                                    logFirebaseEvent(
-                                                                        'Button_trigger_push_notification');
-                                                                    triggerPushNotification(
-                                                                      notificationTitle:
-                                                                          'hi2',
-                                                                      notificationText:
-                                                                          'hi test2',
-                                                                      notificationSound:
-                                                                          'default',
-                                                                      userRefs: [
-                                                                        FFAppState()
-                                                                            .adminId!
-                                                                      ],
-                                                                      initialPageName:
-                                                                          'Client',
-                                                                      parameterData: {
-                                                                        'client':
-                                                                            widget.client,
-                                                                      },
-                                                                    );
                                                                   } else {
                                                                     logFirebaseEvent(
                                                                         'Button_show_snack_bar');
@@ -1169,79 +1140,31 @@ class _ClientWidgetState extends State<ClientWidget> {
                                               logFirebaseEvent(
                                                   'ListView_refresh_database_request');
                                               setState(() => _model
-                                                  .pagingController
+                                                  .listViewPagingController
                                                   ?.refresh());
                                               await _model.waitForOnePage();
                                             },
                                             child: PagedListView<
                                                 ApiPagingParams, dynamic>(
-                                              pagingController: () {
-                                                if (_model.pagingController !=
-                                                    null) {
-                                                  return _model
-                                                      .pagingController!;
-                                                }
-
-                                                _model.pagingController =
-                                                    PagingController(
-                                                  firstPageKey: ApiPagingParams(
-                                                    nextPageNumber: 0,
-                                                    numItems: 0,
-                                                    lastResponse: null,
-                                                  ),
-                                                );
-                                                _model.pagingController!
-                                                    .addPageRequestListener(
-                                                        (nextPageMarker) {
-                                                  ClientsGroup
-                                                      .tasksDebloqeClientsCall
-                                                      .call(
-                                                    token: valueOrDefault(
-                                                        currentUserDocument
-                                                            ?.token,
-                                                        ''),
-                                                    page: nextPageMarker
-                                                        .nextPageNumber,
-                                                    sizePage: 10,
-                                                    cBpartnerId: functions
-                                                        .jsonToInt(getJsonField(
-                                                      widget.client,
-                                                      r'''$.c_bpartner_id''',
-                                                    )),
-                                                  )
-                                                      .then(
-                                                          (listViewTasksDebloqeClientsResponse) {
-                                                    final pageItems = ClientsGroup
-                                                        .tasksDebloqeClientsCall
-                                                        .data(
-                                                          listViewTasksDebloqeClientsResponse
-                                                              .jsonBody,
-                                                        )!
-                                                        .toList() as List;
-                                                    final newNumItems =
-                                                        nextPageMarker
-                                                                .numItems +
-                                                            pageItems.length;
-                                                    _model.pagingController!
-                                                        .appendPage(
-                                                      pageItems,
-                                                      (pageItems.length > 0)
-                                                          ? ApiPagingParams(
-                                                              nextPageNumber:
-                                                                  nextPageMarker
-                                                                          .nextPageNumber +
-                                                                      1,
-                                                              numItems:
-                                                                  newNumItems,
-                                                              lastResponse:
-                                                                  listViewTasksDebloqeClientsResponse,
-                                                            )
-                                                          : null,
-                                                    );
-                                                  });
-                                                });
-                                                return _model.pagingController!;
-                                              }(),
+                                              pagingController:
+                                                  _model.setListViewController(
+                                                (nextPageMarker) => ClientsGroup
+                                                    .tasksDebloqeClientsCall
+                                                    .call(
+                                                  token: valueOrDefault(
+                                                      currentUserDocument
+                                                          ?.token,
+                                                      ''),
+                                                  page: nextPageMarker
+                                                      .nextPageNumber,
+                                                  sizePage: 10,
+                                                  cBpartnerId: functions
+                                                      .jsonToInt(getJsonField(
+                                                    widget.client,
+                                                    r'''$.c_bpartner_id''',
+                                                  )),
+                                                ),
+                                              ),
                                               padding: EdgeInsets.zero,
                                               primary: false,
                                               reverse: false,
@@ -1257,10 +1180,31 @@ class _ClientWidgetState extends State<ClientWidget> {
                                                     height: 50.0,
                                                     child:
                                                         CircularProgressIndicator(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                              Color>(
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // Customize what your widget looks like when it's loading another page.
+                                                newPageProgressIndicatorBuilder:
+                                                    (_) => Center(
+                                                  child: SizedBox(
+                                                    width: 50.0,
+                                                    height: 50.0,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                              Color>(
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primary,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -1268,7 +1212,7 @@ class _ClientWidgetState extends State<ClientWidget> {
                                                 itemBuilder:
                                                     (context, _, taskIndex) {
                                                   final taskItem = _model
-                                                      .pagingController!
+                                                      .listViewPagingController!
                                                       .itemList![taskIndex];
                                                   return Padding(
                                                     padding:
@@ -1276,6 +1220,14 @@ class _ClientWidgetState extends State<ClientWidget> {
                                                             .fromSTEB(0.0, 0.0,
                                                                 0.0, 8.0),
                                                     child: InkWell(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      focusColor:
+                                                          Colors.transparent,
+                                                      hoverColor:
+                                                          Colors.transparent,
+                                                      highlightColor:
+                                                          Colors.transparent,
                                                       onTap: () async {
                                                         logFirebaseEvent(
                                                             'CLIENT_PAGE_transaction_ON_TAP');
@@ -1297,17 +1249,15 @@ class _ClientWidgetState extends State<ClientWidget> {
                                                                 0x00000000),
                                                             enableDrag: false,
                                                             context: context,
-                                                            builder:
-                                                                (bottomSheetContext) {
+                                                            builder: (context) {
                                                               return Padding(
-                                                                padding: MediaQuery.of(
-                                                                        bottomSheetContext)
-                                                                    .viewInsets,
+                                                                padding: MediaQuery
+                                                                    .viewInsetsOf(
+                                                                        context),
                                                                 child:
                                                                     Container(
-                                                                  height: MediaQuery.of(
+                                                                  height: MediaQuery.sizeOf(
                                                                               context)
-                                                                          .size
                                                                           .height *
                                                                       0.75,
                                                                   child:
@@ -1324,18 +1274,18 @@ class _ClientWidgetState extends State<ClientWidget> {
                                                           logFirebaseEvent(
                                                               'transaction_refresh_database_request');
                                                           setState(() => _model
-                                                              .pagingController
+                                                              .listViewPagingController
                                                               ?.refresh());
                                                           await _model
                                                               .waitForOnePage();
                                                         }
                                                       },
                                                       child: Container(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.92,
+                                                        width:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .width *
+                                                                0.92,
                                                         decoration:
                                                             BoxDecoration(
                                                           color: FlutterFlowTheme

@@ -79,6 +79,7 @@ class _CompareOrderAndOffreWidgetState
         elevation: 2.0,
       ),
       body: SafeArea(
+        top: true,
         child: Padding(
           padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
           child: Column(

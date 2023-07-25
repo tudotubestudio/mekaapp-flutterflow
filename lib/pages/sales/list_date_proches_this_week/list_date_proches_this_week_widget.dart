@@ -24,7 +24,6 @@ class _ListDateProchesThisWeekWidgetState
   late ListDateProchesThisWeekModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -40,7 +39,6 @@ class _ListDateProchesThisWeekWidgetState
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -49,7 +47,7 @@ class _ListDateProchesThisWeekWidgetState
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -61,6 +59,7 @@ class _ListDateProchesThisWeekWidgetState
           elevation: 2.0,
         ),
         body: SafeArea(
+          top: true,
           child: FutureBuilder<ApiCallResponse>(
             future: DateProchesThisWeekCall.call(),
             builder: (context, snapshot) {
@@ -71,7 +70,9 @@ class _ListDateProchesThisWeekWidgetState
                     width: 50.0,
                     height: 50.0,
                     child: CircularProgressIndicator(
-                      color: FlutterFlowTheme.of(context).primary,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        FlutterFlowTheme.of(context).primary,
+                      ),
                     ),
                   ),
                 );
@@ -152,7 +153,9 @@ class _ListDateProchesThisWeekWidgetState
                                 width: 50.0,
                                 height: 50.0,
                                 child: CircularProgressIndicator(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
                               ),
                             );
@@ -160,7 +163,7 @@ class _ListDateProchesThisWeekWidgetState
                           final containerStatusScoreDateProcheResponse =
                               snapshot.data!;
                           return Container(
-                            width: MediaQuery.of(context).size.width * 1.0,
+                            width: MediaQuery.sizeOf(context).width * 1.0,
                             decoration: BoxDecoration(
                               color: Color(0xFFEEEEEE),
                               border: Border.all(
@@ -399,7 +402,9 @@ class _ListDateProchesThisWeekWidgetState
                                 width: 50.0,
                                 height: 50.0,
                                 child: CircularProgressIndicator(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
                               ),
                             );
@@ -407,7 +412,7 @@ class _ListDateProchesThisWeekWidgetState
                           final containerStatusScoreDateProcheResponse =
                               snapshot.data!;
                           return Container(
-                            width: MediaQuery.of(context).size.width * 1.0,
+                            width: MediaQuery.sizeOf(context).width * 1.0,
                             decoration: BoxDecoration(
                               color: Color(0xFFEEEEEE),
                               border: Border.all(
@@ -646,7 +651,9 @@ class _ListDateProchesThisWeekWidgetState
                                 width: 50.0,
                                 height: 50.0,
                                 child: CircularProgressIndicator(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
                               ),
                             );
@@ -654,7 +661,7 @@ class _ListDateProchesThisWeekWidgetState
                           final containerStatusScoreDateProcheResponse =
                               snapshot.data!;
                           return Container(
-                            width: MediaQuery.of(context).size.width * 1.0,
+                            width: MediaQuery.sizeOf(context).width * 1.0,
                             decoration: BoxDecoration(
                               color: Color(0xFFEEEEEE),
                               border: Border.all(

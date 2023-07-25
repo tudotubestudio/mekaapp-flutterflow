@@ -24,7 +24,6 @@ class _GenerateOrdersMissionsWidgetState
   late GenerateOrdersMissionsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -40,7 +39,6 @@ class _GenerateOrdersMissionsWidgetState
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -56,19 +54,25 @@ class _GenerateOrdersMissionsWidgetState
         builder: (context, snapshot) {
           // Customize what your widget looks like when it's loading.
           if (!snapshot.hasData) {
-            return Center(
-              child: SizedBox(
-                width: 50.0,
-                height: 50.0,
-                child: CircularProgressIndicator(
-                  color: FlutterFlowTheme.of(context).primary,
+            return Scaffold(
+              backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+              body: Center(
+                child: SizedBox(
+                  width: 50.0,
+                  height: 50.0,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      FlutterFlowTheme.of(context).primary,
+                    ),
+                  ),
                 ),
               ),
             );
           }
           final generateOrdersMissionsListLivreursResponse = snapshot.data!;
           return GestureDetector(
-            onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+            onTap: () =>
+                FocusScope.of(context).requestFocus(_model.unfocusNode),
             child: Scaffold(
               key: scaffoldKey,
               backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -115,7 +119,9 @@ class _GenerateOrdersMissionsWidgetState
                         width: 50.0,
                         height: 50.0,
                         child: CircularProgressIndicator(
-                          color: FlutterFlowTheme.of(context).primary,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            FlutterFlowTheme.of(context).primary,
+                          ),
                         ),
                       ),
                     );
@@ -129,41 +135,47 @@ class _GenerateOrdersMissionsWidgetState
                         children: [
                           Expanded(
                             child: Container(
-                              width: MediaQuery.of(context).size.width * 1.0,
+                              width: MediaQuery.sizeOf(context).width * 1.0,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
                                     .secondaryBackground,
                               ),
-                              child: FutureBuilder<ApiCallResponse>(
-                                future: OrderMissionGroup.listRegionCall.call(
-                                  token: valueOrDefault(
-                                      currentUserDocument?.token, ''),
-                                ),
-                                builder: (context, snapshot) {
-                                  // Customize what your widget looks like when it's loading.
-                                  if (!snapshot.hasData) {
-                                    return Center(
-                                      child: SizedBox(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        child: CircularProgressIndicator(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                        ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: FutureBuilder<ApiCallResponse>(
+                                      future:
+                                          OrderMissionGroup.listRegionCall.call(
+                                        token: valueOrDefault(
+                                            currentUserDocument?.token, ''),
                                       ),
-                                    );
-                                  }
-                                  final rowListRegionResponse = snapshot.data!;
-                                  return Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Builder(
+                                      builder: (context, snapshot) {
+                                        // Customize what your widget looks like when it's loading.
+                                        if (!snapshot.hasData) {
+                                          return Center(
+                                            child: SizedBox(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        final dataTableListRegionResponse =
+                                            snapshot.data!;
+                                        return Builder(
                                           builder: (context) {
                                             final region =
                                                 OrderMissionGroup.listRegionCall
                                                         .data(
-                                                          rowListRegionResponse
+                                                          dataTableListRegionResponse
                                                               .jsonBody,
                                                         )
                                                         ?.toList() ??
@@ -314,17 +326,17 @@ class _GenerateOrdersMissionsWidgetState
                                                                       context:
                                                                           context,
                                                                       builder:
-                                                                          (bottomSheetContext) {
+                                                                          (context) {
                                                                         return GestureDetector(
                                                                           onTap: () =>
-                                                                              FocusScope.of(context).requestFocus(_unfocusNode),
+                                                                              FocusScope.of(context).requestFocus(_model.unfocusNode),
                                                                           child:
                                                                               Padding(
                                                                             padding:
-                                                                                MediaQuery.of(bottomSheetContext).viewInsets,
+                                                                                MediaQuery.viewInsetsOf(context),
                                                                             child:
                                                                                 Container(
-                                                                              height: MediaQuery.of(context).size.height * 0.8,
+                                                                              height: MediaQuery.sizeOf(context).height * 0.8,
                                                                               child: CreateOrderMissionWidget(
                                                                                 region: regionItem,
                                                                                 listLivreurs: generateOrdersMissionsListLivreursResponse.jsonBody,
@@ -368,11 +380,11 @@ class _GenerateOrdersMissionsWidgetState
                                               minWidth: 49.0,
                                             );
                                           },
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

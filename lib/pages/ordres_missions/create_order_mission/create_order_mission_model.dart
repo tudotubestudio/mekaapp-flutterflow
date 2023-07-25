@@ -26,6 +26,9 @@ class CreateOrderMissionModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this component.
 
   final formKey = GlobalKey<FormState>();
+  // State field(s) for Destination widget.
+  TextEditingController? destinationController1;
+  String? Function(BuildContext, String?)? destinationController1Validator;
   // State field(s) for Livreur widget.
   String? livreurValue;
   FormFieldController<String>? livreurValueController;
@@ -35,9 +38,9 @@ class CreateOrderMissionModel extends FlutterFlowModel {
   DateTime? datePicked1;
   DateTime? datePicked2;
   // State field(s) for Destination widget.
-  TextEditingController? destinationController;
-  String? Function(BuildContext, String?)? destinationControllerValidator;
-  String? _destinationControllerValidator(BuildContext context, String? val) {
+  TextEditingController? destinationController2;
+  String? Function(BuildContext, String?)? destinationController2Validator;
+  String? _destinationController2Validator(BuildContext context, String? val) {
     if (val == null || val.isEmpty) {
       return 'Field is required';
     }
@@ -52,43 +55,24 @@ class CreateOrderMissionModel extends FlutterFlowModel {
     return null;
   }
 
-  // State field(s) for Truck widget.
-  TextEditingController? truckController;
-  String? Function(BuildContext, String?)? truckControllerValidator;
-  String? _truckControllerValidator(BuildContext context, String? val) {
-    if (val == null || val.isEmpty) {
-      return 'Field is required';
-    }
-
-    if (val.length < 4) {
-      return 'Requires at least 4 characters.';
-    }
-    if (val.length > 50) {
-      return 'Maximum 50 characters allowed, currently ${val.length}.';
-    }
-
-    return null;
-  }
-
-  // State field(s) for Accompagnateur widget.
-  TextEditingController? accompagnateurController;
-  String? Function(BuildContext, String?)? accompagnateurControllerValidator;
+  // State field(s) for WithLivreur widget.
+  String? withLivreurValue;
+  FormFieldController<String>? withLivreurValueController;
   // Stores action output result for [Backend Call - API (addOrdreMission)] action in Button widget.
   ApiCallResponse? resOrdreMission;
 
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {
-    destinationControllerValidator = _destinationControllerValidator;
-    truckControllerValidator = _truckControllerValidator;
+    destinationController2Validator = _destinationController2Validator;
   }
 
   void dispose() {
-    destinationController?.dispose();
-    truckController?.dispose();
-    accompagnateurController?.dispose();
+    destinationController1?.dispose();
+    destinationController2?.dispose();
   }
 
-  /// Additional helper methods are added here.
+  /// Action blocks are added here.
 
+  /// Additional helper methods are added here.
 }

@@ -108,17 +108,16 @@ class _ListGlobalChiffreWidgetState extends State<ListGlobalChiffreWidget> {
                               'LIST_GLOBAL_CHIFFRE_PAY_EARLY_BTN_ON_TAP');
                           logFirebaseEvent('Button_backend_call');
 
-                          final giftsCreateData = createGiftsRecordData(
-                            type: 1,
-                            total: 550.0,
-                            createdAt: getCurrentTimestamp,
-                            createdBy: currentUserReference,
-                            updatedAt: getCurrentTimestamp,
-                            updatedBy: currentUserReference,
-                          );
                           await GiftsRecord.collection
                               .doc()
-                              .set(giftsCreateData);
+                              .set(createGiftsRecordData(
+                                type: 1,
+                                total: 550.0,
+                                createdAt: getCurrentTimestamp,
+                                createdBy: currentUserReference,
+                                updatedAt: getCurrentTimestamp,
+                                updatedBy: currentUserReference,
+                              ));
                         },
                         text: 'Pay Early',
                         options: FFButtonOptions(
@@ -212,7 +211,9 @@ class _ListGlobalChiffreWidgetState extends State<ListGlobalChiffreWidget> {
                     width: 50.0,
                     height: 50.0,
                     child: CircularProgressIndicator(
-                      color: FlutterFlowTheme.of(context).primary,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        FlutterFlowTheme.of(context).primary,
+                      ),
                     ),
                   ),
                 );
@@ -248,7 +249,9 @@ class _ListGlobalChiffreWidgetState extends State<ListGlobalChiffreWidget> {
                               width: 50.0,
                               height: 50.0,
                               child: CircularProgressIndicator(
-                                color: FlutterFlowTheme.of(context).primary,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).primary,
+                                ),
                               ),
                             ),
                           );
@@ -283,10 +286,9 @@ class _ListGlobalChiffreWidgetState extends State<ListGlobalChiffreWidget> {
                                     8.0, 0.0, 0.0, 0.0),
                                 child: LinearPercentIndicator(
                                   percent: functions.percTwoNum(
-                                      rowRealisationObjDaysRecord!.realisation,
+                                      rowRealisationObjDaysRecord?.realisation,
                                       listViewTasksRecord.objectif),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
+                                  width: MediaQuery.sizeOf(context).width * 0.4,
                                   lineHeight: 16.0,
                                   animation: true,
                                   progressColor: Color(0xFF3498DB),

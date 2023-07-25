@@ -1,30 +1,84 @@
-import 'dart:async';
+// ignore_for_file: unnecessary_getters_setters
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../index.dart';
-import '../serializers.dart';
-import 'package:built_value/built_value.dart';
+import '/backend/schema/util/firestore_util.dart';
+import '/backend/schema/util/schema_util.dart';
 
-part 'call_log_struct.g.dart';
+import 'index.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 
-abstract class CallLogStruct
-    implements Built<CallLogStruct, CallLogStructBuilder> {
-  static Serializer<CallLogStruct> get serializer => _$callLogStructSerializer;
+class CallLogStruct extends FFFirebaseStruct {
+  CallLogStruct({
+    String? name,
+    String? number,
+    FirestoreUtilData firestoreUtilData = const FirestoreUtilData(),
+  })  : _name = name,
+        _number = number,
+        super(firestoreUtilData);
 
-  String? get name;
+  // "name" field.
+  String? _name;
+  String get name => _name ?? '';
+  set name(String? val) => _name = val;
+  bool hasName() => _name != null;
 
-  String? get number;
+  // "number" field.
+  String? _number;
+  String get number => _number ?? '';
+  set number(String? val) => _number = val;
+  bool hasNumber() => _number != null;
 
-  /// Utility class for Firestore updates
-  FirestoreUtilData get firestoreUtilData;
+  static CallLogStruct fromMap(Map<String, dynamic> data) => CallLogStruct(
+        name: data['name'] as String?,
+        number: data['number'] as String?,
+      );
 
-  static void _initializeBuilder(CallLogStructBuilder builder) => builder
-    ..name = ''
-    ..number = ''
-    ..firestoreUtilData = FirestoreUtilData();
+  static CallLogStruct? maybeFromMap(dynamic data) =>
+      data is Map<String, dynamic> ? CallLogStruct.fromMap(data) : null;
 
-  CallLogStruct._();
-  factory CallLogStruct([void Function(CallLogStructBuilder) updates]) =
-      _$CallLogStruct;
+  Map<String, dynamic> toMap() => {
+        'name': _name,
+        'number': _number,
+      }.withoutNulls;
+
+  @override
+  Map<String, dynamic> toSerializableMap() => {
+        'name': serializeParam(
+          _name,
+          ParamType.String,
+        ),
+        'number': serializeParam(
+          _number,
+          ParamType.String,
+        ),
+      }.withoutNulls;
+
+  static CallLogStruct fromSerializableMap(Map<String, dynamic> data) =>
+      CallLogStruct(
+        name: deserializeParam(
+          data['name'],
+          ParamType.String,
+          false,
+        ),
+        number: deserializeParam(
+          data['number'],
+          ParamType.String,
+          false,
+        ),
+      );
+
+  @override
+  String toString() => 'CallLogStruct(${toMap()})';
+
+  @override
+  bool operator ==(Object other) {
+    return other is CallLogStruct &&
+        name == other.name &&
+        number == other.number;
+  }
+
+  @override
+  int get hashCode => const ListEquality().hash([name, number]);
 }
 
 CallLogStruct createCallLogStruct({
@@ -36,27 +90,26 @@ CallLogStruct createCallLogStruct({
   bool delete = false,
 }) =>
     CallLogStruct(
-      (c) => c
-        ..name = name
-        ..number = number
-        ..firestoreUtilData = FirestoreUtilData(
-          clearUnsetFields: clearUnsetFields,
-          create: create,
-          delete: delete,
-          fieldValues: fieldValues,
-        ),
+      name: name,
+      number: number,
+      firestoreUtilData: FirestoreUtilData(
+        clearUnsetFields: clearUnsetFields,
+        create: create,
+        delete: delete,
+        fieldValues: fieldValues,
+      ),
     );
 
 CallLogStruct? updateCallLogStruct(
   CallLogStruct? callLog, {
   bool clearUnsetFields = true,
+  bool create = false,
 }) =>
-    callLog != null
-        ? (callLog.toBuilder()
-              ..firestoreUtilData =
-                  FirestoreUtilData(clearUnsetFields: clearUnsetFields))
-            .build()
-        : null;
+    callLog
+      ?..firestoreUtilData = FirestoreUtilData(
+        clearUnsetFields: clearUnsetFields,
+        create: create,
+      );
 
 void addCallLogStructData(
   Map<String, dynamic> firestoreData,
@@ -80,8 +133,6 @@ void addCallLogStructData(
 
   final create = callLog.firestoreUtilData.create;
   firestoreData.addAll(create ? mergeNestedFields(nestedData) : nestedData);
-
-  return;
 }
 
 Map<String, dynamic> getCallLogFirestoreData(
@@ -91,8 +142,7 @@ Map<String, dynamic> getCallLogFirestoreData(
   if (callLog == null) {
     return {};
   }
-  final firestoreData =
-      serializers.toFirestore(CallLogStruct.serializer, callLog);
+  final firestoreData = mapToFirestore(callLog.toMap());
 
   // Add any Firestore field values
   callLog.firestoreUtilData.fieldValues.forEach((k, v) => firestoreData[k] = v);
@@ -103,4 +153,4 @@ Map<String, dynamic> getCallLogFirestoreData(
 List<Map<String, dynamic>> getCallLogListFirestoreData(
   List<CallLogStruct>? callLogs,
 ) =>
-    callLogs?.map((c) => getCallLogFirestoreData(c, true)).toList() ?? [];
+    callLogs?.map((e) => getCallLogFirestoreData(e, true)).toList() ?? [];

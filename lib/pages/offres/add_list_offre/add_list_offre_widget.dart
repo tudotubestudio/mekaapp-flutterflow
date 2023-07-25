@@ -84,6 +84,7 @@ class _AddListOffreWidgetState extends State<AddListOffreWidget> {
         elevation: 2.0,
       ),
       body: SafeArea(
+        top: true,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,8 +202,11 @@ class _AddListOffreWidgetState extends State<AddListOffreWidget> {
                                           width: 50.0,
                                           height: 50.0,
                                           child: CircularProgressIndicator(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              FlutterFlowTheme.of(context)
+                                                  .primary,
+                                            ),
                                           ),
                                         ),
                                       );
@@ -218,8 +222,7 @@ class _AddListOffreWidgetState extends State<AddListOffreWidget> {
                                             .jsonBody,
                                       ) as List)
                                           .map<String>((s) => s.toString())
-                                          .toList()!
-                                          .toList(),
+                                          .toList()!,
                                       onChanged: (val) => setState(
                                           () => _model.dropDownValue = val),
                                       width: 80.0,
@@ -264,14 +267,12 @@ class _AddListOffreWidgetState extends State<AddListOffreWidget> {
                                     backgroundColor: Color(0x00000000),
                                     barrierColor: Color(0x00000000),
                                     context: context,
-                                    builder: (bottomSheetContext) {
+                                    builder: (context) {
                                       return Padding(
                                         padding:
-                                            MediaQuery.of(bottomSheetContext)
-                                                .viewInsets,
+                                            MediaQuery.viewInsetsOf(context),
                                         child: Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
+                                          height: MediaQuery.sizeOf(context)
                                                   .height *
                                               0.7,
                                           child: ListProdsLaboWidget(),
@@ -511,9 +512,11 @@ class _AddListOffreWidgetState extends State<AddListOffreWidget> {
                                             width: 50.0,
                                             height: 50.0,
                                             child: CircularProgressIndicator(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
+                                              ),
                                             ),
                                           ),
                                         );

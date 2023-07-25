@@ -48,12 +48,24 @@ export '/pages/ordres_missions/p_d_f_etat_region_livreur_ordre_mission_copy/p_d_
     show PDFEtatRegionLivreurOrdreMissionCopyWidget;
 export '/pages/ordres_missions/p_d_f_etat_region_livreur_ordre_mission_copy_copy/p_d_f_etat_region_livreur_ordre_mission_copy_copy_widget.dart'
     show PDFEtatRegionLivreurOrdreMissionCopyCopyWidget;
-export '/pages/home/main_copy/main_copy_widget.dart' show MainCopyWidget;
 export '/pages/clients/clients_admin_en_cours/clients_admin_en_cours_widget.dart'
     show ClientsAdminEnCoursWidget;
-export '/payments/scan_bon_pour/scan_bon_pour_widget.dart'
+export '/pages/payments/scan_bon_pour/scan_bon_pour_widget.dart'
     show ScanBonPourWidget;
-export '/payments/list_payment_book_lines_rest/list_payment_book_lines_rest_widget.dart'
+export '/pages/payments/list_payment_book_lines_rest/list_payment_book_lines_rest_widget.dart'
     show ListPaymentBookLinesRestWidget;
-export '/payments/create_payment_bon_pour/create_payment_bon_pour_widget.dart'
+export '/pages/payments/create_payment_bon_pour/create_payment_bon_pour_widget.dart'
     show CreatePaymentBonPourWidget;
+export '/pages/payments/carnets_bon_pour/carnets_bon_pour_widget.dart'
+    show CarnetsBonPourWidget;
+export '/pages/payments/p_d_f_qr_code_carnet/p_d_f_qr_code_carnet_widget.dart'
+    show PDFQrCodeCarnetWidget;
+export '/pages/payments/pdf_decharge_carnet/pdf_decharge_carnet_widget.dart'
+    show PdfDechargeCarnetWidget;
+export '/addqora/addqora_widget.dart' show AddqoraWidget;
+export '/archived_invoice/archived_invoice_widget.dart'
+    show ArchivedInvoiceWidget;
+export '/meka_a_i/meka_a_i_widget.dart' show MekaAIWidget;
+export '/all_chats_page/all_chats_page_widget.dart' show AllChatsPageWidget;
+export '/create_group_chat_page/create_group_chat_page_widget.dart'
+    show CreateGroupChatPageWidget;

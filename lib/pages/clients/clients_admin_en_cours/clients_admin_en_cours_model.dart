@@ -15,10 +15,13 @@ import 'package:provider/provider.dart';
 class ClientsAdminEnCoursModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
+  final unfocusNode = FocusNode();
   // Model for ButtonsTopTasks component.
   late ButtonsTopTasksModel buttonsTopTasksModel;
   // State field(s) for ListView widget.
-  PagingController<ApiPagingParams, dynamic>? pagingController;
+
+  PagingController<ApiPagingParams, dynamic>? listViewPagingController;
+  Function(ApiPagingParams nextPageMarker)? listViewApiCall;
 
   /// Initialization and disposal methods.
 
@@ -27,10 +30,56 @@ class ClientsAdminEnCoursModel extends FlutterFlowModel {
   }
 
   void dispose() {
+    unfocusNode.dispose();
     buttonsTopTasksModel.dispose();
+    listViewPagingController?.dispose();
   }
 
+  /// Action blocks are added here.
+
   /// Additional helper methods are added here.
+
+  PagingController<ApiPagingParams, dynamic> setListViewController(
+    Function(ApiPagingParams) apiCall,
+  ) {
+    listViewApiCall = apiCall;
+    return listViewPagingController ??= _createListViewController(apiCall);
+  }
+
+  PagingController<ApiPagingParams, dynamic> _createListViewController(
+    Function(ApiPagingParams) query,
+  ) {
+    final controller = PagingController<ApiPagingParams, dynamic>(
+      firstPageKey: ApiPagingParams(
+        nextPageNumber: 0,
+        numItems: 0,
+        lastResponse: null,
+      ),
+    );
+    return controller
+      ..addPageRequestListener(listViewTasksDebloqeClientsEnCoursPage);
+  }
+
+  void listViewTasksDebloqeClientsEnCoursPage(ApiPagingParams nextPageMarker) =>
+      listViewApiCall!(nextPageMarker)
+          .then((listViewTasksDebloqeClientsEnCoursResponse) {
+        final pageItems = (ClientsGroup.tasksDebloqeClientsEnCoursCall.data(
+                  listViewTasksDebloqeClientsEnCoursResponse.jsonBody,
+                )! ??
+                [])
+            .toList() as List;
+        final newNumItems = nextPageMarker.numItems + pageItems.length;
+        listViewPagingController?.appendPage(
+          pageItems,
+          (pageItems.length > 0)
+              ? ApiPagingParams(
+                  nextPageNumber: nextPageMarker.nextPageNumber + 1,
+                  numItems: newNumItems,
+                  lastResponse: listViewTasksDebloqeClientsEnCoursResponse,
+                )
+              : null,
+        );
+      });
 
   Future waitForOnePage({
     double minWait = 0,
@@ -41,7 +90,7 @@ class ClientsAdminEnCoursModel extends FlutterFlowModel {
       await Future.delayed(Duration(milliseconds: 50));
       final timeElapsed = stopwatch.elapsedMilliseconds;
       final requestComplete =
-          (pagingController?.nextPageKey?.nextPageNumber ?? 0) > 0;
+          (listViewPagingController?.nextPageKey?.nextPageNumber ?? 0) > 0;
       if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
         break;
       }

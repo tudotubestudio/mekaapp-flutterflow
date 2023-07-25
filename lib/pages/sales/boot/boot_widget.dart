@@ -23,7 +23,6 @@ class _BootWidgetState extends State<BootWidget> {
   late BootModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _BootWidgetState extends State<BootWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -48,7 +46,7 @@ class _BootWidgetState extends State<BootWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -56,6 +54,10 @@ class _BootWidgetState extends State<BootWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: InkWell(
+            splashColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
             onTap: () async {
               logFirebaseEvent('BOOT_PAGE_Text_qspg1hhm_ON_TAP');
               logFirebaseEvent('Text_auth');
@@ -63,7 +65,7 @@ class _BootWidgetState extends State<BootWidget> {
               await authManager.signOut();
               GoRouter.of(context).clearRedirectLocation();
 
-              context.goNamedAuth('SignIn', mounted);
+              context.goNamedAuth('SignIn', context.mounted);
             },
             child: Text(
               'Log Out',
@@ -79,6 +81,7 @@ class _BootWidgetState extends State<BootWidget> {
           elevation: 2.0,
         ),
         body: SafeArea(
+          top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -96,7 +99,9 @@ class _BootWidgetState extends State<BootWidget> {
                           width: 50.0,
                           height: 50.0,
                           child: CircularProgressIndicator(
-                            color: FlutterFlowTheme.of(context).primary,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              FlutterFlowTheme.of(context).primary,
+                            ),
                           ),
                         ),
                       );
@@ -135,9 +140,12 @@ class _BootWidgetState extends State<BootWidget> {
                                               width: 50.0,
                                               height: 50.0,
                                               child: CircularProgressIndicator(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
                                           );
@@ -174,10 +182,10 @@ class _BootWidgetState extends State<BootWidget> {
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(8.0, 0.0, 8.0, 0.0),
                                               child: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    1.0,
+                                                width:
+                                                    MediaQuery.sizeOf(context)
+                                                            .width *
+                                                        1.0,
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(
@@ -283,9 +291,13 @@ class _BootWidgetState extends State<BootWidget> {
                                                               height: 50.0,
                                                               child:
                                                                   CircularProgressIndicator(
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .primary,
+                                                                valueColor:
+                                                                    AlwaysStoppedAnimation<
+                                                                        Color>(
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .primary,
+                                                                ),
                                                               ),
                                                             ),
                                                           );
@@ -418,9 +430,12 @@ class _BootWidgetState extends State<BootWidget> {
                                               width: 50.0,
                                               height: 50.0,
                                               child: CircularProgressIndicator(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
                                           );
@@ -454,7 +469,7 @@ class _BootWidgetState extends State<BootWidget> {
                 ),
               ),
               Container(
-                width: MediaQuery.of(context).size.width * 1.0,
+                width: MediaQuery.sizeOf(context).width * 1.0,
                 height: 50.0,
                 decoration: BoxDecoration(
                   color: Color(0xFFEEEEEE),
@@ -469,7 +484,9 @@ class _BootWidgetState extends State<BootWidget> {
                           width: 50.0,
                           height: 50.0,
                           child: CircularProgressIndicator(
-                            color: FlutterFlowTheme.of(context).primary,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              FlutterFlowTheme.of(context).primary,
+                            ),
                           ),
                         ),
                       );
@@ -492,17 +509,15 @@ class _BootWidgetState extends State<BootWidget> {
                               logFirebaseEvent('BOOT_PAGE_BUTTON_BTN_ON_TAP');
                               logFirebaseEvent('Button_backend_call');
 
-                              final conversationsCreateData =
-                                  createConversationsRecordData(
-                                type: listViewActionsRecord.result,
-                                createdAt: getCurrentTimestamp,
-                                createdBy: FFAppState().bot,
-                              );
                               await ConversationsRecord.collection
                                   .doc()
-                                  .set(conversationsCreateData);
+                                  .set(createConversationsRecordData(
+                                    type: listViewActionsRecord.result,
+                                    createdAt: getCurrentTimestamp,
+                                    createdBy: FFAppState().bot,
+                                  ));
                             },
-                            text: listViewActionsRecord.name!,
+                            text: listViewActionsRecord.name,
                             options: FFButtonOptions(
                               width: 130.0,
                               height: 40.0,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'flutter_flow/request_manager.dart';
-import 'backend/backend.dart';
+import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
 import 'backend/api_requests/api_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/flutter_flow_util.dart';
@@ -13,20 +14,14 @@ class FFAppState extends ChangeNotifier {
     return _instance;
   }
 
-  FFAppState._internal() {
-    initializePersistedState();
-  }
+  FFAppState._internal();
 
-  Future initializePersistedState() async {
-    prefs = await SharedPreferences.getInstance();
-  }
+  Future initializePersistedState() async {}
 
   void update(VoidCallback callback) {
     callback();
     notifyListeners();
   }
-
-  late SharedPreferences prefs;
 
   DocumentReference? _bot =
       FirebaseFirestore.instance.doc('/users/PSCIISz9GzfhpcRESmSuJTXICX92');
@@ -108,6 +103,13 @@ class FFAppState extends ChangeNotifier {
     _addTaskProdsOblg.removeAt(_index);
   }
 
+  void updateAddTaskProdsOblgAtIndex(
+    int _index,
+    dynamic Function(dynamic) updateFn,
+  ) {
+    _addTaskProdsOblg[_index] = updateFn(_addTaskProdsOblg[_index]);
+  }
+
   List<dynamic> _addTaskProdsGift = [];
   List<dynamic> get addTaskProdsGift => _addTaskProdsGift;
   set addTaskProdsGift(List<dynamic> _value) {
@@ -126,6 +128,13 @@ class FFAppState extends ChangeNotifier {
     _addTaskProdsGift.removeAt(_index);
   }
 
+  void updateAddTaskProdsGiftAtIndex(
+    int _index,
+    dynamic Function(dynamic) updateFn,
+  ) {
+    _addTaskProdsGift[_index] = updateFn(_addTaskProdsGift[_index]);
+  }
+
   List<dynamic> _addTaskListProdsSelect = [];
   List<dynamic> get addTaskListProdsSelect => _addTaskListProdsSelect;
   set addTaskListProdsSelect(List<dynamic> _value) {
@@ -142,6 +151,13 @@ class FFAppState extends ChangeNotifier {
 
   void removeAtIndexFromAddTaskListProdsSelect(int _index) {
     _addTaskListProdsSelect.removeAt(_index);
+  }
+
+  void updateAddTaskListProdsSelectAtIndex(
+    int _index,
+    dynamic Function(dynamic) updateFn,
+  ) {
+    _addTaskListProdsSelect[_index] = updateFn(_addTaskListProdsSelect[_index]);
   }
 
   dynamic _taskList;
@@ -217,6 +233,13 @@ class FFAppState extends ChangeNotifier {
     _xList.removeAt(_index);
   }
 
+  void updateXListAtIndex(
+    int _index,
+    int Function(int) updateFn,
+  ) {
+    _xList[_index] = updateFn(_xList[_index]);
+  }
+
   List<String> _yList = ['0', '-1', '-2', '-3', '-4', '-5'];
   List<String> get yList => _yList;
   set yList(List<String> _value) {
@@ -235,10 +258,41 @@ class FFAppState extends ChangeNotifier {
     _yList.removeAt(_index);
   }
 
+  void updateYListAtIndex(
+    int _index,
+    String Function(String) updateFn,
+  ) {
+    _yList[_index] = updateFn(_yList[_index]);
+  }
+
   String _dataString = '';
   String get dataString => _dataString;
   set dataString(String _value) {
     _dataString = _value;
+  }
+
+  bool _BcdPharma = true;
+  bool get BcdPharma => _BcdPharma;
+  set BcdPharma(bool _value) {
+    _BcdPharma = _value;
+  }
+
+  bool _CharkPharm = false;
+  bool get CharkPharm => _CharkPharm;
+  set CharkPharm(bool _value) {
+    _CharkPharm = _value;
+  }
+
+  String _NameCompany = 'BcdPharma';
+  String get NameCompany => _NameCompany;
+  set NameCompany(String _value) {
+    _NameCompany = _value;
+  }
+
+  String _Version = '9.0.1';
+  String get Version => _Version;
+  set Version(String _value) {
+    _Version = _value;
   }
 
   final _clientsAppManager = FutureRequestManager<ApiCallResponse>();
@@ -265,4 +319,16 @@ LatLng? _latLngFromString(String? val) {
   final lat = double.parse(split.first);
   final lng = double.parse(split.last);
   return LatLng(lat, lng);
+}
+
+void _safeInit(Function() initializeField) {
+  try {
+    initializeField();
+  } catch (_) {}
+}
+
+Future _safeInitAsync(Function() initializeField) async {
+  try {
+    await initializeField();
+  } catch (_) {}
 }

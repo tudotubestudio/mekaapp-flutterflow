@@ -23,7 +23,6 @@ class _ClientsWidgetState extends State<ClientsWidget> {
   late ClientsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -38,7 +37,6 @@ class _ClientsWidgetState extends State<ClientsWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -47,7 +45,7 @@ class _ClientsWidgetState extends State<ClientsWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
@@ -106,7 +104,9 @@ class _ClientsWidgetState extends State<ClientsWidget> {
                           width: 50.0,
                           height: 50.0,
                           child: CircularProgressIndicator(
-                            color: FlutterFlowTheme.of(context).primary,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              FlutterFlowTheme.of(context).primary,
+                            ),
                           ),
                         ),
                       );
@@ -117,38 +117,41 @@ class _ClientsWidgetState extends State<ClientsWidget> {
                       initialIndex: 0,
                       child: Column(
                         children: [
-                          TabBar(
-                            labelColor: FlutterFlowTheme.of(context).primary,
-                            unselectedLabelColor:
-                                FlutterFlowTheme.of(context).gray600,
-                            labelStyle:
-                                FlutterFlowTheme.of(context).titleMedium,
-                            indicatorColor:
-                                FlutterFlowTheme.of(context).primary,
-                            indicatorWeight: 3.0,
-                            tabs: [
-                              Tab(
-                                text: 'A',
-                              ),
-                              Tab(
-                                text: 'B',
-                              ),
-                              Tab(
-                                text: 'C',
-                              ),
-                              Tab(
-                                text: 'D',
-                              ),
-                              Tab(
-                                text: 'E',
-                              ),
-                              Tab(
-                                text: 'F',
-                              ),
-                              Tab(
-                                text: 'A+',
-                              ),
-                            ],
+                          Align(
+                            alignment: Alignment(0.0, 0),
+                            child: TabBar(
+                              labelColor: FlutterFlowTheme.of(context).primary,
+                              unselectedLabelColor:
+                                  FlutterFlowTheme.of(context).gray600,
+                              labelStyle:
+                                  FlutterFlowTheme.of(context).titleMedium,
+                              indicatorColor:
+                                  FlutterFlowTheme.of(context).primary,
+                              indicatorWeight: 3.0,
+                              tabs: [
+                                Tab(
+                                  text: 'A',
+                                ),
+                                Tab(
+                                  text: 'B',
+                                ),
+                                Tab(
+                                  text: 'C',
+                                ),
+                                Tab(
+                                  text: 'D',
+                                ),
+                                Tab(
+                                  text: 'E',
+                                ),
+                                Tab(
+                                  text: 'F',
+                                ),
+                                Tab(
+                                  text: 'A+',
+                                ),
+                              ],
+                            ),
                           ),
                           Expanded(
                             child: TabBarView(

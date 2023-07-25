@@ -1,9 +1,13 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
+import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +26,6 @@ class _MainWidgetState extends State<MainWidget> {
   late MainModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -42,6 +45,14 @@ class _MainWidgetState extends State<MainWidget> {
         FFAppState().update(() {
           FFAppState().me = (_model.apiResultu97?.jsonBody ?? '');
         });
+        logFirebaseEvent('Main_backend_call');
+
+        await currentUserReference!.update(createUsersRecordData(
+          adUserId: functions.jsonToInt(getJsonField(
+            FFAppState().me,
+            r'''$.ad_user_id''',
+          )),
+        ));
       }
       if (isAndroid) {
         logFirebaseEvent('Main_custom_action');
@@ -128,7 +139,6 @@ class _MainWidgetState extends State<MainWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -137,247 +147,298 @@ class _MainWidgetState extends State<MainWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         drawer: Drawer(
           elevation: 16.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
+                        child: Icon(
+                          Icons.chevron_left,
+                          color: FlutterFlowTheme.of(context).grayIcon,
+                          size: 30.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      AuthUserStreamWidget(
+                        builder: (context) => Container(
+                          width: 40.0,
+                          height: 40.0,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                          ),
+                          child: Image.network(
+                            currentUserPhoto,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                        child: AuthUserStreamWidget(
+                          builder: (context) => Text(
+                            currentUserDisplayName,
+                            style: FlutterFlowTheme.of(context).bodyMedium,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      logFirebaseEvent('MAIN_PAGE_LOG_IN_BTN_ON_TAP');
+                      logFirebaseEvent('Button_navigate_to');
+
+                      context.pushNamed('SignIn');
+                    },
+                    text: 'Log In',
+                    options: FFButtonOptions(
+                      width: double.infinity,
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 0.0, 0.0),
-                      child: Icon(
-                        Icons.chevron_left,
-                        color: FlutterFlowTheme.of(context).grayIcon,
-                        size: 30.0,
+                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      color: FlutterFlowTheme.of(context).primaryBtnText,
+                      textStyle:
+                          FlutterFlowTheme.of(context).titleSmall.override(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF95A5A6),
+                                fontSize: 20.0,
+                              ),
+                      elevation: 2.0,
+                      borderSide: BorderSide(
+                        color: Color(0xFFBDC3C7),
+                        width: 1.0,
                       ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    AuthUserStreamWidget(
-                      builder: (context) => Container(
-                        width: 40.0,
-                        height: 40.0,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: Image.network(
-                          currentUserPhoto,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Padding(
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      logFirebaseEvent('MAIN_PAGE_LOG_OUT_BTN_ON_TAP');
+                      logFirebaseEvent('Button_auth');
+                      GoRouter.of(context).prepareAuthEvent();
+                      await authManager.signOut();
+                      GoRouter.of(context).clearRedirectLocation();
+
+                      context.goNamedAuth('SignIn', context.mounted);
+                    },
+                    text: 'Log Out',
+                    options: FFButtonOptions(
+                      width: double.infinity,
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
-                      child: AuthUserStreamWidget(
-                        builder: (context) => Text(
-                          currentUserDisplayName,
-                          style: FlutterFlowTheme.of(context).bodyMedium,
-                        ),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      color: FlutterFlowTheme.of(context).primaryBtnText,
+                      textStyle:
+                          FlutterFlowTheme.of(context).titleSmall.override(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF95A5A6),
+                                fontSize: 20.0,
+                              ),
+                      elevation: 2.0,
+                      borderSide: BorderSide(
+                        color: Color(0xFFBDC3C7),
+                        width: 1.0,
                       ),
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    logFirebaseEvent('MAIN_PAGE_LOG_IN_BTN_ON_TAP');
-                    logFirebaseEvent('Button_navigate_to');
-
-                    context.pushNamed('SignIn');
-                  },
-                  text: 'Log In',
-                  options: FFButtonOptions(
-                    width: double.infinity,
+                if (valueOrDefault<bool>(currentUserDocument?.admin, false) ==
+                    true)
+                  Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primaryBtnText,
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          fontFamily: 'Poppins',
-                          color: Color(0xFF95A5A6),
-                          fontSize: 20.0,
-                        ),
-                    elevation: 2.0,
-                    borderSide: BorderSide(
-                      color: Color(0xFFBDC3C7),
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    logFirebaseEvent('MAIN_PAGE_LOG_OUT_BTN_ON_TAP');
-                    logFirebaseEvent('Button_auth');
-                    GoRouter.of(context).prepareAuthEvent();
-                    await authManager.signOut();
-                    GoRouter.of(context).clearRedirectLocation();
+                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                    child: AuthUserStreamWidget(
+                      builder: (context) => FFButtonWidget(
+                        onPressed: () async {
+                          logFirebaseEvent('MAIN_PAGE_ADD_TASK_BTN_ON_TAP');
+                          logFirebaseEvent('Button_navigate_to');
 
-                    context.goNamedAuth('SignIn', mounted);
-                  },
-                  text: 'Log Out',
-                  options: FFButtonOptions(
-                    width: double.infinity,
+                          context.pushNamed('addTask');
+                        },
+                        text: 'Add Task',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 20.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFF95A5A6),
+                                    fontSize: 20.0,
+                                  ),
+                          elevation: 2.0,
+                          borderSide: BorderSide(
+                            color: Color(0xFFBDC3C7),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                if (valueOrDefault<bool>(currentUserDocument?.admin, false) ==
+                    true)
+                  Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primaryBtnText,
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          fontFamily: 'Poppins',
-                          color: Color(0xFF95A5A6),
-                          fontSize: 20.0,
-                        ),
-                    elevation: 2.0,
-                    borderSide: BorderSide(
-                      color: Color(0xFFBDC3C7),
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),
-              if (valueOrDefault<bool>(currentUserDocument?.admin, false) ==
-                  true)
-                Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-                  child: AuthUserStreamWidget(
-                    builder: (context) => FFButtonWidget(
-                      onPressed: () async {
-                        logFirebaseEvent('MAIN_PAGE_ADD_TASK_BTN_ON_TAP');
-                        logFirebaseEvent('Button_navigate_to');
+                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                    child: AuthUserStreamWidget(
+                      builder: (context) => FFButtonWidget(
+                        onPressed: () async {
+                          logFirebaseEvent(
+                              'MAIN_PAGE_ORDRE_MISSION_BTN_ON_TAP');
+                          logFirebaseEvent('Button_navigate_to');
 
-                        context.pushNamed('addTask');
-                      },
-                      text: 'Add Task',
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 20.0, 0.0, 20.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFF95A5A6),
-                                  fontSize: 20.0,
-                                ),
-                        elevation: 2.0,
-                        borderSide: BorderSide(
-                          color: Color(0xFFBDC3C7),
-                          width: 1.0,
+                          context.pushNamed('LogsOrdreMissions');
+                        },
+                        text: 'Ordre Mission',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 20.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFF95A5A6),
+                                    fontSize: 20.0,
+                                  ),
+                          elevation: 2.0,
+                          borderSide: BorderSide(
+                            color: Color(0xFFBDC3C7),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                   ),
-                ),
-              if (valueOrDefault<bool>(currentUserDocument?.admin, false) ==
-                  true)
-                Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-                  child: AuthUserStreamWidget(
-                    builder: (context) => FFButtonWidget(
-                      onPressed: () async {
-                        logFirebaseEvent('MAIN_PAGE_ORDRE_MISSION_BTN_ON_TAP');
-                        logFirebaseEvent('Button_navigate_to');
+                if (valueOrDefault<bool>(currentUserDocument?.admin, false) ==
+                    true)
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                    child: AuthUserStreamWidget(
+                      builder: (context) => FFButtonWidget(
+                        onPressed: () async {
+                          logFirebaseEvent(
+                              'MAIN_PAGE_CARNET_BON_POUR_BTN_ON_TAP');
+                          logFirebaseEvent('Button_navigate_to');
 
-                        context.pushNamed('LogsOrdreMissions');
-                      },
-                      text: 'Ordre Mission',
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 20.0, 0.0, 20.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFF95A5A6),
-                                  fontSize: 20.0,
-                                ),
-                        elevation: 2.0,
-                        borderSide: BorderSide(
-                          color: Color(0xFFBDC3C7),
-                          width: 1.0,
+                          context.pushNamed('CarnetsBonPour');
+                        },
+                        text: 'Carnet Bon Pour',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 20.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFF95A5A6),
+                                    fontSize: 20.0,
+                                  ),
+                          elevation: 2.0,
+                          borderSide: BorderSide(
+                            color: Color(0xFFBDC3C7),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                   ),
-                ),
-              if (valueOrDefault<bool>(currentUserDocument?.admin, false) ==
-                  true)
-                Padding(
-                  padding:
-                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
-                  child: AuthUserStreamWidget(
-                    builder: (context) => FFButtonWidget(
-                      onPressed: () async {
-                        logFirebaseEvent('MAIN_PAGE_SCAN_BOOK_BTN_ON_TAP');
-                        logFirebaseEvent('Button_navigate_to');
+                if (valueOrDefault<bool>(currentUserDocument?.admin, false) ==
+                    true)
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                    child: AuthUserStreamWidget(
+                      builder: (context) => FFButtonWidget(
+                        onPressed: () async {
+                          logFirebaseEvent('MAIN_PAGE_INVOICES_BTN_ON_TAP');
+                          logFirebaseEvent('Button_navigate_to');
 
-                        context.pushNamed('ScanBonPour');
-                      },
-                      text: 'Scan Book',
-                      options: FFButtonOptions(
-                        width: double.infinity,
-                        padding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 20.0, 0.0, 20.0),
-                        iconPadding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: FlutterFlowTheme.of(context).primaryBtnText,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFF95A5A6),
-                                  fontSize: 20.0,
-                                ),
-                        elevation: 2.0,
-                        borderSide: BorderSide(
-                          color: Color(0xFFBDC3C7),
-                          width: 1.0,
+                          context.pushNamed('ArchivedInvoice');
+                        },
+                        text: 'Invoices',
+                        options: FFButtonOptions(
+                          width: double.infinity,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 20.0),
+                          iconPadding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 0.0),
+                          color: FlutterFlowTheme.of(context).primaryBtnText,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFF95A5A6),
+                                    fontSize: 20.0,
+                                  ),
+                          elevation: 2.0,
+                          borderSide: BorderSide(
+                            color: Color(0xFFBDC3C7),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
           automaticallyImplyLeading: false,
           leading: InkWell(
+            splashColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            highlightColor: Colors.transparent,
             onTap: () async {
               logFirebaseEvent('MAIN_PAGE_Icon_f2v1pdx8_ON_TAP');
               logFirebaseEvent('Icon_drawer');
@@ -389,15 +450,35 @@ class _MainWidgetState extends State<MainWidget> {
               size: 24.0,
             ),
           ),
-          title: Text(
-            'BcdPharma v8.1.9',
-            style: FlutterFlowTheme.of(context).headlineMedium,
+          title: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: FFAppState().NameCompany,
+                  style: TextStyle(),
+                ),
+                TextSpan(
+                  text: ' ',
+                  style: TextStyle(),
+                ),
+                TextSpan(
+                  text: FFAppState().Version,
+                  style: TextStyle(),
+                )
+              ],
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'Poppins',
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.normal,
+                  ),
+            ),
           ),
           actions: [],
           centerTitle: false,
           elevation: 0.0,
         ),
         body: SafeArea(
+          top: true,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -513,6 +594,39 @@ class _MainWidgetState extends State<MainWidget> {
                       context.pushNamed('ClientsAdminEnCours');
                     },
                     text: 'Tasks Admin',
+                    options: FFButtonOptions(
+                      width: double.infinity,
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 20.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      color: FlutterFlowTheme.of(context).primaryBtnText,
+                      textStyle:
+                          FlutterFlowTheme.of(context).titleSmall.override(
+                                fontFamily: 'Poppins',
+                                color: Color(0xFF95A5A6),
+                                fontSize: 20.0,
+                              ),
+                      elevation: 2.0,
+                      borderSide: BorderSide(
+                        color: Color(0xFFBDC3C7),
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      logFirebaseEvent('MAIN_PAGE_MEKA_A_I_BTN_ON_TAP');
+                      logFirebaseEvent('Button_navigate_to');
+
+                      context.pushNamed('AllChatsPage');
+                    },
+                    text: 'MekaAI',
                     options: FFButtonOptions(
                       width: double.infinity,
                       padding:

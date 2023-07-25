@@ -24,7 +24,6 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
   late TrackRealOpsModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -40,7 +39,6 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -49,7 +47,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primary,
@@ -92,27 +90,30 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                 initialIndex: 0,
                 child: Column(
                   children: [
-                    TabBar(
-                      labelColor: FlutterFlowTheme.of(context).primaryBtnText,
-                      unselectedLabelColor: Color(0xB3FFFFFF),
-                      labelStyle: FlutterFlowTheme.of(context).titleMedium,
-                      indicatorColor: FlutterFlowTheme.of(context).primary,
-                      indicatorWeight: 3.0,
-                      tabs: [
-                        Tab(
-                          text: 'Day',
-                        ),
-                        Tab(
-                          text: 'Privistion',
-                        ),
-                      ],
+                    Align(
+                      alignment: Alignment(0.0, 0),
+                      child: TabBar(
+                        labelColor: FlutterFlowTheme.of(context).primaryBtnText,
+                        unselectedLabelColor: Color(0xB3FFFFFF),
+                        labelStyle: FlutterFlowTheme.of(context).titleMedium,
+                        indicatorColor: FlutterFlowTheme.of(context).primary,
+                        indicatorWeight: 3.0,
+                        tabs: [
+                          Tab(
+                            text: 'Day',
+                          ),
+                          Tab(
+                            text: 'Privistion',
+                          ),
+                        ],
+                      ),
                     ),
                     Expanded(
                       child: TabBarView(
                         children: [
                           Container(
-                            width: MediaQuery.of(context).size.width * 1.0,
-                            height: MediaQuery.of(context).size.height * 1.0,
+                            width: MediaQuery.sizeOf(context).width * 1.0,
+                            height: MediaQuery.sizeOf(context).height * 1.0,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,
@@ -134,9 +135,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                               width: 50.0,
                                               height: 50.0,
                                               child: CircularProgressIndicator(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
                                           );
@@ -602,9 +606,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                               width: 50.0,
                                               height: 50.0,
                                               child: CircularProgressIndicator(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
                                           );
@@ -1090,9 +1097,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                               width: 50.0,
                                               height: 50.0,
                                               child: CircularProgressIndicator(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
                                           );
@@ -1216,9 +1226,9 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                             ),
                                                             collapsed:
                                                                 Container(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
+                                                              width: MediaQuery
+                                                                          .sizeOf(
+                                                                              context)
                                                                       .width *
                                                                   1.0,
                                                               decoration:
@@ -1293,8 +1303,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                             r'''$[0].perc''',
                                                                           ).toString(),
                                                                           true),
-                                                                      width: MediaQuery.of(context)
-                                                                              .size
+                                                                      width: MediaQuery.sizeOf(context)
                                                                               .width *
                                                                           1.0,
                                                                       lineHeight:
@@ -1589,9 +1598,12 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                               width: 50.0,
                                               height: 50.0,
                                               child: CircularProgressIndicator(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
                                           );
@@ -1741,7 +1753,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                         collapsed:
                                                                             Container(
                                                                           width:
-                                                                              MediaQuery.of(context).size.width * 1.0,
+                                                                              MediaQuery.sizeOf(context).width * 1.0,
                                                                           decoration:
                                                                               BoxDecoration(
                                                                             color:
@@ -1794,7 +1806,7 @@ class _TrackRealOpsWidgetState extends State<TrackRealOpsWidget> {
                                                                                       r'''$.perc''',
                                                                                     ).toString(),
                                                                                     true),
-                                                                                width: MediaQuery.of(context).size.width * 1.0,
+                                                                                width: MediaQuery.sizeOf(context).width * 1.0,
                                                                                 lineHeight: 10.0,
                                                                                 animation: true,
                                                                                 progressColor: Color(0xFFE67E22),

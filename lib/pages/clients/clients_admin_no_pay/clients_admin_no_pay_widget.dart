@@ -26,7 +26,6 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
   late ClientsAdminNoPayModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -42,7 +41,6 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -51,7 +49,7 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -88,6 +86,7 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
           elevation: 2.0,
         ),
         body: SafeArea(
+          top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -105,55 +104,20 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
                         logFirebaseEvent(
                             'CLIENTS_ADMIN_NO_PAY_ListView_qnz87bau_O');
                         logFirebaseEvent('ListView_refresh_database_request');
-                        setState(() => _model.pagingController?.refresh());
+                        setState(
+                            () => _model.listViewPagingController?.refresh());
                         await _model.waitForOnePage();
                       },
                       child: PagedListView<ApiPagingParams, dynamic>(
-                        pagingController: () {
-                          if (_model.pagingController != null) {
-                            return _model.pagingController!;
-                          }
-
-                          _model.pagingController = PagingController(
-                            firstPageKey: ApiPagingParams(
-                              nextPageNumber: 0,
-                              numItems: 0,
-                              lastResponse: null,
-                            ),
-                          );
-                          _model.pagingController!
-                              .addPageRequestListener((nextPageMarker) {
-                            ClientsGroup.tasksNoValidCall
-                                .call(
-                              token: valueOrDefault(
-                                  currentUserDocument?.token, ''),
-                              page: nextPageMarker.nextPageNumber,
-                              sizePage: 30,
-                            )
-                                .then((listViewTasksNoValidResponse) {
-                              final pageItems = ClientsGroup.tasksNoValidCall
-                                  .data(
-                                    listViewTasksNoValidResponse.jsonBody,
-                                  )!
-                                  .toList() as List;
-                              final newNumItems =
-                                  nextPageMarker.numItems + pageItems.length;
-                              _model.pagingController!.appendPage(
-                                pageItems,
-                                (pageItems.length > 0)
-                                    ? ApiPagingParams(
-                                        nextPageNumber:
-                                            nextPageMarker.nextPageNumber + 1,
-                                        numItems: newNumItems,
-                                        lastResponse:
-                                            listViewTasksNoValidResponse,
-                                      )
-                                    : null,
-                              );
-                            });
-                          });
-                          return _model.pagingController!;
-                        }(),
+                        pagingController: _model.setListViewController(
+                          (nextPageMarker) =>
+                              ClientsGroup.tasksNoValidCall.call(
+                            token:
+                                valueOrDefault(currentUserDocument?.token, ''),
+                            page: nextPageMarker.nextPageNumber,
+                            sizePage: 30,
+                          ),
+                        ),
                         padding: EdgeInsets.zero,
                         primary: false,
                         shrinkWrap: true,
@@ -166,7 +130,21 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
                               width: 50.0,
                               height: 50.0,
                               child: CircularProgressIndicator(
-                                color: FlutterFlowTheme.of(context).primary,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Customize what your widget looks like when it's loading another page.
+                          newPageProgressIndicatorBuilder: (_) => Center(
+                            child: SizedBox(
+                              width: 50.0,
+                              height: 50.0,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).primary,
+                                ),
                               ),
                             ),
                           ),
@@ -174,9 +152,13 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
                             'assets/images/7486744.png',
                           ),
                           itemBuilder: (context, _, taskIndex) {
-                            final taskItem =
-                                _model.pagingController!.itemList![taskIndex];
+                            final taskItem = _model
+                                .listViewPagingController!.itemList![taskIndex];
                             return InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
                               onTap: () async {
                                 logFirebaseEvent(
                                     'CLIENTS_ADMIN_NO_PAY_Container_fhluh3jc_');
@@ -188,17 +170,15 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
                                   barrierColor: Color(0x00000000),
                                   enableDrag: false,
                                   context: context,
-                                  builder: (bottomSheetContext) {
+                                  builder: (context) {
                                     return GestureDetector(
                                       onTap: () => FocusScope.of(context)
-                                          .requestFocus(_unfocusNode),
+                                          .requestFocus(_model.unfocusNode),
                                       child: Padding(
                                         padding:
-                                            MediaQuery.of(bottomSheetContext)
-                                                .viewInsets,
+                                            MediaQuery.viewInsetsOf(context),
                                         child: Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
+                                          height: MediaQuery.sizeOf(context)
                                                   .height *
                                               0.75,
                                           child: ValidateDebloqueWidget(
@@ -212,13 +192,13 @@ class _ClientsAdminNoPayWidgetState extends State<ClientsAdminNoPayWidget> {
 
                                 logFirebaseEvent(
                                     'TaskOrdreDeblockageClient_refresh_databa');
-                                setState(
-                                    () => _model.pagingController?.refresh());
+                                setState(() =>
+                                    _model.listViewPagingController?.refresh());
                                 await _model.waitForOnePage();
                               },
                               child: TaskOrdreDeblockageClientWidget(
                                 key: Key(
-                                    'Keyfhl_${taskIndex}_of_${_model.pagingController!.itemList!.length}'),
+                                    'Keyfhl_${taskIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
                                 task: taskItem,
                               ),
                             );

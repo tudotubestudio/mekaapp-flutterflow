@@ -85,7 +85,7 @@ class _SelectCountReservedWidgetState extends State<SelectCountReservedWidget>
     context.watch<FFAppState>();
 
     return Container(
-      width: MediaQuery.of(context).size.width * 1.0,
+      width: MediaQuery.sizeOf(context).width * 1.0,
       height: double.infinity,
       decoration: BoxDecoration(
         color: Color(0xFFF1F4F8),

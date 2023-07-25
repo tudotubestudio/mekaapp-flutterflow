@@ -34,7 +34,6 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
   late AddTaskModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -59,7 +58,6 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -68,11 +66,12 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
+          top: true,
           child: Form(
             key: _model.formKey,
             autovalidateMode: AutovalidateMode.disabled,
@@ -135,8 +134,10 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                       width: 50.0,
                                       height: 50.0,
                                       child: CircularProgressIndicator(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
                                       ),
                                     ),
                                   );
@@ -150,8 +151,6 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                           FormFieldController<String>(null),
                                   options: dropDownTypeTaskTaskTypesRecordList
                                       .map((e) => e.name)
-                                      .withoutNulls
-                                      .toList()
                                       .toList(),
                                   onChanged: (val) => setState(
                                       () => _model.dropDownTypeTaskValue = val),
@@ -537,6 +536,10 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 2.0, 2.0, 2.0, 2.0),
                             child: InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
                               onTap: () async {
                                 logFirebaseEvent(
                                     'ADD_TASK_PAGE_Container_rnbea5jd_ON_TAP');
@@ -547,17 +550,15 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                       .primaryBtnText,
                                   barrierColor: Color(0x00000000),
                                   context: context,
-                                  builder: (bottomSheetContext) {
+                                  builder: (context) {
                                     return GestureDetector(
                                       onTap: () => FocusScope.of(context)
-                                          .requestFocus(_unfocusNode),
+                                          .requestFocus(_model.unfocusNode),
                                       child: Padding(
                                         padding:
-                                            MediaQuery.of(bottomSheetContext)
-                                                .viewInsets,
+                                            MediaQuery.viewInsetsOf(context),
                                         child: Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
+                                          height: MediaQuery.sizeOf(context)
                                                   .height *
                                               0.75,
                                           child: SelectUserDropDownWidget(),
@@ -655,6 +656,10 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                   children: [
                                     Expanded(
                                       child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
                                         onTap: () async {
                                           logFirebaseEvent(
                                               'ADD_TASK_PAGE_Container_1ah18y2n_ON_TAP');
@@ -667,21 +672,21 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                                     .primaryBtnText,
                                             barrierColor: Color(0x00000000),
                                             context: context,
-                                            builder: (bottomSheetContext) {
+                                            builder: (context) {
                                               return GestureDetector(
-                                                onTap: () => FocusScope.of(
-                                                        context)
-                                                    .requestFocus(_unfocusNode),
+                                                onTap: () =>
+                                                    FocusScope.of(context)
+                                                        .requestFocus(
+                                                            _model.unfocusNode),
                                                 child: Padding(
-                                                  padding: MediaQuery.of(
-                                                          bottomSheetContext)
-                                                      .viewInsets,
+                                                  padding:
+                                                      MediaQuery.viewInsetsOf(
+                                                          context),
                                                   child: Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.75,
+                                                    height: MediaQuery.sizeOf(
+                                                                context)
+                                                            .height *
+                                                        0.75,
                                                     child:
                                                         SelectListDropDownWidget(),
                                                   ),
@@ -765,21 +770,21 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                                     .primaryBtnText,
                                             barrierColor: Color(0x00000000),
                                             context: context,
-                                            builder: (bottomSheetContext) {
+                                            builder: (context) {
                                               return GestureDetector(
-                                                onTap: () => FocusScope.of(
-                                                        context)
-                                                    .requestFocus(_unfocusNode),
+                                                onTap: () =>
+                                                    FocusScope.of(context)
+                                                        .requestFocus(
+                                                            _model.unfocusNode),
                                                 child: Padding(
-                                                  padding: MediaQuery.of(
-                                                          bottomSheetContext)
-                                                      .viewInsets,
+                                                  padding:
+                                                      MediaQuery.viewInsetsOf(
+                                                          context),
                                                   child: Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.8,
+                                                    height: MediaQuery.sizeOf(
+                                                                context)
+                                                            .height *
+                                                        0.8,
                                                     child:
                                                         CreateListProdsWidget(),
                                                   ),
@@ -1367,22 +1372,22 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                                         .primaryBtnText,
                                                 barrierColor: Color(0x00000000),
                                                 context: context,
-                                                builder: (bottomSheetContext) {
+                                                builder: (context) {
                                                   return GestureDetector(
-                                                    onTap: () =>
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                                _unfocusNode),
+                                                    onTap: () => FocusScope.of(
+                                                            context)
+                                                        .requestFocus(
+                                                            _model.unfocusNode),
                                                     child: Padding(
-                                                      padding: MediaQuery.of(
-                                                              bottomSheetContext)
-                                                          .viewInsets,
+                                                      padding: MediaQuery
+                                                          .viewInsetsOf(
+                                                              context),
                                                       child: Container(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.5,
+                                                        height:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .height *
+                                                                0.5,
                                                         child:
                                                             SearchProdsOblgWidget(),
                                                       ),
@@ -1728,42 +1733,46 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                         initialIndex: 0,
                                         child: Column(
                                           children: [
-                                            TabBar(
-                                              labelColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              labelStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                              indicatorColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                              tabs: [
-                                                Tab(
-                                                  text: 'Money',
-                                                  icon: Icon(
-                                                    Icons.attach_money_outlined,
+                                            Align(
+                                              alignment: Alignment(0.0, 0),
+                                              child: TabBar(
+                                                labelColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                labelStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodySmall
+                                                        .override(
+                                                          fontFamily: 'Poppins',
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                indicatorColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                                tabs: [
+                                                  Tab(
+                                                    text: 'Money',
+                                                    icon: Icon(
+                                                      Icons
+                                                          .attach_money_outlined,
+                                                    ),
                                                   ),
-                                                ),
-                                                Tab(
-                                                  text: 'Chiffre Quota',
-                                                  icon: Icon(
-                                                    Icons.looks_one_outlined,
+                                                  Tab(
+                                                    text: 'Chiffre Quota',
+                                                    icon: Icon(
+                                                      Icons.looks_one_outlined,
+                                                    ),
                                                   ),
-                                                ),
-                                                Tab(
-                                                  text: 'Prods Gift',
-                                                  icon: FaIcon(
-                                                    FontAwesomeIcons
-                                                        .productHunt,
+                                                  Tab(
+                                                    text: 'Prods Gift',
+                                                    icon: FaIcon(
+                                                      FontAwesomeIcons
+                                                          .productHunt,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                             Expanded(
                                               child: TabBarView(
@@ -2384,18 +2393,18 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                                                     context:
                                                                         context,
                                                                     builder:
-                                                                        (bottomSheetContext) {
+                                                                        (context) {
                                                                       return GestureDetector(
                                                                         onTap: () =>
-                                                                            FocusScope.of(context).requestFocus(_unfocusNode),
+                                                                            FocusScope.of(context).requestFocus(_model.unfocusNode),
                                                                         child:
                                                                             Padding(
                                                                           padding:
-                                                                              MediaQuery.of(bottomSheetContext).viewInsets,
+                                                                              MediaQuery.viewInsetsOf(context),
                                                                           child:
                                                                               Container(
                                                                             height:
-                                                                                MediaQuery.of(context).size.height * 0.5,
+                                                                                MediaQuery.sizeOf(context).height * 0.5,
                                                                             child:
                                                                                 SearchProdsGiftWidget(),
                                                                           ),
@@ -2549,7 +2558,9 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                             width: 50.0,
                             height: 50.0,
                             child: CircularProgressIndicator(
-                              color: FlutterFlowTheme.of(context).primary,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                FlutterFlowTheme.of(context).primary,
+                              ),
                             ),
                           ),
                         );
@@ -2591,7 +2602,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
                                     );
                                     logFirebaseEvent('Button_backend_call');
                                     _model.rAddTask = await TaskAddCall.call(
-                                      type: rowTaskTypesRecord!.id,
+                                      type: rowTaskTypesRecord?.id,
                                       title: _model.titleTaskController.text,
                                       description:
                                           _model.descriptionController.text,

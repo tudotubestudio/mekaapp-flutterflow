@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/pages/tasks/rapport_route_months/rapport_route_months_widget.dart';
 import '/flutter_flow/custom_functions.dart' as functions;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -110,14 +111,14 @@ class _ClientTaskWidgetState extends State<ClientTaskWidget> {
                         ),
                       ),
                       Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 0.0, 0.0),
-                              child: Text(
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              8.0, 0.0, 0.0, 0.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
                                 getJsonField(
                                   widget.client,
                                   r'''$.name''',
@@ -129,31 +130,74 @@ class _ClientTaskWidgetState extends State<ClientTaskWidget> {
                                       fontWeight: FontWeight.normal,
                                     ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 4.0, 0.0, 0.0),
-                              child: Text(
-                                formatNumber(
-                                  functions.toDouble(
-                                      getJsonField(
-                                        widget.client,
-                                        r'''$.tot_echue_non_couvert''',
-                                      ).toString(),
-                                      false),
-                                  formatType: FormatType.decimal,
-                                  decimalType: DecimalType.automatic,
-                                  currency: 'DA ',
-                                ),
-                                style: FlutterFlowTheme.of(context)
-                                    .bodySmall
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.normal,
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: formatNumber(
+                                        functions.toDouble(
+                                            getJsonField(
+                                              widget.client,
+                                              r'''$.tot_echue_non_couvert''',
+                                            ).toString(),
+                                            false),
+                                        formatType: FormatType.decimal,
+                                        decimalType: DecimalType.automatic,
+                                        currency: 'DA ',
+                                      ),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                     ),
+                                    TextSpan(
+                                      text: ' - ',
+                                      style: TextStyle(),
+                                    ),
+                                    TextSpan(
+                                      text: getJsonField(
+                                        widget.client,
+                                        r'''$.ch_0''',
+                                      ).toString(),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: FlutterFlowTheme.of(context)
+                                                .gray600,
+                                          ),
+                                    ),
+                                    TextSpan(
+                                      text: '/',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: FlutterFlowTheme.of(context)
+                                                .grayIcon,
+                                          ),
+                                    ),
+                                    TextSpan(
+                                      text: widget.minChMonth.toString(),
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: FlutterFlowTheme.of(context)
+                                                .grayIcon,
+                                          ),
+                                    )
+                                  ],
+                                  style:
+                                      FlutterFlowTheme.of(context).bodyMedium,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       FlutterFlowIconButton(
@@ -175,13 +219,12 @@ class _ClientTaskWidgetState extends State<ClientTaskWidget> {
                             backgroundColor: Colors.white,
                             enableDrag: false,
                             context: context,
-                            builder: (bottomSheetContext) {
+                            builder: (context) {
                               return Padding(
-                                padding: MediaQuery.of(bottomSheetContext)
-                                    .viewInsets,
+                                padding: MediaQuery.viewInsetsOf(context),
                                 child: Container(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.75,
+                                      MediaQuery.sizeOf(context).height * 0.75,
                                   child: RapportRouteMonthsWidget(
                                     cBpartnerId:
                                         functions.jsonToInt(getJsonField(
@@ -212,7 +255,7 @@ class _ClientTaskWidgetState extends State<ClientTaskWidget> {
 
                           context.pushNamed(
                             'Client',
-                            queryParams: {
+                            queryParameters: {
                               'client': serializeParam(
                                 widget.client,
                                 ParamType.JSON,
@@ -234,10 +277,26 @@ class _ClientTaskWidgetState extends State<ClientTaskWidget> {
                   r'''$.ch_0''',
                 )),
                 widget.minChMonth),
-            lineHeight: 6.0,
+            lineHeight: 20.0,
             animation: true,
-            progressColor: FlutterFlowTheme.of(context).primary,
+            progressColor: FlutterFlowTheme.of(context).secondary,
             backgroundColor: FlutterFlowTheme.of(context).accent4,
+            center: Text(
+              formatNumber(
+                functions.percTwoNumMax1(
+                    functions.jsonToDouble(getJsonField(
+                      widget.client,
+                      r'''$.ch_0''',
+                    )),
+                    widget.minChMonth),
+                formatType: FormatType.percent,
+              ),
+              textAlign: TextAlign.center,
+              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                    fontFamily: 'Poppins',
+                    color: FlutterFlowTheme.of(context).gray600,
+                  ),
+            ),
             padding: EdgeInsets.zero,
           ),
         ],

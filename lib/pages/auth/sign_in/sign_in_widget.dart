@@ -4,6 +4,7 @@ import '/backend/backend.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/pages/auth/logo/logo_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,6 +50,7 @@ class _SignInWidgetState extends State<SignInWidget> {
       key: scaffoldKey,
       backgroundColor: Color(0xFFF1F4F8),
       body: SafeArea(
+        top: true,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -61,15 +63,11 @@ class _SignInWidgetState extends State<SignInWidget> {
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Card(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
-                          child: Image.asset(
-                            'assets/images/download.ico',
-                            width: 50.0,
-                            height: 50.0,
-                            fit: BoxFit.fitWidth,
+                        Expanded(
+                          child: wrapWithModel(
+                            model: _model.logoModel,
+                            updateCallback: () => setState(() {}),
+                            child: LogoWidget(),
                           ),
                         ),
                       ],
@@ -89,17 +87,14 @@ class _SignInWidgetState extends State<SignInWidget> {
                             alignment: AlignmentDirectional(-1.0, 0.0),
                             child: Text(
                               'Sign In',
-                              style: FlutterFlowTheme.of(context)
-                                  .headlineMedium
-                                  .override(
-                                    fontFamily: 'Lexend Deca',
-                                    color: Color(0xFF090F13),
-                                    fontSize: 28.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              style: FlutterFlowTheme.of(context).headlineLarge,
                             ),
                           ),
                           InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
                             onTap: () async {
                               logFirebaseEvent(
                                   'SIGN_IN_PAGE_Container_zcnme7wj_ON_TAP');
@@ -126,12 +121,11 @@ class _SignInWidgetState extends State<SignInWidget> {
                               child: Text(
                                 'Sign Up',
                                 style: FlutterFlowTheme.of(context)
-                                    .headlineMedium
+                                    .headlineLarge
                                     .override(
-                                      fontFamily: 'Lexend Deca',
-                                      color: Color(0xFF95A1AC),
-                                      fontSize: 28.0,
-                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Poppins',
+                                      color:
+                                          FlutterFlowTheme.of(context).grayIcon,
                                     ),
                               ),
                             ),
@@ -145,15 +139,11 @@ class _SignInWidgetState extends State<SignInWidget> {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text(
-                            'Get started by creating an account below.',
-                            style:
-                                FlutterFlowTheme.of(context).bodySmall.override(
-                                      fontFamily: 'Lexend Deca',
-                                      color: Color(0xFF57636C),
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                          Expanded(
+                            child: Text(
+                              'Get started by creating an account below.',
+                              style: FlutterFlowTheme.of(context).bodyLarge,
+                            ),
                           ),
                         ],
                       ),
@@ -183,30 +173,30 @@ class _SignInWidgetState extends State<SignInWidget> {
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0xFFDBE2E7),
-                              width: 2.0,
+                              width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(0.0),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0x00000000),
-                              width: 2.0,
+                              width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(0.0),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0x00000000),
-                              width: 2.0,
+                              width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(0.0),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0x00000000),
-                              width: 2.0,
+                              width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(0.0),
                           ),
                           filled: true,
                           fillColor: Colors.white,
@@ -229,6 +219,80 @@ class _SignInWidgetState extends State<SignInWidget> {
                           EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 12.0),
                       child: TextFormField(
                         controller: _model.passwordController,
+                        onFieldSubmitted: (_) async {
+                          logFirebaseEvent(
+                              'SIGN_IN_password_ON_TEXTFIELD_SUBMIT');
+                          Function() _navigate = () {};
+                          logFirebaseEvent('password_backend_call');
+                          _model.tokenCopy = await AuthGroup.loginCall.call(
+                            email: _model.emailAddressController.text,
+                            password: _model.passwordController.text,
+                          );
+                          if ((_model.token?.succeeded ?? true)) {
+                            logFirebaseEvent('password_auth');
+                            GoRouter.of(context).prepareAuthEvent();
+
+                            final user = await authManager.signInWithEmail(
+                              context,
+                              _model.emailAddressController.text,
+                              _model.passwordController.text,
+                            );
+                            if (user == null) {
+                              return;
+                            }
+
+                            _navigate = () =>
+                                context.goNamedAuth('Main', context.mounted);
+                            logFirebaseEvent('password_backend_call');
+
+                            await currentUserReference!
+                                .update(createUsersRecordData(
+                              token: getJsonField(
+                                (_model.token?.jsonBody ?? ''),
+                                r'''$.access_token''',
+                              ).toString(),
+                              displayName: getJsonField(
+                                (_model.token?.jsonBody ?? ''),
+                                r'''$.user''',
+                              ).toString(),
+                            ));
+                            logFirebaseEvent('password_update_app_state');
+                            FFAppState().update(() {
+                              FFAppState().apitoken = getJsonField(
+                                (_model.token?.jsonBody ?? ''),
+                                r'''$.access_token''',
+                              ).toString();
+                            });
+                            logFirebaseEvent('password_backend_call');
+                            _model.meCopy = await AuthGroup.meCall.call();
+                            logFirebaseEvent('password_update_app_state');
+                            FFAppState().update(() {
+                              FFAppState().me = (_model.meCopy?.jsonBody ?? '');
+                            });
+                          } else {
+                            logFirebaseEvent('password_show_snack_bar');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  getJsonField(
+                                    (_model.token?.jsonBody ?? ''),
+                                    r'''$.error''',
+                                  ).toString(),
+                                  style: TextStyle(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                  ),
+                                ),
+                                duration: Duration(milliseconds: 4000),
+                                backgroundColor: Color(0x00000000),
+                              ),
+                            );
+                          }
+
+                          _navigate();
+
+                          setState(() {});
+                        },
                         obscureText: !_model.passwordVisibility,
                         decoration: InputDecoration(
                           labelText: 'Password...',
@@ -249,30 +313,30 @@ class _SignInWidgetState extends State<SignInWidget> {
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0xFFDBE2E7),
-                              width: 2.0,
+                              width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(0.0),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0x00000000),
-                              width: 2.0,
+                              width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(0.0),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0x00000000),
-                              width: 2.0,
+                              width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(0.0),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0x00000000),
-                              width: 2.0,
+                              width: 1.0,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
+                            borderRadius: BorderRadius.circular(0.0),
                           ),
                           filled: true,
                           fillColor: Colors.white,
@@ -334,11 +398,12 @@ class _SignInWidgetState extends State<SignInWidget> {
                             return;
                           }
 
-                          _navigate =
-                              () => context.goNamedAuth('Main', mounted);
+                          _navigate = () =>
+                              context.goNamedAuth('Main', context.mounted);
                           logFirebaseEvent('Button_backend_call');
 
-                          final usersUpdateData = createUsersRecordData(
+                          await currentUserReference!
+                              .update(createUsersRecordData(
                             token: getJsonField(
                               (_model.token?.jsonBody ?? ''),
                               r'''$.access_token''',
@@ -347,8 +412,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                               (_model.token?.jsonBody ?? ''),
                               r'''$.user''',
                             ).toString(),
-                          );
-                          await currentUserReference!.update(usersUpdateData);
+                          ));
                           logFirebaseEvent('Button_update_app_state');
                           FFAppState().update(() {
                             FFAppState().apitoken = getJsonField(
@@ -394,20 +458,20 @@ class _SignInWidgetState extends State<SignInWidget> {
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         iconPadding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                        color: Color(0xFF090F13),
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Lexend Deca',
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        color: FlutterFlowTheme.of(context).primary,
+                        textStyle: FlutterFlowTheme.of(context)
+                            .bodyLarge
+                            .override(
+                              fontFamily: 'Poppins',
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBtnText,
+                            ),
                         elevation: 3.0,
                         borderSide: BorderSide(
                           color: Colors.transparent,
                           width: 1.0,
                         ),
-                        borderRadius: BorderRadius.circular(40.0),
+                        borderRadius: BorderRadius.circular(2.0),
                       ),
                     ),
                   ],

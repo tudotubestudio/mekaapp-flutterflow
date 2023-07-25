@@ -23,16 +23,26 @@ class MekaappFirebaseUser extends BaseAuthUser {
   Future? delete() => user?.delete();
 
   @override
+  Future? updateEmail(String email) async => await user?.updateEmail(email);
+
+  @override
   Future? sendEmailVerification() => user?.sendEmailVerification();
 
   @override
   bool get emailVerified {
     // Reloads the user when checking in order to get the most up to date
     // email verified status.
-    if (loggedIn && user!.emailVerified) {
-      user!.reload().then((_) => user = FirebaseAuth.instance.currentUser);
+    if (loggedIn && !user!.emailVerified) {
+      refreshUser();
     }
-    return currentUser?.emailVerified ?? false;
+    return user?.emailVerified ?? false;
+  }
+
+  @override
+  Future refreshUser() async {
+    await FirebaseAuth.instance.currentUser
+        ?.reload()
+        .then((_) => user = FirebaseAuth.instance.currentUser);
   }
 
   static BaseAuthUser fromUserCredential(UserCredential userCredential) =>

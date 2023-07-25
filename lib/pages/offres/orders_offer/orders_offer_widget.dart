@@ -74,6 +74,7 @@ class _OrdersOfferWidgetState extends State<OrdersOfferWidget> {
         elevation: 2.0,
       ),
       body: SafeArea(
+        top: true,
         child: ListView(
           padding: EdgeInsets.zero,
           scrollDirection: Axis.vertical,
@@ -81,6 +82,10 @@ class _OrdersOfferWidgetState extends State<OrdersOfferWidget> {
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
               child: InkWell(
+                splashColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
                 onTap: () async {
                   logFirebaseEvent('ORDERS_OFFER_ListTile_k671s5ko_ON_TAP');
                   logFirebaseEvent('ListTile_navigate_to');

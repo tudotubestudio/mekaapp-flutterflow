@@ -59,17 +59,16 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
       });
     });
 
-    _model.destinationController ??= TextEditingController(
+    _model.destinationController1 ??= TextEditingController(
+        text: 'Region: ${getJsonField(
+      widget.region,
+      r'''$.region''',
+    ).toString().toString()}');
+    _model.destinationController2 ??= TextEditingController(
         text: 'BATNA - ${getJsonField(
       widget.region,
       r'''$.region''',
     ).toString().toString()}-  BATNA');
-    _model.truckController ??= TextEditingController(
-        text: getJsonField(
-      widget.region,
-      r'''$.description''',
-    ).toString().toString());
-    _model.accompagnateurController ??= TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -101,59 +100,95 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                      child: Text(
-                        'Region: ${getJsonField(
-                          widget.region,
-                          r'''$.region''',
-                        ).toString()}',
-                        style: FlutterFlowTheme.of(context).bodyMedium,
-                      ),
-                    ),
-                    FlutterFlowIconButton(
-                      borderColor: Colors.transparent,
-                      borderRadius: 30.0,
-                      borderWidth: 1.0,
-                      buttonSize: 60.0,
-                      icon: Icon(
-                        Icons.refresh,
-                        color: FlutterFlowTheme.of(context).primaryText,
-                        size: 30.0,
-                      ),
-                      onPressed: () async {
-                        logFirebaseEvent(
-                            'CREATE_ORDER_MISSION_refresh_ICN_ON_TAP');
-                        logFirebaseEvent('IconButton_reset_form_fields');
-                        setState(() {
-                          _model.destinationController?.text =
-                              'BATNA - ${getJsonField(
-                            widget.region,
-                            r'''$.region''',
-                          ).toString()}-  BATNA';
-                          _model.truckController?.text = getJsonField(
-                            widget.region,
-                            r'''$.description''',
-                          ).toString();
-                          _model.accompagnateurController?.clear();
-                        });
-                      },
-                    ),
-                  ],
+                FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30.0,
+                  borderWidth: 1.0,
+                  buttonSize: 60.0,
+                  icon: Icon(
+                    Icons.refresh,
+                    color: FlutterFlowTheme.of(context).primaryText,
+                    size: 30.0,
+                  ),
+                  onPressed: () async {
+                    logFirebaseEvent('CREATE_ORDER_MISSION_refresh_ICN_ON_TAP');
+                    logFirebaseEvent('IconButton_reset_form_fields');
+                    setState(() {
+                      _model.withLivreurValueController?.reset();
+                    });
+                  },
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                  child: Text(
-                    'Livreur: ${getJsonField(
-                      widget.region,
-                      r'''$.name''',
-                    ).toString()}',
-                    style: FlutterFlowTheme.of(context).bodyMedium,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _model.destinationController1,
+                          autofocus: true,
+                          readOnly: true,
+                          obscureText: false,
+                          decoration: InputDecoration(
+                            labelText: 'Region',
+                            hintStyle:
+                                FlutterFlowTheme.of(context).bodySmall.override(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: FlutterFlowTheme.of(context).lineColor,
+                                width: 1.0,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: FlutterFlowTheme.of(context).lineColor,
+                                width: 1.0,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0x00000000),
+                                width: 1.0,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color(0x00000000),
+                                width: 1.0,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(4.0),
+                                topRight: Radius.circular(4.0),
+                              ),
+                            ),
+                            contentPadding: EdgeInsetsDirectional.fromSTEB(
+                                12.0, 12.0, 12.0, 12.0),
+                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                          validator: _model.destinationController1Validator
+                              .asValidator(context),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -171,8 +206,7 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                       r'''$..name''',
                     ) as List)
                         .map<String>((s) => s.toString())
-                        .toList()!
-                        .toList(),
+                        .toList()!,
                     onChanged: (val) =>
                         setState(() => _model.livreurValue = val),
                     width: double.infinity,
@@ -183,7 +217,7 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                               color: FlutterFlowTheme.of(context).secondaryText,
                             ),
                     textStyle: FlutterFlowTheme.of(context).bodyMedium,
-                    hintText: 'Please select...',
+                    hintText: 'Livreur...',
                     searchHintText: 'Search for an item...',
                     fillColor: FlutterFlowTheme.of(context).secondaryBackground,
                     elevation: 2.0,
@@ -210,8 +244,7 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                       r'''$..name''',
                     ) as List)
                         .map<String>((s) => s.toString())
-                        .toList()!
-                        .toList(),
+                        .toList()!,
                     onChanged: (val) =>
                         setState(() => _model.veculeValue = val),
                     width: double.infinity,
@@ -248,6 +281,10 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               8.0, 0.0, 0.0, 0.0),
                           child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
                             onTap: () async {
                               logFirebaseEvent(
                                   'CREATE_ORDER_MISSION_Container_jy8d5e8a_');
@@ -339,6 +376,10 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                           padding: EdgeInsetsDirectional.fromSTEB(
                               8.0, 0.0, 0.0, 0.0),
                           child: InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
                             onTap: () async {
                               logFirebaseEvent(
                                   'CREATE_ORDER_MISSION_Container_kvya6gty_');
@@ -419,9 +460,9 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                     children: [
                       Expanded(
                         child: TextFormField(
-                          controller: _model.destinationController,
+                          controller: _model.destinationController2,
                           onChanged: (_) => EasyDebounce.debounce(
-                            '_model.destinationController',
+                            '_model.destinationController2',
                             Duration(milliseconds: 1000),
                             () => setState(() {}),
                           ),
@@ -483,7 +524,7 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.normal,
                                   ),
-                          validator: _model.destinationControllerValidator
+                          validator: _model.destinationController2Validator
                               .asValidator(context),
                         ),
                       ),
@@ -492,148 +533,35 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _model.truckController,
-                          autofocus: true,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: 'Moyen de locomotion',
-                            hintText: 'Moyen de locomotion ...',
-                            hintStyle:
-                                FlutterFlowTheme.of(context).bodySmall.override(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).lineColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
+                  child: FlutterFlowDropDown<String>(
+                    controller: _model.withLivreurValueController ??=
+                        FormFieldController<String>(null),
+                    options: (getJsonField(
+                      widget.listLivreurs,
+                      r'''$..name''',
+                    ) as List)
+                        .map<String>((s) => s.toString())
+                        .toList()!,
+                    onChanged: (val) =>
+                        setState(() => _model.withLivreurValue = val),
+                    width: double.infinity,
+                    height: 50.0,
+                    searchHintTextStyle:
+                        FlutterFlowTheme.of(context).bodyLarge.override(
+                              fontFamily: 'Roboto',
+                              color: FlutterFlowTheme.of(context).secondaryText,
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).lineColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1.0,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1.0,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                12.0, 12.0, 12.0, 12.0),
-                          ),
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                          validator: _model.truckControllerValidator
-                              .asValidator(context),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _model.accompagnateurController,
-                          autofocus: true,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            labelText: 'Accompagnateur',
-                            hintText: 'Accompagnateur ...',
-                            hintStyle:
-                                FlutterFlowTheme.of(context).bodySmall.override(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).lineColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: FlutterFlowTheme.of(context).lineColor,
-                                width: 1.0,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1.0,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0x00000000),
-                                width: 1.0,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(4.0),
-                                topRight: Radius.circular(4.0),
-                              ),
-                            ),
-                            contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                12.0, 12.0, 12.0, 12.0),
-                          ),
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                          validator: _model.accompagnateurControllerValidator
-                              .asValidator(context),
-                        ),
-                      ),
-                    ],
+                    textStyle: FlutterFlowTheme.of(context).bodyMedium,
+                    hintText: 'Accompagnateur...',
+                    searchHintText: 'Search for an item...',
+                    fillColor: FlutterFlowTheme.of(context).secondaryBackground,
+                    elevation: 2.0,
+                    borderColor: FlutterFlowTheme.of(context).lineColor,
+                    borderWidth: 0.0,
+                    borderRadius: 0.0,
+                    margin: EdgeInsetsDirectional.fromSTEB(4.0, 4.0, 4.0, 4.0),
+                    hidesUnderline: true,
+                    isSearchable: true,
                   ),
                 ),
                 Padding(
@@ -665,8 +593,9 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                                     width: 50.0,
                                     height: 50.0,
                                     child: CircularProgressIndicator(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -692,7 +621,7 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                                       r'''$.c_salesregion_id''',
                                     )),
                                     destination:
-                                        _model.destinationController.text,
+                                        _model.destinationController2.text,
                                     dateStart: _model.dateStart?.toString(),
                                     dateEnd: _model.dateEnd?.toString(),
                                     barecode: random_data.randomString(
@@ -708,6 +637,14 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                                         widget.listVecules!,
                                         _model.veculeValue!,
                                         'dd_vehicle_id'),
+                                    withCBpartnerId:
+                                        _model.withLivreurValue != null &&
+                                                _model.withLivreurValue != ''
+                                            ? functions.getIdFromListJson(
+                                                widget.listLivreurs!,
+                                                _model.withLivreurValue!,
+                                                'id')
+                                            : null,
                                   );
                                   if ((_model.resOrdreMission?.succeeded ??
                                       true)) {
@@ -736,15 +673,15 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                                             ''),
                                         r'''$.id''',
                                       ).toString(),
-                                      getJsonField(
-                                        widget.region,
-                                        r'''$.name''',
-                                      ).toString(),
-                                      _model.destinationController.text,
-                                      _model.truckController.text,
+                                      _model.livreurValue!,
+                                      _model.destinationController2.text,
+                                      _model.veculeValue!,
                                       dateTimeFormat('d/M/y', _model.dateStart),
                                       dateTimeFormat('d/M/y', _model.dateEnd),
-                                      _model.accompagnateurController.text,
+                                      valueOrDefault<String>(
+                                        _model.withLivreurValue,
+                                        '........./..........',
+                                      ),
                                       dateTimeFormat(
                                           'd/M/y',
                                           functions.jsonToDate(getJsonField(
@@ -770,17 +707,11 @@ class _CreateOrderMissionWidgetState extends State<CreateOrderMissionWidget> {
                                     logFirebaseEvent(
                                         'Button_reset_form_fields');
                                     setState(() {
-                                      _model.destinationController?.text =
+                                      _model.destinationController2?.text =
                                           'BATNA - ${getJsonField(
                                         widget.region,
                                         r'''$.region''',
                                       ).toString()}-  BATNA';
-                                      _model.truckController?.text =
-                                          getJsonField(
-                                        widget.region,
-                                        r'''$.description''',
-                                      ).toString();
-                                      _model.accompagnateurController?.clear();
                                     });
                                   } else {
                                     logFirebaseEvent('Button_show_snack_bar');

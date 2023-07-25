@@ -36,6 +36,7 @@ class AddListOffreModel extends FlutterFlowModel {
     nameController2?.dispose();
   }
 
-  /// Additional helper methods are added here.
+  /// Action blocks are added here.
 
+  /// Additional helper methods are added here.
 }

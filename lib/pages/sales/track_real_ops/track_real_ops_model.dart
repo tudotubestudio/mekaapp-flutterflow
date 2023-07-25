@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 class TrackRealOpsModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
+  final unfocusNode = FocusNode();
   Completer<ApiCallResponse>? apiRequestCompleter2;
   Completer<ApiCallResponse>? apiRequestCompleter1;
 
@@ -21,7 +22,11 @@ class TrackRealOpsModel extends FlutterFlowModel {
 
   void initState(BuildContext context) {}
 
-  void dispose() {}
+  void dispose() {
+    unfocusNode.dispose();
+  }
+
+  /// Action blocks are added here.
 
   /// Additional helper methods are added here.
 

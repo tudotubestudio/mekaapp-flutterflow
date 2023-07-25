@@ -53,7 +53,7 @@ class _TaskOrdreDeblockageClientWidgetState
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 8.0),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.92,
+        width: MediaQuery.sizeOf(context).width * 0.92,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).secondaryBackground,
           boxShadow: [

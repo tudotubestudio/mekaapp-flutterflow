@@ -32,7 +32,6 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
   late AddTaskCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -56,7 +55,6 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -65,11 +63,12 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
+          top: true,
           child: Form(
             key: _model.formKey,
             autovalidateMode: AutovalidateMode.disabled,
@@ -508,6 +507,10 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                   children: [
                                     Expanded(
                                       child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        focusColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
                                         onTap: () async {
                                           logFirebaseEvent(
                                               'ADD_TASK_COPY_Container_6d8y5eha_ON_TAP');
@@ -520,21 +523,21 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                     .primaryBtnText,
                                             barrierColor: Color(0x00000000),
                                             context: context,
-                                            builder: (bottomSheetContext) {
+                                            builder: (context) {
                                               return GestureDetector(
-                                                onTap: () => FocusScope.of(
-                                                        context)
-                                                    .requestFocus(_unfocusNode),
+                                                onTap: () =>
+                                                    FocusScope.of(context)
+                                                        .requestFocus(
+                                                            _model.unfocusNode),
                                                 child: Padding(
-                                                  padding: MediaQuery.of(
-                                                          bottomSheetContext)
-                                                      .viewInsets,
+                                                  padding:
+                                                      MediaQuery.viewInsetsOf(
+                                                          context),
                                                   child: Container(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.75,
+                                                    height: MediaQuery.sizeOf(
+                                                                context)
+                                                            .height *
+                                                        0.75,
                                                     child:
                                                         SelectListDropDownWidget(),
                                                   ),
@@ -993,8 +996,9 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                     width: 50.0,
                                     height: 50.0,
                                     child: CircularProgressIndicator(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        FlutterFlowTheme.of(context).primary,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -1006,8 +1010,6 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                     FormFieldController<String>(null),
                                 options: userUsersRecordList
                                     .map((e) => e.displayName)
-                                    .withoutNulls
-                                    .toList()
                                     .toList(),
                                 onChanged: (val) =>
                                     setState(() => _model.userValue = val),
@@ -1117,22 +1119,22 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                         .primaryBtnText,
                                                 barrierColor: Color(0x00000000),
                                                 context: context,
-                                                builder: (bottomSheetContext) {
+                                                builder: (context) {
                                                   return GestureDetector(
-                                                    onTap: () =>
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                                _unfocusNode),
+                                                    onTap: () => FocusScope.of(
+                                                            context)
+                                                        .requestFocus(
+                                                            _model.unfocusNode),
                                                     child: Padding(
-                                                      padding: MediaQuery.of(
-                                                              bottomSheetContext)
-                                                          .viewInsets,
+                                                      padding: MediaQuery
+                                                          .viewInsetsOf(
+                                                              context),
                                                       child: Container(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.5,
+                                                        height:
+                                                            MediaQuery.sizeOf(
+                                                                        context)
+                                                                    .height *
+                                                                0.5,
                                                         child:
                                                             SearchProdsOblgWidget(),
                                                       ),
@@ -1477,42 +1479,46 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                         initialIndex: 0,
                                         child: Column(
                                           children: [
-                                            TabBar(
-                                              labelColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondaryText,
-                                              labelStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily: 'Poppins',
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                              indicatorColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .secondary,
-                                              tabs: [
-                                                Tab(
-                                                  text: 'Money',
-                                                  icon: Icon(
-                                                    Icons.attach_money_outlined,
+                                            Align(
+                                              alignment: Alignment(0.0, 0),
+                                              child: TabBar(
+                                                labelColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                labelStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodySmall
+                                                        .override(
+                                                          fontFamily: 'Poppins',
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                indicatorColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondary,
+                                                tabs: [
+                                                  Tab(
+                                                    text: 'Money',
+                                                    icon: Icon(
+                                                      Icons
+                                                          .attach_money_outlined,
+                                                    ),
                                                   ),
-                                                ),
-                                                Tab(
-                                                  text: 'Chiffre Quota',
-                                                  icon: Icon(
-                                                    Icons.looks_one_outlined,
+                                                  Tab(
+                                                    text: 'Chiffre Quota',
+                                                    icon: Icon(
+                                                      Icons.looks_one_outlined,
+                                                    ),
                                                   ),
-                                                ),
-                                                Tab(
-                                                  text: 'Prods Gift',
-                                                  icon: FaIcon(
-                                                    FontAwesomeIcons
-                                                        .productHunt,
+                                                  Tab(
+                                                    text: 'Prods Gift',
+                                                    icon: FaIcon(
+                                                      FontAwesomeIcons
+                                                          .productHunt,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                             Expanded(
                                               child: TabBarView(
@@ -2249,18 +2255,18 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                                                     context:
                                                                         context,
                                                                     builder:
-                                                                        (bottomSheetContext) {
+                                                                        (context) {
                                                                       return GestureDetector(
                                                                         onTap: () =>
-                                                                            FocusScope.of(context).requestFocus(_unfocusNode),
+                                                                            FocusScope.of(context).requestFocus(_model.unfocusNode),
                                                                         child:
                                                                             Padding(
                                                                           padding:
-                                                                              MediaQuery.of(bottomSheetContext).viewInsets,
+                                                                              MediaQuery.viewInsetsOf(context),
                                                                           child:
                                                                               Container(
                                                                             height:
-                                                                                MediaQuery.of(context).size.height * 0.5,
+                                                                                MediaQuery.sizeOf(context).height * 0.5,
                                                                             child:
                                                                                 SearchProdsGiftWidget(),
                                                                           ),
@@ -2408,8 +2414,10 @@ class _AddTaskCopyWidgetState extends State<AddTaskCopyWidget> {
                                       width: 50.0,
                                       height: 50.0,
                                       child: CircularProgressIndicator(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
                                       ),
                                     ),
                                   );

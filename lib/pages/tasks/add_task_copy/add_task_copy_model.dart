@@ -22,6 +22,7 @@ import 'package:provider/provider.dart';
 class AddTaskCopyModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
+  final unfocusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   // State field(s) for DropDownTypeTask widget.
   String? dropDownTypeTaskValue;
@@ -97,6 +98,7 @@ class AddTaskCopyModel extends FlutterFlowModel {
   void initState(BuildContext context) {}
 
   void dispose() {
+    unfocusNode.dispose();
     titleTaskController?.dispose();
     descriptionController?.dispose();
     titleController?.dispose();
@@ -107,6 +109,8 @@ class AddTaskCopyModel extends FlutterFlowModel {
     giftChiffre1Controller?.dispose();
     percGiftChiffre1Controller?.dispose();
   }
+
+  /// Action blocks are added here.
 
   /// Additional helper methods are added here.
 

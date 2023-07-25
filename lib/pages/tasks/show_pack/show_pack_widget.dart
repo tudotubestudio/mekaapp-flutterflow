@@ -81,6 +81,7 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
         elevation: 0.0,
       ),
       body: SafeArea(
+        top: true,
         child: Container(
           width: double.infinity,
           height: double.infinity,
@@ -94,7 +95,7 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 1.0,
+                    width: MediaQuery.sizeOf(context).width * 1.0,
                     height: 140.0,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).primary,
@@ -226,7 +227,9 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                                 width: 50.0,
                                 height: 50.0,
                                 child: CircularProgressIndicator(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
                               ),
                             );
@@ -262,7 +265,7 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
                                           0.0, 0.0, 0.0, 8.0),
                                       child: Container(
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            MediaQuery.sizeOf(context).width *
                                                 0.92,
                                         decoration: BoxDecoration(
                                           color: FlutterFlowTheme.of(context)
@@ -433,7 +436,7 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
 
                                                       context.pushNamed(
                                                         'GetGiftTask',
-                                                        queryParams: {
+                                                        queryParameters: {
                                                           'task':
                                                               serializeParam(
                                                             widget.pack,
@@ -508,7 +511,7 @@ class _ShowPackWidgetState extends State<ShowPackWidget> {
 
                                                     context.pushNamed(
                                                       'GetGiftTask',
-                                                      queryParams: {
+                                                      queryParameters: {
                                                         'task': serializeParam(
                                                           widget.pack,
                                                           ParamType.JSON,

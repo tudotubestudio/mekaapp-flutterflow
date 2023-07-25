@@ -1,66 +1,105 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+
+import '/backend/schema/util/firestore_util.dart';
+import '/backend/schema/util/schema_util.dart';
+
 import 'index.dart';
-import 'serializers.dart';
-import 'package:built_value/built_value.dart';
+import '/flutter_flow/flutter_flow_util.dart';
 
-part 'task_types_record.g.dart';
+class TaskTypesRecord extends FirestoreRecord {
+  TaskTypesRecord._(
+    DocumentReference reference,
+    Map<String, dynamic> data,
+  ) : super(reference, data) {
+    _initializeFields();
+  }
 
-abstract class TaskTypesRecord
-    implements Built<TaskTypesRecord, TaskTypesRecordBuilder> {
-  static Serializer<TaskTypesRecord> get serializer =>
-      _$taskTypesRecordSerializer;
+  // "id" field.
+  int? _id;
+  int get id => _id ?? 0;
+  bool hasId() => _id != null;
 
-  int? get id;
+  // "name" field.
+  String? _name;
+  String get name => _name ?? '';
+  bool hasName() => _name != null;
 
-  String? get name;
+  // "list_permetions" field.
+  List<DocumentReference>? _listPermetions;
+  List<DocumentReference> get listPermetions => _listPermetions ?? const [];
+  bool hasListPermetions() => _listPermetions != null;
 
-  @BuiltValueField(wireName: 'list_permetions')
-  BuiltList<DocumentReference>? get listPermetions;
-
-  @BuiltValueField(wireName: kDocumentReferenceField)
-  DocumentReference? get ffRef;
-  DocumentReference get reference => ffRef!;
-
-  static void _initializeBuilder(TaskTypesRecordBuilder builder) => builder
-    ..id = 0
-    ..name = ''
-    ..listPermetions = ListBuilder();
+  void _initializeFields() {
+    _id = castToType<int>(snapshotData['id']);
+    _name = snapshotData['name'] as String?;
+    _listPermetions = getDataList(snapshotData['list_permetions']);
+  }
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('task_types');
 
-  static Stream<TaskTypesRecord> getDocument(DocumentReference ref) => ref
-      .snapshots()
-      .map((s) => serializers.deserializeWith(serializer, serializedData(s))!);
+  static Stream<TaskTypesRecord> getDocument(DocumentReference ref) =>
+      ref.snapshots().map((s) => TaskTypesRecord.fromSnapshot(s));
 
-  static Future<TaskTypesRecord> getDocumentOnce(DocumentReference ref) => ref
-      .get()
-      .then((s) => serializers.deserializeWith(serializer, serializedData(s))!);
+  static Future<TaskTypesRecord> getDocumentOnce(DocumentReference ref) =>
+      ref.get().then((s) => TaskTypesRecord.fromSnapshot(s));
 
-  TaskTypesRecord._();
-  factory TaskTypesRecord([void Function(TaskTypesRecordBuilder) updates]) =
-      _$TaskTypesRecord;
+  static TaskTypesRecord fromSnapshot(DocumentSnapshot snapshot) =>
+      TaskTypesRecord._(
+        snapshot.reference,
+        mapFromFirestore(snapshot.data() as Map<String, dynamic>),
+      );
 
   static TaskTypesRecord getDocumentFromData(
-          Map<String, dynamic> data, DocumentReference reference) =>
-      serializers.deserializeWith(serializer,
-          {...mapFromFirestore(data), kDocumentReferenceField: reference})!;
+    Map<String, dynamic> data,
+    DocumentReference reference,
+  ) =>
+      TaskTypesRecord._(reference, mapFromFirestore(data));
+
+  @override
+  String toString() =>
+      'TaskTypesRecord(reference: ${reference.path}, data: $snapshotData)';
+
+  @override
+  int get hashCode => reference.path.hashCode;
+
+  @override
+  bool operator ==(other) =>
+      other is TaskTypesRecord &&
+      reference.path.hashCode == other.reference.path.hashCode;
 }
 
 Map<String, dynamic> createTaskTypesRecordData({
   int? id,
   String? name,
 }) {
-  final firestoreData = serializers.toFirestore(
-    TaskTypesRecord.serializer,
-    TaskTypesRecord(
-      (t) => t
-        ..id = id
-        ..name = name
-        ..listPermetions = null,
-    ),
+  final firestoreData = mapToFirestore(
+    <String, dynamic>{
+      'id': id,
+      'name': name,
+    }.withoutNulls,
   );
 
   return firestoreData;
+}
+
+class TaskTypesRecordDocumentEquality implements Equality<TaskTypesRecord> {
+  const TaskTypesRecordDocumentEquality();
+
+  @override
+  bool equals(TaskTypesRecord? e1, TaskTypesRecord? e2) {
+    const listEquality = ListEquality();
+    return e1?.id == e2?.id &&
+        e1?.name == e2?.name &&
+        listEquality.equals(e1?.listPermetions, e2?.listPermetions);
+  }
+
+  @override
+  int hash(TaskTypesRecord? e) =>
+      const ListEquality().hash([e?.id, e?.name, e?.listPermetions]);
+
+  @override
+  bool isValidKey(Object? o) => o is TaskTypesRecord;
 }

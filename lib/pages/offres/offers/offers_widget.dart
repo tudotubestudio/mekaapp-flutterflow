@@ -25,7 +25,6 @@ class _OffersWidgetState extends State<OffersWidget> {
   late OffersModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -40,7 +39,6 @@ class _OffersWidgetState extends State<OffersWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -49,7 +47,7 @@ class _OffersWidgetState extends State<OffersWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primary,
@@ -95,20 +93,23 @@ class _OffersWidgetState extends State<OffersWidget> {
                 initialIndex: 0,
                 child: Column(
                   children: [
-                    TabBar(
-                      labelColor: FlutterFlowTheme.of(context).primaryBtnText,
-                      unselectedLabelColor: Color(0xB3FFFFFF),
-                      labelStyle: FlutterFlowTheme.of(context).titleMedium,
-                      indicatorColor: FlutterFlowTheme.of(context).primary,
-                      indicatorWeight: 3.0,
-                      tabs: [
-                        Tab(
-                          text: 'Day',
-                        ),
-                        Tab(
-                          text: 'Privistion',
-                        ),
-                      ],
+                    Align(
+                      alignment: Alignment(0.0, 0),
+                      child: TabBar(
+                        labelColor: FlutterFlowTheme.of(context).primaryBtnText,
+                        unselectedLabelColor: Color(0xB3FFFFFF),
+                        labelStyle: FlutterFlowTheme.of(context).titleMedium,
+                        indicatorColor: FlutterFlowTheme.of(context).primary,
+                        indicatorWeight: 3.0,
+                        tabs: [
+                          Tab(
+                            text: 'Day',
+                          ),
+                          Tab(
+                            text: 'Privistion',
+                          ),
+                        ],
+                      ),
                     ),
                     Expanded(
                       child: TabBarView(
@@ -248,9 +249,9 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                             ),
                                                             collapsed:
                                                                 Container(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
+                                                              width: MediaQuery
+                                                                          .sizeOf(
+                                                                              context)
                                                                       .width *
                                                                   1.0,
                                                               decoration:
@@ -263,13 +264,12 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                             8.0),
                                                               ),
                                                               child: Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            8.0,
-                                                                            8.0,
-                                                                            8.0,
-                                                                            8.0),
+                                                                padding: EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                        8.0,
+                                                                        16.0,
+                                                                        8.0,
+                                                                        16.0),
                                                                 child:
                                                                     FlutterFlowChoiceChips(
                                                                   options: [
@@ -332,6 +332,8 @@ class _OffersWidgetState extends State<OffersWidget> {
                                                                   ),
                                                                   chipSpacing:
                                                                       10.0,
+                                                                  rowSpacing:
+                                                                      12.0,
                                                                   multiselect:
                                                                       false,
                                                                   alignment:

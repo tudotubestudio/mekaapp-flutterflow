@@ -74,7 +74,7 @@ class _ValidateDebloqueWidgetState extends State<ValidateDebloqueWidget> {
       ),
       child: Container(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 1.0,
+        height: MediaQuery.sizeOf(context).height * 1.0,
         decoration: BoxDecoration(
           color: FlutterFlowTheme.of(context).lineColor,
           borderRadius: BorderRadius.only(
@@ -182,7 +182,9 @@ class _ValidateDebloqueWidgetState extends State<ValidateDebloqueWidget> {
                                 width: 50.0,
                                 height: 50.0,
                                 child: CircularProgressIndicator(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    FlutterFlowTheme.of(context).primary,
+                                  ),
                                 ),
                               ),
                             );
@@ -326,7 +328,9 @@ class _ValidateDebloqueWidgetState extends State<ValidateDebloqueWidget> {
                               width: 50.0,
                               height: 50.0,
                               child: CircularProgressIndicator(
-                                color: FlutterFlowTheme.of(context).primary,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).primary,
+                                ),
                               ),
                             ),
                           );
@@ -480,7 +484,9 @@ class _ValidateDebloqueWidgetState extends State<ValidateDebloqueWidget> {
                               width: 50.0,
                               height: 50.0,
                               child: CircularProgressIndicator(
-                                color: FlutterFlowTheme.of(context).primary,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  FlutterFlowTheme.of(context).primary,
+                                ),
                               ),
                             ),
                           );
@@ -504,6 +510,10 @@ class _ValidateDebloqueWidgetState extends State<ValidateDebloqueWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       0.0, 0.0, 0.0, 8.0),
                                   child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
                                     onTap: () async {
                                       logFirebaseEvent(
                                           'VALIDATE_DEBLOQUE_transaction_ON_TAP');
@@ -515,14 +525,12 @@ class _ValidateDebloqueWidgetState extends State<ValidateDebloqueWidget> {
                                         barrierColor: Color(0x00000000),
                                         enableDrag: false,
                                         context: context,
-                                        builder: (bottomSheetContext) {
+                                        builder: (context) {
                                           return Padding(
-                                            padding: MediaQuery.of(
-                                                    bottomSheetContext)
-                                                .viewInsets,
+                                            padding: MediaQuery.viewInsetsOf(
+                                                context),
                                             child: Container(
-                                              height: MediaQuery.of(context)
-                                                      .size
+                                              height: MediaQuery.sizeOf(context)
                                                       .height *
                                                   0.75,
                                               child: ValidateDebloqueWidget(
@@ -543,7 +551,7 @@ class _ValidateDebloqueWidgetState extends State<ValidateDebloqueWidget> {
                                       await _model.waitForApiRequestCompleted();
                                     },
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width *
+                                      width: MediaQuery.sizeOf(context).width *
                                           0.92,
                                       decoration: BoxDecoration(
                                         color: FlutterFlowTheme.of(context)
@@ -1136,6 +1144,11 @@ class _ValidateDebloqueWidgetState extends State<ValidateDebloqueWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0.0, 0.0, 0.0, 8.0),
                                             child: InkWell(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
                                               onTap: () async {
                                                 logFirebaseEvent(
                                                     'VALIDATE_DEBLOQUE_Container_p2heq282_ON_');

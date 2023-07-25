@@ -2,7 +2,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 import 'form_field_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class FlutterFlowDropDown<T> extends StatefulWidget {
   const FlutterFlowDropDown({
@@ -17,6 +16,7 @@ class FlutterFlowDropDown<T> extends StatefulWidget {
     this.height,
     this.fillColor,
     this.searchHintTextStyle,
+    this.searchCursorColor,
     required this.textStyle,
     required this.elevation,
     required this.borderWidth,
@@ -39,6 +39,7 @@ class FlutterFlowDropDown<T> extends StatefulWidget {
   final double? height;
   final Color? fillColor;
   final TextStyle? searchHintTextStyle;
+  final Color? searchCursorColor;
   final TextStyle textStyle;
   final double elevation;
   final double borderWidth;
@@ -73,20 +74,23 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final optionToDisplayValue = Map.fromEntries(
+      widget.options.asMap().entries.map((option) => MapEntry(
+          option.value,
+          widget.optionLabels == null ||
+                  widget.optionLabels!.length < option.key + 1
+              ? option.value.toString()
+              : widget.optionLabels![option.key])),
+    );
     final value = widget.options.contains(widget.controller.value)
         ? widget.controller.value
         : null;
     final items = widget.options
-        .asMap()
-        .entries
         .map(
           (option) => DropdownMenuItem<T>(
-            value: option.value,
+            value: option,
             child: Text(
-              widget.optionLabels == null ||
-                      widget.optionLabels!.length < option.key + 1
-                  ? option.value.toString()
-                  : widget.optionLabels![option.key],
+              optionToDisplayValue[option] ?? '',
               style: widget.textStyle,
             ),
           ),
@@ -98,7 +102,13 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
     void Function(T?)? onChanged =
         !widget.disabled ? (value) => widget.controller.value = value : null;
     final dropdownWidget = widget.isSearchable
-        ? _buildSearchableDropdown(value, items, onChanged, hintText)
+        ? _buildSearchableDropdown(
+            value,
+            items,
+            onChanged,
+            hintText,
+            optionToDisplayValue,
+          )
         : _buildNonSearchableDropdown(value, items, onChanged, hintText);
     final childWidget = DecoratedBox(
       decoration: BoxDecoration(
@@ -150,6 +160,7 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
     List<DropdownMenuItem<T>>? items,
     void Function(T?)? onChanged,
     Text? hintText,
+    Map<T, String> optionLabels,
   ) {
     final overlayColor = MaterialStateProperty.resolveWith<Color?>((states) =>
         states.contains(MaterialState.focused) ? Colors.transparent : null);
@@ -190,6 +201,7 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
             expands: true,
             maxLines: null,
             controller: _textEditingController,
+            cursorColor: widget.searchCursorColor,
             decoration: InputDecoration(
               isDense: true,
               contentPadding: const EdgeInsets.symmetric(
@@ -205,14 +217,13 @@ class _FlutterFlowDropDownState<T> extends State<FlutterFlowDropDown<T>> {
           ),
         ),
         searchMatchFn: (item, searchValue) {
-          return item.value
-              .toString()
+          return (optionLabels[item.value] ?? '')
               .toLowerCase()
               .contains(searchValue.toLowerCase());
         },
       ),
 
-      //This to clear the search value when you close the menu
+      // This to clear the search value when you close the menu
       onMenuStateChange: (isOpen) {
         if (!isOpen) {
           _textEditingController.clear();

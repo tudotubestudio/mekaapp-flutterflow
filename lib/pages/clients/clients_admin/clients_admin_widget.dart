@@ -25,7 +25,6 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
   late ClientsAdminModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -41,7 +40,6 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -50,7 +48,7 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -87,6 +85,7 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
           elevation: 2.0,
         ),
         body: SafeArea(
+          top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -101,56 +100,17 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
                   child: AuthUserStreamWidget(
                     builder: (context) =>
                         PagedListView<ApiPagingParams, dynamic>(
-                      pagingController: () {
-                        if (_model.pagingController != null) {
-                          return _model.pagingController!;
-                        }
-
-                        _model.pagingController = PagingController(
-                          firstPageKey: ApiPagingParams(
-                            nextPageNumber: 0,
-                            numItems: 0,
-                            lastResponse: null,
+                      pagingController: _model.setListViewController(
+                        (nextPageMarker) =>
+                            ClientsGroup.tasksDebloqeClientsCall.call(
+                          token: valueOrDefault(currentUserDocument?.token, ''),
+                          page: valueOrDefault<int>(
+                            nextPageMarker.nextPageNumber,
+                            1,
                           ),
-                        );
-                        _model.pagingController!
-                            .addPageRequestListener((nextPageMarker) {
-                          ClientsGroup.tasksDebloqeClientsCall
-                              .call(
-                            token:
-                                valueOrDefault(currentUserDocument?.token, ''),
-                            page: valueOrDefault<int>(
-                              nextPageMarker.nextPageNumber,
-                              1,
-                            ),
-                            sizePage: 30,
-                          )
-                              .then((listViewTasksDebloqeClientsResponse) {
-                            final pageItems =
-                                ClientsGroup.tasksDebloqeClientsCall
-                                    .data(
-                                      listViewTasksDebloqeClientsResponse
-                                          .jsonBody,
-                                    )!
-                                    .toList() as List;
-                            final newNumItems =
-                                nextPageMarker.numItems + pageItems.length;
-                            _model.pagingController!.appendPage(
-                              pageItems,
-                              (pageItems.length > 0)
-                                  ? ApiPagingParams(
-                                      nextPageNumber:
-                                          nextPageMarker.nextPageNumber + 1,
-                                      numItems: newNumItems,
-                                      lastResponse:
-                                          listViewTasksDebloqeClientsResponse,
-                                    )
-                                  : null,
-                            );
-                          });
-                        });
-                        return _model.pagingController!;
-                      }(),
+                          sizePage: 30,
+                        ),
+                      ),
                       padding: EdgeInsets.zero,
                       primary: false,
                       shrinkWrap: true,
@@ -163,7 +123,21 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
                             width: 50.0,
                             height: 50.0,
                             child: CircularProgressIndicator(
-                              color: FlutterFlowTheme.of(context).primary,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                FlutterFlowTheme.of(context).primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Customize what your widget looks like when it's loading another page.
+                        newPageProgressIndicatorBuilder: (_) => Center(
+                          child: SizedBox(
+                            width: 50.0,
+                            height: 50.0,
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                FlutterFlowTheme.of(context).primary,
+                              ),
                             ),
                           ),
                         ),
@@ -171,9 +145,13 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
                           'assets/images/7486744.png',
                         ),
                         itemBuilder: (context, _, taskIndex) {
-                          final taskItem =
-                              _model.pagingController!.itemList![taskIndex];
+                          final taskItem = _model
+                              .listViewPagingController!.itemList![taskIndex];
                           return InkWell(
+                            splashColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            hoverColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
                             onTap: () async {
                               logFirebaseEvent(
                                   'CLIENTS_ADMIN_Container_u2vkladu_ON_TAP');
@@ -185,16 +163,15 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
                                 barrierColor: Color(0x00000000),
                                 enableDrag: false,
                                 context: context,
-                                builder: (bottomSheetContext) {
+                                builder: (context) {
                                   return GestureDetector(
                                     onTap: () => FocusScope.of(context)
-                                        .requestFocus(_unfocusNode),
+                                        .requestFocus(_model.unfocusNode),
                                     child: Padding(
-                                      padding: MediaQuery.of(bottomSheetContext)
-                                          .viewInsets,
+                                      padding: MediaQuery.viewInsetsOf(context),
                                       child: Container(
                                         height:
-                                            MediaQuery.of(context).size.height *
+                                            MediaQuery.sizeOf(context).height *
                                                 0.75,
                                         child: ValidateDebloqueWidget(
                                           task: taskItem,
@@ -207,13 +184,13 @@ class _ClientsAdminWidgetState extends State<ClientsAdminWidget> {
 
                               logFirebaseEvent(
                                   'TaskOrdreDeblockageClient_refresh_databa');
-                              setState(
-                                  () => _model.pagingController?.refresh());
+                              setState(() =>
+                                  _model.listViewPagingController?.refresh());
                               await _model.waitForOnePage();
                             },
                             child: TaskOrdreDeblockageClientWidget(
                               key: Key(
-                                  'Keyu2v_${taskIndex}_of_${_model.pagingController!.itemList!.length}'),
+                                  'Keyu2v_${taskIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
                               task: taskItem,
                             ),
                           );

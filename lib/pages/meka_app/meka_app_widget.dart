@@ -43,11 +43,12 @@ class _MekaAppWidgetState extends State<MekaAppWidget> {
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       body: SafeArea(
+        top: true,
         child: FlutterFlowWebView(
-          url: 'https://mekaapp.com/bcd/mekaapp/',
+          content: 'https://mekaapp.com/bcd/mekaapp/',
           bypass: false,
-          width: MediaQuery.of(context).size.width * 1.0,
-          height: MediaQuery.of(context).size.height * 1.0,
+          width: MediaQuery.sizeOf(context).width * 1.0,
+          height: MediaQuery.sizeOf(context).height * 1.0,
           verticalScroll: true,
           horizontalScroll: false,
         ),

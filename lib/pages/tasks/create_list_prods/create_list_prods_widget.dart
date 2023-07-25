@@ -84,7 +84,9 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                                   width: 50.0,
                                   height: 50.0,
                                   child: CircularProgressIndicator(
-                                    color: FlutterFlowTheme.of(context).primary,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      FlutterFlowTheme.of(context).primary,
+                                    ),
                                   ),
                                 ),
                               );
@@ -99,8 +101,7 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                                 dropDownLabosGetAllLabosActiveResponse.jsonBody,
                               ) as List)
                                   .map<String>((s) => s.toString())
-                                  .toList()!
-                                  .toList(),
+                                  .toList()!,
                               onChanged: (val) => setState(
                                   () => _model.dropDownLabosValue = val),
                               width: 180.0,
@@ -151,7 +152,8 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                           FFAppState().addTaskListProdsSelect = functions
                               .jsonToListJson((_model.resProds?.jsonBody ?? ''),
                                   FFAppState().addTaskListProdsSelect.toList())
-                              .toList();
+                              .toList()
+                              .cast<dynamic>();
                         });
 
                         setState(() {});
@@ -365,8 +367,10 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                                       width: 50.0,
                                       height: 50.0,
                                       child: CircularProgressIndicator(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
                                       ),
                                     ),
                                   );
@@ -405,6 +409,11 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     12.0, 0.0, 12.0, 8.0),
                                             child: InkWell(
+                                              splashColor: Colors.transparent,
+                                              focusColor: Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
                                               onTap: () async {
                                                 logFirebaseEvent(
                                                     'CREATE_LIST_PRODS_contentView_0_ON_TAP');
@@ -543,6 +552,10 @@ class _CreateListProdsWidgetState extends State<CreateListProdsWidget> {
                     padding:
                         EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 8.0),
                     child: InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
                       onTap: () async {
                         logFirebaseEvent(
                             'CREATE_LIST_PRODS_contentView_0_ON_TAP');

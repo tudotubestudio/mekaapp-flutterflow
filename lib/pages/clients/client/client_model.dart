@@ -1,6 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/api_requests/api_calls.dart';
-import '/backend/push_notifications/push_notifications_util.dart';
 import '/flutter_flow/flutter_flow_charts.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
@@ -46,7 +45,9 @@ class ClientModel extends FlutterFlowModel {
   // Stores action output result for [Backend Call - API (Debloqe client)] action in Button widget.
   ApiCallResponse? apiResultAugSold;
   // State field(s) for ListView widget.
-  PagingController<ApiPagingParams, dynamic>? pagingController;
+
+  PagingController<ApiPagingParams, dynamic>? listViewPagingController;
+  Function(ApiPagingParams nextPageMarker)? listViewApiCall;
 
   /// Initialization and disposal methods.
 
@@ -57,7 +58,10 @@ class ClientModel extends FlutterFlowModel {
   void dispose() {
     montantController?.dispose();
     descController?.dispose();
+    listViewPagingController?.dispose();
   }
+
+  /// Action blocks are added here.
 
   /// Additional helper methods are added here.
 
@@ -70,10 +74,51 @@ class ClientModel extends FlutterFlowModel {
       await Future.delayed(Duration(milliseconds: 50));
       final timeElapsed = stopwatch.elapsedMilliseconds;
       final requestComplete =
-          (pagingController?.nextPageKey?.nextPageNumber ?? 0) > 0;
+          (listViewPagingController?.nextPageKey?.nextPageNumber ?? 0) > 0;
       if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
         break;
       }
     }
   }
+
+  PagingController<ApiPagingParams, dynamic> setListViewController(
+    Function(ApiPagingParams) apiCall,
+  ) {
+    listViewApiCall = apiCall;
+    return listViewPagingController ??= _createListViewController(apiCall);
+  }
+
+  PagingController<ApiPagingParams, dynamic> _createListViewController(
+    Function(ApiPagingParams) query,
+  ) {
+    final controller = PagingController<ApiPagingParams, dynamic>(
+      firstPageKey: ApiPagingParams(
+        nextPageNumber: 0,
+        numItems: 0,
+        lastResponse: null,
+      ),
+    );
+    return controller..addPageRequestListener(listViewTasksDebloqeClientsPage);
+  }
+
+  void listViewTasksDebloqeClientsPage(ApiPagingParams nextPageMarker) =>
+      listViewApiCall!(nextPageMarker)
+          .then((listViewTasksDebloqeClientsResponse) {
+        final pageItems = (ClientsGroup.tasksDebloqeClientsCall.data(
+                  listViewTasksDebloqeClientsResponse.jsonBody,
+                )! ??
+                [])
+            .toList() as List;
+        final newNumItems = nextPageMarker.numItems + pageItems.length;
+        listViewPagingController?.appendPage(
+          pageItems,
+          (pageItems.length > 0)
+              ? ApiPagingParams(
+                  nextPageNumber: nextPageMarker.nextPageNumber + 1,
+                  numItems: newNumItems,
+                  lastResponse: listViewTasksDebloqeClientsResponse,
+                )
+              : null,
+        );
+      });
 }

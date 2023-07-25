@@ -30,7 +30,6 @@ class _GetGiftTaskWidgetState extends State<GetGiftTaskWidget> {
   late GetGiftTaskModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -45,7 +44,6 @@ class _GetGiftTaskWidgetState extends State<GetGiftTaskWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -54,7 +52,7 @@ class _GetGiftTaskWidgetState extends State<GetGiftTaskWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -90,6 +88,7 @@ class _GetGiftTaskWidgetState extends State<GetGiftTaskWidget> {
           elevation: 2.0,
         ),
         body: SafeArea(
+          top: true,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -668,7 +667,7 @@ class _GetGiftTaskWidgetState extends State<GetGiftTaskWidget> {
                                 8.0, 8.0, 4.0, 8.0),
                             child: Container(
                               width: 4.0,
-                              height: MediaQuery.of(context).size.height * 0.3,
+                              height: MediaQuery.sizeOf(context).height * 0.3,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).tertiary,
                                 borderRadius: BorderRadius.circular(4.0),
@@ -954,7 +953,7 @@ class _GetGiftTaskWidgetState extends State<GetGiftTaskWidget> {
                     padding:
                         EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 1.0,
+                      width: MediaQuery.sizeOf(context).width * 1.0,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
                         boxShadow: [

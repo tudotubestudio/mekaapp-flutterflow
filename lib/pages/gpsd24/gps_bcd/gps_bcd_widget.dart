@@ -20,7 +20,6 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
   late GpsBcdModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -35,7 +34,6 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -44,7 +42,7 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primary,
@@ -87,23 +85,26 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                 initialIndex: 0,
                 child: Column(
                   children: [
-                    TabBar(
-                      labelColor: FlutterFlowTheme.of(context).primaryBtnText,
-                      unselectedLabelColor: Color(0xB3FFFFFF),
-                      labelStyle: FlutterFlowTheme.of(context).titleMedium,
-                      indicatorColor: FlutterFlowTheme.of(context).primary,
-                      indicatorWeight: 3.0,
-                      tabs: [
-                        Tab(
-                          text: 'All',
-                        ),
-                        Tab(
-                          text: 'Active',
-                        ),
-                        Tab(
-                          text: 'Inactive',
-                        ),
-                      ],
+                    Align(
+                      alignment: Alignment(0.0, 0),
+                      child: TabBar(
+                        labelColor: FlutterFlowTheme.of(context).primaryBtnText,
+                        unselectedLabelColor: Color(0xB3FFFFFF),
+                        labelStyle: FlutterFlowTheme.of(context).titleMedium,
+                        indicatorColor: FlutterFlowTheme.of(context).primary,
+                        indicatorWeight: 3.0,
+                        tabs: [
+                          Tab(
+                            text: 'All',
+                          ),
+                          Tab(
+                            text: 'Active',
+                          ),
+                          Tab(
+                            text: 'Inactive',
+                          ),
+                        ],
+                      ),
                     ),
                     Expanded(
                       child: TabBarView(
@@ -128,8 +129,10 @@ class _GpsBcdWidgetState extends State<GpsBcdWidget> {
                                       width: 50.0,
                                       height: 50.0,
                                       child: CircularProgressIndicator(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primary,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          FlutterFlowTheme.of(context).primary,
+                                        ),
                                       ),
                                     ),
                                   );

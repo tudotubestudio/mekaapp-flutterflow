@@ -28,7 +28,6 @@ class _PDFEtatRegionLivreurOrdreMissionCopyCopyWidgetState
   late PDFEtatRegionLivreurOrdreMissionCopyCopyModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
@@ -46,7 +45,6 @@ class _PDFEtatRegionLivreurOrdreMissionCopyCopyWidgetState
   void dispose() {
     _model.dispose();
 
-    _unfocusNode.dispose();
     super.dispose();
   }
 
@@ -55,11 +53,12 @@ class _PDFEtatRegionLivreurOrdreMissionCopyCopyWidgetState
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
+      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
+          top: true,
           child: AuthUserStreamWidget(
             builder: (context) => FutureBuilder<ApiCallResponse>(
               future: OrderMissionGroup.clientsHoreEchoOrdreMissionCall.call(
@@ -77,7 +76,9 @@ class _PDFEtatRegionLivreurOrdreMissionCopyCopyWidgetState
                       width: 50.0,
                       height: 50.0,
                       child: CircularProgressIndicator(
-                        color: FlutterFlowTheme.of(context).primary,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          FlutterFlowTheme.of(context).primary,
+                        ),
                       ),
                     ),
                   );

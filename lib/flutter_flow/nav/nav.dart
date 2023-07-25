@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import '../flutter_flow_theme.dart';
-import '../../backend/backend.dart';
+import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
 
 import '../../auth/base_auth_user_provider.dart';
-import '../../backend/push_notifications/push_notifications_handler.dart'
-    show PushNotificationsHandler;
 
 import '../../index.dart';
 import '../../main.dart';
@@ -22,6 +21,11 @@ export 'serialization_util.dart';
 const kTransitionInfoKey = '__transition_info__';
 
 class AppStateNotifier extends ChangeNotifier {
+  AppStateNotifier._();
+
+  static AppStateNotifier? _instance;
+  static AppStateNotifier get instance => _instance ??= AppStateNotifier._();
+
   BaseAuthUser? initialUser;
   BaseAuthUser? user;
   bool showSplashImage = true;
@@ -49,10 +53,13 @@ class AppStateNotifier extends ChangeNotifier {
   void updateNotifyOnAuthChange(bool notify) => notifyOnAuthChange = notify;
 
   void update(BaseAuthUser newUser) {
+    final shouldUpdate =
+        user?.uid == null || newUser.uid == null || user?.uid != newUser.uid;
     initialUser ??= newUser;
     user = newUser;
     // Refresh the app on auth change unless explicitly marked otherwise.
-    if (notifyOnAuthChange) {
+    // No need to update unless the user has changed.
+    if (notifyOnAuthChange && shouldUpdate) {
       notifyListeners();
     }
     // Once again mark the notifier as needing to update on auth change
@@ -70,7 +77,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
-      errorBuilder: (context, _) =>
+      errorBuilder: (context, state) =>
           appStateNotifier.loggedIn ? NavBarPage() : SignInWidget(),
       routes: [
         FFRoute(
@@ -292,14 +299,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
-          name: 'MainCopy',
-          path: '/mainCopy',
-          requireAuth: true,
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'MainCopy')
-              : MainCopyWidget(),
-        ),
-        FFRoute(
           name: 'ClientsAdminEnCours',
           path: '/clientsAdminEnCours',
           requireAuth: true,
@@ -330,9 +329,64 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             xxPaymentBookLineId:
                 params.getParam('xxPaymentBookLineId', ParamType.int),
           ),
+        ),
+        FFRoute(
+          name: 'CarnetsBonPour',
+          path: '/carnetsBonPour',
+          requireAuth: true,
+          builder: (context, params) => CarnetsBonPourWidget(),
+        ),
+        FFRoute(
+          name: 'PDFQrCodeCarnet',
+          path: '/pDFQrCodeCarnet',
+          requireAuth: true,
+          builder: (context, params) => PDFQrCodeCarnetWidget(
+            carnet: params.getParam('carnet', ParamType.JSON),
+          ),
+        ),
+        FFRoute(
+          name: 'pdfDechargeCarnet',
+          path: '/pdfDechargeCarnet',
+          requireAuth: true,
+          builder: (context, params) => PdfDechargeCarnetWidget(),
+        ),
+        FFRoute(
+          name: 'addqora',
+          path: '/addqora',
+          requireAuth: true,
+          builder: (context, params) => AddqoraWidget(),
+        ),
+        FFRoute(
+          name: 'ArchivedInvoice',
+          path: '/archivedInvoice',
+          requireAuth: true,
+          builder: (context, params) => ArchivedInvoiceWidget(),
+        ),
+        FFRoute(
+          name: 'MekaAI',
+          path: '/mekaAI',
+          requireAuth: true,
+          asyncParams: {
+            'user': getDoc(['users'], UsersRecord.fromSnapshot),
+          },
+          builder: (context, params) => MekaAIWidget(
+            chat: params.getParam('chat', ParamType.JSON),
+            user: params.getParam('user', ParamType.Document),
+          ),
+        ),
+        FFRoute(
+          name: 'AllChatsPage',
+          path: '/allChatsPage',
+          requireAuth: true,
+          builder: (context, params) => AllChatsPageWidget(),
+        ),
+        FFRoute(
+          name: 'CreateGroupChatPage',
+          path: '/createGroupChatPage',
+          requireAuth: true,
+          builder: (context, params) => CreateGroupChatPageWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
-      urlPathStrategy: UrlPathStrategy.path,
     );
 
 extension NavParamExtensions on Map<String, String?> {
@@ -347,8 +401,8 @@ extension NavigationExtensions on BuildContext {
   void goNamedAuth(
     String name,
     bool mounted, {
-    Map<String, String> params = const <String, String>{},
-    Map<String, String> queryParams = const <String, String>{},
+    Map<String, String> pathParameters = const <String, String>{},
+    Map<String, String> queryParameters = const <String, String>{},
     Object? extra,
     bool ignoreRedirect = false,
   }) =>
@@ -356,16 +410,16 @@ extension NavigationExtensions on BuildContext {
           ? null
           : goNamed(
               name,
-              params: params,
-              queryParams: queryParams,
+              pathParameters: pathParameters,
+              queryParameters: queryParameters,
               extra: extra,
             );
 
   void pushNamedAuth(
     String name,
     bool mounted, {
-    Map<String, String> params = const <String, String>{},
-    Map<String, String> queryParams = const <String, String>{},
+    Map<String, String> pathParameters = const <String, String>{},
+    Map<String, String> queryParameters = const <String, String>{},
     Object? extra,
     bool ignoreRedirect = false,
   }) =>
@@ -373,25 +427,24 @@ extension NavigationExtensions on BuildContext {
           ? null
           : pushNamed(
               name,
-              params: params,
-              queryParams: queryParams,
+              pathParameters: pathParameters,
+              queryParameters: queryParameters,
               extra: extra,
             );
 
   void safePop() {
     // If there is only one route on the stack, navigate to the initial
     // page instead of popping.
-    if (GoRouter.of(this).routerDelegate.matches.length <= 1) {
-      go('/');
-    } else {
+    if (canPop()) {
       pop();
+    } else {
+      go('/');
     }
   }
 }
 
 extension GoRouterExtensions on GoRouter {
-  AppStateNotifier get appState =>
-      (routerDelegate.refreshListenable as AppStateNotifier);
+  AppStateNotifier get appState => AppStateNotifier.instance;
   void prepareAuthEvent([bool ignoreRedirect = false]) =>
       appState.hasRedirect() && !ignoreRedirect
           ? null
@@ -400,16 +453,15 @@ extension GoRouterExtensions on GoRouter {
       !ignoreRedirect && appState.hasRedirect();
   void clearRedirectLocation() => appState.clearRedirectLocation();
   void setRedirectLocationIfUnset(String location) =>
-      (routerDelegate.refreshListenable as AppStateNotifier)
-          .updateNotifyOnAuthChange(false);
+      appState.updateNotifyOnAuthChange(false);
 }
 
 extension _GoRouterStateExtensions on GoRouterState {
   Map<String, dynamic> get extraMap =>
       extra != null ? extra as Map<String, dynamic> : {};
   Map<String, dynamic> get allParams => <String, dynamic>{}
-    ..addAll(params)
-    ..addAll(queryParams)
+    ..addAll(pathParameters)
+    ..addAll(queryParameters)
     ..addAll(extraMap);
   TransitionInfo get transitionInfo => extraMap.containsKey(kTransitionInfoKey)
       ? extraMap[kTransitionInfoKey] as TransitionInfo
@@ -465,7 +517,8 @@ class FFParameters {
       return param;
     }
     // Return serialized value.
-    return deserializeParam<T>(param, type, isList, collectionNamePath);
+    return deserializeParam<T>(param, type, isList,
+        collectionNamePath: collectionNamePath);
   }
 }
 
@@ -489,7 +542,7 @@ class FFRoute {
   GoRoute toRoute(AppStateNotifier appStateNotifier) => GoRoute(
         name: name,
         path: path,
-        redirect: (state) {
+        redirect: (context, state) {
           if (appStateNotifier.shouldRedirect) {
             final redirectLocation = appStateNotifier.getRedirectLocation();
             appStateNotifier.clearRedirectLocation();
@@ -518,7 +571,7 @@ class FFRoute {
                     fit: BoxFit.cover,
                   ),
                 )
-              : PushNotificationsHandler(child: page);
+              : page;
 
           final transitionInfo = state.transitionInfo;
           return transitionInfo.hasTransition

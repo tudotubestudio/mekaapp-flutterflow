@@ -96,8 +96,8 @@ class _TasksWidgetState extends State<TasksWidget>
           curve: Curves.easeInOut,
           delay: 0.ms,
           duration: 600.ms,
-          begin: 0.7,
-          end: 1.0,
+          begin: Offset(0.7, 0.7),
+          end: Offset(1.0, 1.0),
         ),
       ],
     ),
@@ -115,8 +115,8 @@ class _TasksWidgetState extends State<TasksWidget>
           curve: Curves.easeInOut,
           delay: 0.ms,
           duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
+          begin: Offset(0.0, 0.0),
+          end: Offset(1.0, 1.0),
         ),
       ],
     ),
@@ -179,8 +179,8 @@ class _TasksWidgetState extends State<TasksWidget>
           curve: Curves.easeInOut,
           delay: 0.ms,
           duration: 600.ms,
-          begin: 0.7,
-          end: 1.0,
+          begin: Offset(0.7, 0.7),
+          end: Offset(1.0, 1.0),
         ),
       ],
     ),
@@ -198,8 +198,8 @@ class _TasksWidgetState extends State<TasksWidget>
           curve: Curves.easeInOut,
           delay: 0.ms,
           duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
+          begin: Offset(0.0, 0.0),
+          end: Offset(1.0, 1.0),
         ),
       ],
     ),
@@ -288,26 +288,29 @@ class _TasksWidgetState extends State<TasksWidget>
                 initialIndex: 0,
                 child: Column(
                   children: [
-                    TabBar(
-                      labelColor: FlutterFlowTheme.of(context).secondaryText,
-                      labelStyle:
-                          FlutterFlowTheme.of(context).bodyMedium.override(
-                                fontFamily: 'Poppins',
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.normal,
-                              ),
-                      indicatorColor: Color(0xFF3498DB),
-                      tabs: [
-                        Tab(
-                          text: 'My day',
-                        ),
-                        Tab(
-                          text: 'My week',
-                        ),
-                        Tab(
-                          text: 'Gift',
-                        ),
-                      ],
+                    Align(
+                      alignment: Alignment(0.0, 0),
+                      child: TabBar(
+                        labelColor: FlutterFlowTheme.of(context).secondaryText,
+                        labelStyle:
+                            FlutterFlowTheme.of(context).bodyMedium.override(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                        indicatorColor: Color(0xFF3498DB),
+                        tabs: [
+                          Tab(
+                            text: 'My day',
+                          ),
+                          Tab(
+                            text: 'My week',
+                          ),
+                          Tab(
+                            text: 'Gift',
+                          ),
+                        ],
+                      ),
                     ),
                     Expanded(
                       child: TabBarView(
@@ -334,9 +337,12 @@ class _TasksWidgetState extends State<TasksWidget>
                                               width: 50.0,
                                               height: 50.0,
                                               child: CircularProgressIndicator(
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primary,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                                ),
                                               ),
                                             ),
                                           );
@@ -571,9 +577,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                             width: 50.0,
                                             height: 50.0,
                                             child: CircularProgressIndicator(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
+                                              ),
                                             ),
                                           ),
                                         );
@@ -1631,7 +1639,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
                                                                                           child: Container(
                                                                                             width: 4.0,
-                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            height: MediaQuery.sizeOf(context).height * 0.1,
                                                                                             decoration: BoxDecoration(
                                                                                               color: FlutterFlowTheme.of(context).tertiary,
                                                                                               borderRadius: BorderRadius.circular(4.0),
@@ -2808,7 +2816,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
                                                                                           child: Container(
                                                                                             width: 4.0,
-                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            height: MediaQuery.sizeOf(context).height * 0.1,
                                                                                             decoration: BoxDecoration(
                                                                                               color: FlutterFlowTheme.of(context).tertiary,
                                                                                               borderRadius: BorderRadius.circular(4.0),
@@ -3985,7 +3993,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
                                                                                           child: Container(
                                                                                             width: 4.0,
-                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            height: MediaQuery.sizeOf(context).height * 0.1,
                                                                                             decoration: BoxDecoration(
                                                                                               color: FlutterFlowTheme.of(context).tertiary,
                                                                                               borderRadius: BorderRadius.circular(4.0),
@@ -5162,7 +5170,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
                                                                                           child: Container(
                                                                                             width: 4.0,
-                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            height: MediaQuery.sizeOf(context).height * 0.1,
                                                                                             decoration: BoxDecoration(
                                                                                               color: FlutterFlowTheme.of(context).tertiary,
                                                                                               borderRadius: BorderRadius.circular(4.0),
@@ -5942,7 +5950,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                                           laboItem,
                                                                                                           r'''$.perc_realisation''',
                                                                                                         )),
-                                                                                                        width: MediaQuery.of(context).size.width * 0.75,
+                                                                                                        width: MediaQuery.sizeOf(context).width * 0.75,
                                                                                                         lineHeight: 8.0,
                                                                                                         animation: true,
                                                                                                         progressColor: Color(0xFF4B39EF),
@@ -6354,7 +6362,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                           padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 4.0, 8.0),
                                                                                           child: Container(
                                                                                             width: 4.0,
-                                                                                            height: MediaQuery.of(context).size.height * 0.1,
+                                                                                            height: MediaQuery.sizeOf(context).height * 0.1,
                                                                                             decoration: BoxDecoration(
                                                                                               color: FlutterFlowTheme.of(context).tertiary,
                                                                                               borderRadius: BorderRadius.circular(4.0),
@@ -6786,6 +6794,10 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                 Padding(
                                                                               padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 2.0, 0.0),
                                                                               child: InkWell(
+                                                                                splashColor: Colors.transparent,
+                                                                                focusColor: Colors.transparent,
+                                                                                hoverColor: Colors.transparent,
+                                                                                highlightColor: Colors.transparent,
                                                                                 onTap: () async {
                                                                                   logFirebaseEvent('TASKS_PAGE_Container_t3g3zuj2_ON_TAP');
                                                                                   logFirebaseEvent('Container_bottom_sheet');
@@ -6794,11 +6806,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                     backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
                                                                                     barrierColor: Color(0x00000000),
                                                                                     context: context,
-                                                                                    builder: (bottomSheetContext) {
+                                                                                    builder: (context) {
                                                                                       return Padding(
-                                                                                        padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                                                                                        padding: MediaQuery.viewInsetsOf(context),
                                                                                         child: Container(
-                                                                                          height: MediaQuery.of(context).size.height * 0.5,
+                                                                                          height: MediaQuery.sizeOf(context).height * 0.5,
                                                                                           child: ShowProdsWidget(
                                                                                             prods: getJsonField(
                                                                                               taskItem,
@@ -6851,6 +6863,10 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                 Padding(
                                                                               padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 2.0, 0.0),
                                                                               child: InkWell(
+                                                                                splashColor: Colors.transparent,
+                                                                                focusColor: Colors.transparent,
+                                                                                hoverColor: Colors.transparent,
+                                                                                highlightColor: Colors.transparent,
                                                                                 onTap: () async {
                                                                                   logFirebaseEvent('TASKS_PAGE_Container_i6lyynn6_ON_TAP');
                                                                                   logFirebaseEvent('Container_bottom_sheet');
@@ -6859,11 +6875,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                     backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
                                                                                     barrierColor: Color(0x00000000),
                                                                                     context: context,
-                                                                                    builder: (bottomSheetContext) {
+                                                                                    builder: (context) {
                                                                                       return Padding(
-                                                                                        padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                                                                                        padding: MediaQuery.viewInsetsOf(context),
                                                                                         child: Container(
-                                                                                          height: MediaQuery.of(context).size.height * 0.5,
+                                                                                          height: MediaQuery.sizeOf(context).height * 0.5,
                                                                                           child: ShowProdsWidget(
                                                                                             prods: getJsonField(
                                                                                               taskItem,
@@ -7031,7 +7047,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                         context
                                                                             .pushNamed(
                                                                           'ShowPack',
-                                                                          queryParams:
+                                                                          queryParameters:
                                                                               {
                                                                             'pack':
                                                                                 serializeParam(
@@ -7175,11 +7191,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                                 backgroundColor: FlutterFlowTheme.of(context).primaryBtnText,
                                                                                 barrierColor: Color(0x00000000),
                                                                                 context: context,
-                                                                                builder: (bottomSheetContext) {
+                                                                                builder: (context) {
                                                                                   return Padding(
-                                                                                    padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                                                                                    padding: MediaQuery.viewInsetsOf(context),
                                                                                     child: Container(
-                                                                                      height: MediaQuery.of(context).size.height * 0.25,
+                                                                                      height: MediaQuery.sizeOf(context).height * 0.25,
                                                                                       child: SelectCountReservedWidget(
                                                                                         task: taskItem,
                                                                                       ),
@@ -7474,6 +7490,10 @@ class _TasksWidgetState extends State<TasksWidget>
                                               EdgeInsetsDirectional.fromSTEB(
                                                   0.0, 12.0, 0.0, 0.0),
                                           child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            focusColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
                                             onTap: () async {
                                               logFirebaseEvent(
                                                   'TASKS_PAGE_Container_jl8tch6c_ON_TAP');
@@ -7486,17 +7506,16 @@ class _TasksWidgetState extends State<TasksWidget>
                                                         .primaryBtnText,
                                                 barrierColor: Color(0x00000000),
                                                 context: context,
-                                                builder: (bottomSheetContext) {
+                                                builder: (context) {
                                                   return Padding(
-                                                    padding: MediaQuery.of(
-                                                            bottomSheetContext)
-                                                        .viewInsets,
+                                                    padding:
+                                                        MediaQuery.viewInsetsOf(
+                                                            context),
                                                     child: Container(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.75,
+                                                      height: MediaQuery.sizeOf(
+                                                                  context)
+                                                              .height *
+                                                          0.75,
                                                       child:
                                                           ListGlobalChiffreWidget(),
                                                     ),
@@ -8205,8 +8224,11 @@ class _TasksWidgetState extends State<TasksWidget>
                                           width: 50.0,
                                           height: 50.0,
                                           child: CircularProgressIndicator(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                              FlutterFlowTheme.of(context)
+                                                  .primary,
+                                            ),
                                           ),
                                         ),
                                       );
@@ -8228,8 +8250,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                               EdgeInsetsDirectional.fromSTEB(
                                                   16.0, 12.0, 16.0, 0.0),
                                           child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
+                                            width: MediaQuery.sizeOf(context)
                                                     .width *
                                                 1.0,
                                             height: 100.0,
@@ -8403,7 +8424,7 @@ class _TasksWidgetState extends State<TasksWidget>
                                                                 child: Text(
                                                                   formatNumber(
                                                                     listViewGiftsRecord
-                                                                        .total!,
+                                                                        .total,
                                                                     formatType:
                                                                         FormatType
                                                                             .decimal,
